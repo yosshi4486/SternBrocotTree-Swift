@@ -78,6 +78,10 @@ extension Rational : Comparable {
         return lhs.compare(to: rhs) <= 0
     }
 
+    static func > (lhs: Rational, rhs: Rational) -> Bool {
+        return lhs.compare(to: rhs) > 0
+    }
+
 }
 
 private extension Bool {
