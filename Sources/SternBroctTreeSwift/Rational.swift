@@ -68,6 +68,14 @@ extension Rational : Equatable {
 
 }
 
+extension Rational : Comparable {
+
+    static func < (lhs: Rational, rhs: Rational) -> Bool {
+        return lhs.compare(to: rhs) < 0
+    }
+
+}
+
 private extension Bool {
 
     var intValue: Int32 { self == true ? 1 : 0 }

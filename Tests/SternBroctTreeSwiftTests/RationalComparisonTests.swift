@@ -22,4 +22,16 @@ class RationalComparisonTests: XCTestCase {
         XCTAssertNotEqual(a, b)
     }
 
+    func testAIsLessThanB() {
+        let a = Rational(fraction: "1/4")!
+        let b = Rational(fraction: "1/3")!
+        XCTAssertTrue(a < b)
+    }
+
+    func testAIsLessThanBFailure() {
+        let a = Rational(fraction: "1/3")!
+        let b = Rational(fraction: "1/4")!
+        XCTAssertFalse(a < b)
+    }
+
 }
