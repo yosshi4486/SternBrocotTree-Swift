@@ -1,7 +1,7 @@
 import XCTest
 @testable import SternBroctTreeSwift
 
-final class SternBroctTreeSwiftTests: XCTestCase {
+final class IntermediateTests: XCTestCase {
 
     func testMediantsOnlyLeft() throws {
 
