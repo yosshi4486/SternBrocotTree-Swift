@@ -60,6 +60,14 @@ struct Rational {
 
 }
 
+extension Rational : Equatable {
+
+    static func == (lhs: Rational, rhs: Rational) -> Bool {
+        return lhs.numerator == rhs.numerator && lhs.denominator == rhs.denominator
+    }
+
+}
+
 private extension Bool {
 
     var intValue: Int32 { self == true ? 1 : 0 }
