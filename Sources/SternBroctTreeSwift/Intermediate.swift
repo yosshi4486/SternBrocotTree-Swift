@@ -1,9 +1,11 @@
 //
-//  SternBrocotTreeSwift.swift
-//  SternBrocotTreeSwift
+//  Intermediate.swift
+//  SternBroctTreeSwift
 //
-//  Created by yosshi4486 on 2020/11/11.
+//  Created by seijin4486 on 2020/11/11.
 //
+
+import Foundation
 
 /// An error that is thrown in `intermediate`.
 enum IntermediateError : Error {
@@ -27,15 +29,10 @@ extension IntermediateError {
 
 }
 
-func getMediant(left: Rational, right: Rational) -> Rational {
-    return .init(numerator: left.numerator + right.numerator,
-                 denominator: left.denominator + right.denominator)
-}
-
 func intermediate(left: Rational?, right: Rational?) throws -> Rational {
 
-    var low = Rational(numerator: 0, denominator: 1)
-    var high = Rational(numerator: 1, denominator: 0)
+    var low = Rational.rootLow
+    var high = Rational.rootHigh
 
     let innerLeft = left ?? low
     let innerRight = right ?? high
@@ -50,7 +47,8 @@ func intermediate(left: Rational?, right: Rational?) throws -> Rational {
 
     var mediant: Rational?
     while true {
-        mediant = getMediant(left: low, right: high)
+        mediant = Rational.mediant(left: low, right: high)
+
         if mediant!.compare(to: innerLeft) < 1 {
             low = mediant!
         } else if mediant!.compare(to: innerRight) > -1 {
