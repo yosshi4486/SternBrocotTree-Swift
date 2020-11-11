@@ -16,6 +16,23 @@ struct Rational {
     /// The denominator of the rational number.
     let denominator: Int32
 
+    // I don't know why the form is used to comparison although I know it is used in `adjacent`.
+    func compare(to other: Rational) -> Int32 {
+
+        let cross1: Int64 = Int64(self.numerator * other.denominator)
+        let cross2: Int64 = Int64(self.denominator * other.numerator)
+
+        return (cross1 > cross2).intValue - (cross1 < cross2).intValue
+    }
+
+}
+
+private extension Bool {
+
+    var intValue: Int32 {
+        return self == true ? 1 : 0
+    }
+
 }
 
 extension Rational : CustomStringConvertible {
@@ -25,6 +42,7 @@ extension Rational : CustomStringConvertible {
     }
 
 }
+
 
 extension Rational {
 

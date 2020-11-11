@@ -5,23 +5,7 @@
 //  Created by yosshi4486 on 2020/11/11.
 //
 
-extension Bool {
-
-    var intValue: Int32 {
-        return self == true ? 1 : 0
-    }
-
-}
-
-
-func cmp(lhs: Rational, rhs: Rational) -> Int32 {
-
-    let cross1: Int64 = Int64(lhs.numerator * rhs.denominator)
-    let cross2: Int64 = Int64(lhs.denominator * rhs.numerator)
-
-    return (cross1 > cross2).intValue - (cross1 < cross2).intValue
-}
-
+/// An error that is thrown in `intermediate`.
 enum IntermediateError : Error {
 
     case negativeArgument(Rational, Rational)
@@ -40,6 +24,7 @@ extension IntermediateError {
             return "left argument must be strictly smaller than right"
         }
     }
+
 }
 
 func getMediant(left: Rational, right: Rational) -> Rational {
@@ -55,20 +40,20 @@ func intermediate(left: Rational?, right: Rational?) throws -> Rational {
     let innerLeft = left ?? low
     let innerRight = right ?? high
 
-    if cmp(lhs: innerLeft, rhs: low) < 0 || cmp(lhs: innerRight, rhs: low) < 0 {
+    if innerLeft.compare(to: low) < 0 || innerRight.compare(to: low) < 0 {
         throw IntermediateError.negativeArgument(innerLeft, innerRight)
     }
 
-    if cmp(lhs: innerLeft, rhs: innerRight) >= 0 {
+    if innerLeft.compare(to: innerRight) >= 0 {
         throw IntermediateError.leftMustBeSmallerThanRight(innerLeft, innerRight)
     }
 
     var mediant: Rational?
     while true {
         mediant = getMediant(left: low, right: high)
-        if cmp(lhs: mediant!, rhs: innerLeft) < 1 {
+        if mediant!.compare(to: innerLeft) < 1 {
             low = mediant!
-        } else if cmp(lhs: mediant!, rhs: innerRight) > -1 {
+        } else if mediant!.compare(to: innerRight) > -1 {
             high = mediant!
         } else {
             break
