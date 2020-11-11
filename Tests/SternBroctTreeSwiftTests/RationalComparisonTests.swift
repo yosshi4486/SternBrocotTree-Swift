@@ -100,4 +100,20 @@ class RationalComparisonTests: XCTestCase {
         XCTAssertFalse(a >= b)
     }
 
+    func testMin() {
+        let a = Rational(fraction: "1/3")!
+        let b = Rational(fraction: "1/4")!
+
+        let result = min(a, b)
+        XCTAssertEqual(result, b)
+    }
+
+    func testMax() {
+        let a = Rational(fraction: "1/3")!
+        let b = Rational(fraction: "1/4")!
+
+        let result = max(a, b)
+        XCTAssertEqual(result, a)
+    }
+
 }
