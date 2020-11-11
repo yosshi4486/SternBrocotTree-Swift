@@ -16,9 +16,15 @@ class RationalComparisonTests: XCTestCase {
         XCTAssertEqual(a, b)
     }
 
-    func testNotEqual() {
+    func testNotEqualWhenAIsLessThanB() {
         let a = Rational(fraction: "1/3")
         let b = Rational(fraction: "1/4")
+        XCTAssertNotEqual(a, b)
+    }
+
+    func testNotEqualWhenAIsGreaterThanB() {
+        let a = Rational(fraction: "1/4")
+        let b = Rational(fraction: "1/3")
         XCTAssertNotEqual(a, b)
     }
 
@@ -34,13 +40,19 @@ class RationalComparisonTests: XCTestCase {
         XCTAssertFalse(a < b)
     }
 
+    func testAIsLessThanBFailureWhenEqual() {
+        let a = Rational(fraction: "1/4")!
+        let b = Rational(fraction: "1/4")!
+        XCTAssertFalse(a < b)
+    }
+
     func testAIsLessThanEqualB() {
         let a = Rational(fraction: "1/4")!
         let b = Rational(fraction: "1/3")!
         XCTAssertTrue(a <= b)
     }
 
-    func testAIsLessThanEqualBEqual() {
+    func testAIsLessThanEqualBWhenEqual() {
         let a = Rational(fraction: "1/4")!
         let b = Rational(fraction: "1/4")!
         XCTAssertTrue(a <= b)
