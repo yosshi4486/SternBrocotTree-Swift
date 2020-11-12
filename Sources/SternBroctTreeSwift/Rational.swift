@@ -11,10 +11,10 @@ import Foundation
 struct Rational {
 
     /// The numerator of the rational number.
-    let numerator: Int32
+    var numerator: Int32
 
     /// The denominator of the rational number.
-    let denominator: Int32
+    var denominator: Int32
 
     init(numerator: Int32, denominator: Int32) {
         self.numerator = numerator
@@ -34,6 +34,7 @@ struct Rational {
         self.denominator = denominator
     }
 
+
     // I don't know why the form is used to comparison although I know it is used in `adjacent`.
     func compare(to other: Rational) -> Int32 {
 
@@ -44,6 +45,42 @@ struct Rational {
         return  (aTimesD > bTimesC).intValue - (aTimesD < bTimesC).intValue
     }
 
+    /// Returns a new simplified rational.
+    ///
+    /// Returns new value when the numerator and the denominator have common devider except for ± 1,
+    ///
+    ///     let new = Rational(fraction: "3/9").simplified()
+    ///     // new.description is 1/3.
+    ///
+    /// otherwise always returns nil.
+    ///
+    ///     let new = Rational(fraction: "3/10").simplified()
+    ///     // new is nil.
+    func simplified() -> Rational? {
+
+        let common = gcd(numerator, denominator)
+
+        let canSimplify = common != 1 && common != -1
+        guard canSimplify else { return nil }
+
+        var numerator = self.numerator
+        var denominator = self.denominator
+
+        // tricky: avoid overflow from (INT32_MIN / -1)
+        if common != -1 || (numerator != Int32.min && denominator != Int32.min) {
+            numerator /= common
+            denominator /= common
+        }
+
+        // prevent negative denominator, but do not negate the smallest value that would produce overflow
+        if denominator < 0 && numerator != Int32.min && denominator != Int32.min {
+            numerator *= -1
+            denominator *= -1
+        }
+
+        return Rational(numerator: numerator, denominator: denominator)
+    }
+
     /// Returns a mediant from two fractions.
     static func mediant(left: Rational, right: Rational) -> Rational {
         Rational(
@@ -52,8 +89,10 @@ struct Rational {
         )
     }
 
+
     /// The low root node of SBTree. 0/1.
     static var rootLow: Rational { Rational(fraction: "0/1")! }
+
 
     /// The low high node of SBTree. 1/0.
     static var rootHigh: Rational { Rational(fraction: "1/0")! }
