@@ -49,24 +49,24 @@ public func intermediate(left: Rational?, right: Rational?) throws -> Rational {
     var low = Rational.rootLow
     var high = Rational.rootHigh
 
-    let innerLeft = left ?? low
-    let innerRight = right ?? high
+    let left = left ?? low
+    let right = right ?? high
 
-    if innerLeft < low || innerRight < low {
-        throw IntermediateError.negativeArgument(innerLeft, innerRight)
+    if left < low || right < low {
+        throw IntermediateError.negativeArgument(left, right)
     }
 
-    if innerLeft >= innerRight {
-        throw IntermediateError.leftMustBeSmallerThanRight(innerLeft, innerRight)
+    if left >= right {
+        throw IntermediateError.leftMustBeSmallerThanRight(left, right)
     }
 
     var mediant: Rational?
     while true {
         mediant = Rational.mediant(left: low, right: high)
 
-        if mediant! <= innerLeft {
+        if mediant! <= left {
             low = mediant!
-        } else if innerRight <= mediant! {
+        } else if right <= mediant! {
             high = mediant!
         } else {
             break
