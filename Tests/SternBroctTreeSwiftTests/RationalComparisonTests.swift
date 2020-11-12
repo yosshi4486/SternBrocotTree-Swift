@@ -116,4 +116,26 @@ class RationalComparisonTests: XCTestCase {
         XCTAssertEqual(result, a)
     }
 
+    func testHashEqual() throws {
+        let a = try Rational(fraction: "1/3")!
+        let b = try Rational(fraction: "1/3")!
+
+        XCTAssertEqual(a.hashValue, b.hashValue)
+    }
+
+    func testHashEqualWithDifferentNumbers() throws {
+        let a = try Rational(fraction: "1/3")!
+        let b = try Rational(fraction: "3/9")!
+
+        XCTAssertEqual(a.hashValue, b.hashValue)
+    }
+
+    func testHashNotEqual() throws {
+        let a = try Rational(fraction: "1/3")!
+        let b = try Rational(fraction: "1/4")!
+
+        XCTAssertNotEqual(a.hashValue, b.hashValue)
+    }
+
+
 }

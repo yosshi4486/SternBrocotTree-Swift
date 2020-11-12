@@ -52,7 +52,7 @@ public struct Rational {
         try self.init(numerator: numerator, denominator: denominator)
     }
 
-    
+
     // Ignore zero denominator error
     private init(_ numerator: Int32, _ denominator: Int32) {
         self.numerator = numerator
@@ -307,9 +307,15 @@ extension Rational : Comparable {
 
 }
 
-private extension Bool {
+extension Rational : Hashable {
 
-    var intValue: Int32 { self == true ? 1 : 0 }
+    public func hash(into hasher: inout Hasher) {
+
+        // In reduced form, SBTree node's fruction must be identified in the tree.
+        let x = simplifiedReportingSuccess().result
+        hasher.combine(x.numerator)
+        hasher.combine(x.denominator)
+    }
 
 }
 
@@ -318,7 +324,6 @@ extension Rational : CustomStringConvertible {
     public var description: String { "\(numerator)/\(denominator)" }
 
 }
-
 
 extension Rational {
 
@@ -340,5 +345,11 @@ extension Rational {
             }
         }
     }
+
+}
+
+private extension Bool {
+
+    var intValue: Int32 { self == true ? 1 : 0 }
 
 }
