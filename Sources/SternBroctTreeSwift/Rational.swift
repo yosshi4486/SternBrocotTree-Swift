@@ -209,6 +209,8 @@ struct Rational {
 
             // check again
             if simplified.numerator == Int32.min {
+
+                // denominator can't be MIN too or fraction would have previosly simplifed to 1/1.
                 return Rational(numerator: simplified.numerator, denominator: simplified.denominator * -1)
             }
 
