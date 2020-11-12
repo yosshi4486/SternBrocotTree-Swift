@@ -1,0 +1,28 @@
+//
+//  MathHelpers.swift
+//  SternBroctTreeSwift
+//
+//  Created by seijin4486 on 2020/11/12.
+//
+
+import Foundation
+
+/// Returns a greatest common divider(gcd) for the given factors.
+///
+/// - Complexity: O(log n) where n is digits of the given `b`.
+func gcd(_ a: Int32, _ b: Int32) -> Int32 {
+
+    var a = a
+    var b = b
+    var r: Int32
+
+    // Euclidean algorithm
+    // https://en.wikipedia.org/wiki/Euclidean_algorithm
+    while b != 0 {
+        r = a % b
+        a = b
+        b = r
+    }
+
+    return a
+}

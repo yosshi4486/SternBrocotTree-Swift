@@ -8,16 +8,13 @@
 import Foundation
 
 /// An error that is thrown in `intermediate`.
-enum IntermediateError : Error {
+public enum IntermediateError : LocalizedError {
 
     case negativeArgument(Rational, Rational)
 
     case leftMustBeSmallerThanRight(Rational, Rational)
-}
 
-extension IntermediateError {
-
-    var errorDescription: String {
+    public var errorDescription: String? {
         switch self {
         case .negativeArgument(_, _):
             return "arguments must be non-negative"
@@ -29,7 +26,7 @@ extension IntermediateError {
 
 }
 
-func intermediate(left: Rational?, right: Rational?) throws -> Rational {
+public func intermediate(left: Rational?, right: Rational?) throws -> Rational {
 
     var low = Rational.rootLow
     var high = Rational.rootHigh
