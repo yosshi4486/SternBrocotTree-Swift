@@ -98,7 +98,8 @@ struct Rational {
     }
 
 
-    /// Returns the sum of values.
+    /// Returns the sum of rationals.
+    /// 
     /// - Parameter other: The rational you want to add.
     /// - Throws: An AddingError may be thrown.
     /// - Returns: A rational that is added to the given other.
@@ -106,17 +107,19 @@ struct Rational {
 
         var x = self
         var y = other
-        var xnyd, ynxd, numer, denom: Int32!
-        var nxydBad, ynxdBad, numerBad, denomBad: Bool!
+        var xNumeratorYDenominator, yNumeratorYDenominator, numerator, denominator: Int32!
+        var isROverflowed, isSOverflowed, isNumeratorOverflowed, isDenominatorOverflowed: Bool!
+
         var retry = true
-
         while retry {
-            (xnyd, nxydBad) = x.numerator.multipliedReportingOverflow(by: y.denominator)
-            (ynxd, ynxdBad) = y.numerator.multipliedReportingOverflow(by: x.denominator)
-            (numer,numerBad) = xnyd.addingReportingOverflow(ynxd)
-            (denom, denomBad) = x.denominator.multipliedReportingOverflow(by: y.denominator)
 
-            if nxydBad || ynxdBad || numerBad || denomBad {
+            (xNumeratorYDenominator, isROverflowed) = x.numerator.multipliedReportingOverflow(by: y.denominator)
+            (yNumeratorYDenominator, isSOverflowed) = y.numerator.multipliedReportingOverflow(by: x.denominator)
+            (numerator,isNumeratorOverflowed) = xNumeratorYDenominator.addingReportingOverflow(yNumeratorYDenominator)
+            (denominator, isDenominatorOverflowed) = x.denominator.multipliedReportingOverflow(by: y.denominator)
+
+            if isROverflowed || isSOverflowed || isNumeratorOverflowed || isDenominatorOverflowed {
+
                 let xSuccess: Bool
                 (x, xSuccess) = x.simplifiedReportingSuccess()
 
@@ -139,7 +142,7 @@ struct Rational {
 
         }
 
-        return Rational(numerator: numer, denominator: denom)
+        return Rational(numerator: numerator, denominator: denominator)
     }
 
 
