@@ -25,7 +25,7 @@ class RationalArithmeticTests: XCTestCase {
     func testAdd() throws {
         let a = Rational(fraction: "1/3")!
         let b = Rational(fraction: "1/3")!
-        let result = try added(a, b)
+        let result = try a.adding(to: b)
 
         // Why does it not reduced?
         XCTAssertEqual(result.description, "6/9")

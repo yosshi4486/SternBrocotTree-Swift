@@ -84,6 +84,65 @@ struct Rational {
         return (Rational(numerator: numerator, denominator: denominator), true)
     }
 
+    enum AddingError : LocalizedError {
+
+        case outOfRange
+
+        var errorDescription: String? {
+            switch self {
+            case .outOfRange:
+                return "intermediate value overflow in rational addition"
+            }
+        }
+
+    }
+
+
+    /// Returns the sum of values.
+    /// - Parameter other: The rational you want to add.
+    /// - Throws: An AddingError may be thrown.
+    /// - Returns: A rational that is added to the given other.
+    func adding(to other: Rational) throws -> Rational {
+
+        var x = self
+        var y = other
+        var xnyd, ynxd, numer, denom: Int32!
+        var nxydBad, ynxdBad, numerBad, denomBad: Bool!
+        var retry = true
+
+        while retry {
+            (xnyd, nxydBad) = x.numerator.multipliedReportingOverflow(by: y.denominator)
+            (ynxd, ynxdBad) = y.numerator.multipliedReportingOverflow(by: x.denominator)
+            (numer,numerBad) = xnyd.addingReportingOverflow(ynxd)
+            (denom, denomBad) = x.denominator.multipliedReportingOverflow(by: y.denominator)
+
+            if nxydBad || ynxdBad || numerBad || denomBad {
+                let xSuccess: Bool
+                (x, xSuccess) = x.simplifiedReportingSuccess()
+
+                let ySuccess: Bool
+                (y, ySuccess) = y.simplifiedReportingSuccess()
+
+                // overflow in intermediate value
+                if !xSuccess && !ySuccess {
+
+                    // neither fraction could reduce, cannot proceed
+                    // (me): I don't understand how to reproduce this error now.
+                    throw AddingError.outOfRange
+                }
+
+                // the fraction(s) reduced, good for one more retry
+                retry = true
+            } else {
+                retry = false
+            }
+
+        }
+
+        return Rational(numerator: numer, denominator: denom)
+    }
+
+
     /// Returns a mediant from two fractions.
     static func mediant(left: Rational, right: Rational) -> Rational {
         Rational(
@@ -135,57 +194,4 @@ extension Rational {
 
     var floatingValue: Float64 { Float64(numerator) / Float64(denominator) }
 
-}
-
-enum AddingError : LocalizedError {
-
-    case outOfRange
-
-    var errorDescription: String? {
-        switch self {
-        case .outOfRange:
-            return "intermediate value overflow in rational addition"
-        }
-    }
-
-}
-
-func added(_ x: Rational, _ y: Rational) throws -> Rational {
-
-    var x = x
-    var y = y
-    var xnyd, ynxd, numer, denom: Int32!
-    var nxydBad, ynxdBad, numerBad, denomBad: Bool!
-    var retry = true
-
-    while retry {
-        (xnyd, nxydBad) = x.numerator.multipliedReportingOverflow(by: y.denominator)
-        (ynxd, ynxdBad) = y.numerator.multipliedReportingOverflow(by: x.denominator)
-        (numer,numerBad) = xnyd.addingReportingOverflow(ynxd)
-        (denom, denomBad) = x.denominator.multipliedReportingOverflow(by: y.denominator)
-
-        if nxydBad || ynxdBad || numerBad || denomBad {
-            let xSuccess: Bool
-            (x, xSuccess) = x.simplifiedReportingSuccess()
-
-            let ySuccess: Bool
-            (y, ySuccess) = y.simplifiedReportingSuccess()
-
-            // overflow in intermediate value
-            if !xSuccess && !ySuccess {
-
-                // neither fraction could reduce, cannot proceed
-                // (me): I don't understand how to reproduce this error now.
-                throw AddingError.outOfRange
-            }
-
-            // the fraction(s) reduced, good for one more retry
-            retry = true
-        } else {
-            retry = false
-        }
-
-    }
-
-    return Rational(numerator: numer, denominator: denom)
 }
