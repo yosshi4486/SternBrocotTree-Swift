@@ -41,4 +41,13 @@ class RationalArithmeticTests: XCTestCase {
 
     }
 
+    func testSub() throws {
+        let a = Rational(fraction: "2/3")!
+        let b = Rational(fraction: "1/3")!
+        let result = try a.subtracting(b)
+
+        // Why does it not reduced?
+        XCTAssertEqual(result.description, "3/9")
+    }
+
 }

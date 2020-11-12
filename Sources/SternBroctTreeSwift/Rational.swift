@@ -147,6 +147,16 @@ struct Rational {
     }
 
 
+    /// Returns the defference obtained by subtracting the given value from this value.
+    ///
+    /// - Parameter other: The value to subtract from this value.
+    /// - Throws: An AddingError may be thrown
+    /// - Returns: A rational that is subtracted.
+    func subtracting(_ other: Rational) throws -> Rational {
+        try adding(to: other.negative)
+    }
+
+
     /// Returns the product of this value and the given value.
     ///
     /// - Parameter other: The value to multiply by this value.
@@ -191,6 +201,21 @@ struct Rational {
         return Rational(numerator: numerator, denominator: denominator)
     }
 
+    private var negative: Rational {
+
+        if numerator == Int32.min {
+
+            let simplified = self.simplifiedReportingSuccess().result
+
+            // check again
+            if simplified.numerator == Int32.min {
+                return Rational(numerator: simplified.numerator, denominator: simplified.denominator * -1)
+            }
+
+        }
+
+        return Rational(numerator: numerator * -1, denominator: denominator)
+    }
 
     /// Returns a mediant from two fractions.
     static func mediant(left: Rational, right: Rational) -> Rational {
