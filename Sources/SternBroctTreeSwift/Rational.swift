@@ -56,6 +56,9 @@ struct Rational {
     ///
     ///     let new = Rational(fraction: "3/10").simplified()
     ///     // new is nil.
+    ///
+    /// - Note:
+    /// `Reduce` is term used to reduce numerics by gcm, but  `simplified` execute sign inversion of the numerator and the denominator in addition.
     func simplified() -> Rational? {
 
         let common = gcd(numerator, denominator)
