@@ -350,9 +350,3 @@ extension Rational {
     }
 
 }
-
-private extension Bool {
-
-    var intValue: Int32 { self == true ? 1 : 0 }
-
-}
