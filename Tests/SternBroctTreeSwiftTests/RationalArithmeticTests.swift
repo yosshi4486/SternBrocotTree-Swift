@@ -10,21 +10,21 @@ import XCTest
 
 class RationalArithmeticTests: XCTestCase {
 
-    func testSimplified() {
-        let rational = Rational(fraction: "3/9")
+    func testSimplified() throws {
+        let rational = try Rational(fraction: "3/9")
         XCTAssertTrue(rational!.simplifiedReportingSuccess().success)
         XCTAssertEqual(rational?.simplifiedReportingSuccess().result.description, "1/3")
     }
 
-    func testSimplifiedNil() {
-        let rational = Rational(fraction: "3/10")
+    func testSimplifiedNil() throws {
+        let rational = try Rational(fraction: "3/10")
         XCTAssertFalse(rational!.simplifiedReportingSuccess().success)
         XCTAssertEqual(rational?.simplifiedReportingSuccess().result.description, "3/10")
     }
 
     func testAdd() throws {
-        let a = Rational(fraction: "1/3")!
-        let b = Rational(fraction: "1/3")!
+        let a = try Rational(fraction: "1/3")!
+        let b = try Rational(fraction: "1/3")!
         let result = try a.adding(to: b)
 
         // Why does it not reduced?
@@ -32,8 +32,8 @@ class RationalArithmeticTests: XCTestCase {
     }
 
     func testMult() throws {
-        let a = Rational(fraction: "1/3")!
-        let b = Rational(fraction: "1/3")!
+        let a = try Rational(fraction: "1/3")!
+        let b = try Rational(fraction: "1/3")!
         let result = try a.multiplied(by: b)
 
         // Why does it not reduced?
@@ -42,8 +42,8 @@ class RationalArithmeticTests: XCTestCase {
     }
 
     func testSub() throws {
-        let a = Rational(fraction: "2/3")!
-        let b = Rational(fraction: "1/3")!
+        let a = try Rational(fraction: "2/3")!
+        let b = try Rational(fraction: "1/3")!
         let result = try a.subtracting(b)
 
         // Why does it not reduced?
@@ -51,8 +51,8 @@ class RationalArithmeticTests: XCTestCase {
     }
 
     func testDiv() throws {
-        let a = Rational(fraction: "2/3")!
-        let b = Rational(fraction: "1/3")!
+        let a = try Rational(fraction: "2/3")!
+        let b = try Rational(fraction: "1/3")!
         let result = try a.divided(by: b)
 
         // Why does it not reduced?
