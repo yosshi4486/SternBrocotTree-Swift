@@ -71,14 +71,27 @@ public struct Rational {
     }
 
 
-    // I don't know why the form is used to comparison although I know it is used in `adjacent`.
     public func compare(to other: Rational) -> Int32 {
 
-        // Two fractions r=a/b and s=c/d in reduced form are adjacent ⇄ ad - bc = ±1.
-        let aTimesD: Int64 = Int64(self.numerator * other.denominator)
-        let bTimesC: Int64 = Int64(self.denominator * other.numerator)
+        let a = self.numerator
+        let b = self.denominator
+        let c = other.numerator
+        let d = other.denominator
 
-        return  (aTimesD > bTimesC).intValue - (aTimesD < bTimesC).intValue
+        let ad: Int64 = Int64(a * d)
+        let bc: Int64 = Int64(b * c)
+
+        // In fraction comparition, a/b = c/d can represent as ad = bc.
+        // 1. To remove left side devider, let both sides multiplied by b. (a = bc/d)
+        // 2. To remove right side devider, let both sides multipied by d. (ad = bc)
+        //
+        // If a, b, c, and d are positive, the result of a/b > c/d can represent as ad > bc.
+        //
+
+        // when ad == bc, returns 0
+        // when ad > bc, returns 1
+        // when ad < bc, returns -1
+        return  (ad > bc).intValue - (ad < bc).intValue
     }
 
     /// Returns a new simplified rational.
