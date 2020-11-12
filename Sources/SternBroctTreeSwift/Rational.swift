@@ -49,22 +49,22 @@ struct Rational {
     ///
     /// Returns new value when the numerator and the denominator have common devider except for ± 1,
     ///
-    ///     let new = Rational(fraction: "3/9").simplified()
+    ///     let new = Rational(fraction: "3/9").simplifiedReportingSuccess().result
     ///     // new.description is 1/3.
     ///
-    /// otherwise always returns nil.
+    /// otherwise always returns self.
     ///
-    ///     let new = Rational(fraction: "3/10").simplified()
-    ///     // new is nil.
+    ///     let new = Rational(fraction: "3/10").simplifiedReportingSuccess().result
+    ///     // new.description is 3/10.
     ///
     /// - Note:
     /// `Reduce` is term used to reduce numerics by gcm, but  `simplified` execute sign inversion of the numerator and the denominator in addition.
-    func simplified() -> Rational? {
+    func simplifiedReportingSuccess() -> (result: Rational, success: Bool) {
 
         let common = gcd(numerator, denominator)
 
         let canSimplify = common != 1 && common != -1
-        guard canSimplify else { return nil }
+        guard canSimplify else { return (self, false) }
 
         var numerator = self.numerator
         var denominator = self.denominator
@@ -81,7 +81,7 @@ struct Rational {
             denominator *= -1
         }
 
-        return Rational(numerator: numerator, denominator: denominator)
+        return (Rational(numerator: numerator, denominator: denominator), true)
     }
 
     /// Returns a mediant from two fractions.
@@ -135,4 +135,57 @@ extension Rational {
 
     var floatingValue: Float64 { Float64(numerator) / Float64(denominator) }
 
+}
+
+enum AddingError : LocalizedError {
+
+    case outOfRange
+
+    var errorDescription: String? {
+        switch self {
+        case .outOfRange:
+            return "intermediate value overflow in rational addition"
+        }
+    }
+
+}
+
+func added(_ x: Rational, _ y: Rational) throws -> Rational {
+
+    var x = x
+    var y = y
+    var xnyd, ynxd, numer, denom: Int32!
+    var nxydBad, ynxdBad, numerBad, denomBad: Bool!
+    var retry = true
+
+    while retry {
+        (xnyd, nxydBad) = x.numerator.multipliedReportingOverflow(by: y.denominator)
+        (ynxd, ynxdBad) = y.numerator.multipliedReportingOverflow(by: x.denominator)
+        (numer,numerBad) = xnyd.addingReportingOverflow(ynxd)
+        (denom, denomBad) = x.denominator.multipliedReportingOverflow(by: y.denominator)
+
+        if nxydBad || ynxdBad || numerBad || denomBad {
+            let xSuccess: Bool
+            (x, xSuccess) = x.simplifiedReportingSuccess()
+
+            let ySuccess: Bool
+            (y, ySuccess) = y.simplifiedReportingSuccess()
+
+            // overflow in intermediate value
+            if !xSuccess && !ySuccess {
+
+                // neither fraction could reduce, cannot proceed
+                // (me): I don't understand how to reproduce this error now.
+                throw AddingError.outOfRange
+            }
+
+            // the fraction(s) reduced, good for one more retry
+            retry = true
+        } else {
+            retry = false
+        }
+
+    }
+
+    return Rational(numerator: numer, denominator: denom)
 }

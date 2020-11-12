@@ -12,12 +12,23 @@ class RationalArithmeticTests: XCTestCase {
 
     func testSimplified() {
         let rational = Rational(fraction: "3/9")
-        XCTAssertEqual(rational?.simplified()?.description, "1/3")
+        XCTAssertTrue(rational!.simplifiedReportingSuccess().success)
+        XCTAssertEqual(rational?.simplifiedReportingSuccess().result.description, "1/3")
     }
 
     func testSimplifiedNil() {
         let rational = Rational(fraction: "3/10")
-        XCTAssertNil(rational?.simplified())
+        XCTAssertFalse(rational!.simplifiedReportingSuccess().success)
+        XCTAssertEqual(rational?.simplifiedReportingSuccess().result.description, "3/10")
+    }
+
+    func testAdd() throws {
+        let a = Rational(fraction: "1/3")!
+        let b = Rational(fraction: "1/3")!
+        let result = try added(a, b)
+
+        // Why does it not reduced?
+        XCTAssertEqual(result.description, "6/9")
     }
 
 }
