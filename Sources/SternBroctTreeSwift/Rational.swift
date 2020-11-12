@@ -328,9 +328,9 @@ extension Rational : CustomStringConvertible {
 
 }
 
-extension Rational {
-
-    public var floatingValue: Float64 { Float64(numerator) / Float64(denominator) }
+extension Rational : CustomFloatConvertible {
+    
+    public var floatValue: Float64 { Float64(numerator) / Float64(denominator) }
 
 }
 
