@@ -34,7 +34,7 @@ class RationalArithmeticTests: XCTestCase {
     func testMult() throws {
         let a = Rational(fraction: "1/3")!
         let b = Rational(fraction: "1/3")!
-        let result = try a.multiplied(to: b)
+        let result = try a.multiplied(by: b)
 
         // Why does it not reduced?
         XCTAssertEqual(result.description, "1/9")

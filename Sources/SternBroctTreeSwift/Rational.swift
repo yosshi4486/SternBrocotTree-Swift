@@ -162,7 +162,7 @@ struct Rational {
     /// - Parameter other: The value to multiply by this value.
     /// - Throws: An AddingError may be thrown
     /// - Returns: A rational that is multiplied.
-    func multiplied(to other: Rational) throws -> Rational {
+    func multiplied(by other: Rational) throws -> Rational {
 
         var x = self
         var y = other
