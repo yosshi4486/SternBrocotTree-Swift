@@ -71,29 +71,6 @@ public struct Rational {
     }
 
 
-    public func compare(to other: Rational) -> Int32 {
-
-        let a = self.numerator
-        let b = self.denominator
-        let c = other.numerator
-        let d = other.denominator
-
-        let ad: Int64 = Int64(a * d)
-        let bc: Int64 = Int64(b * c)
-
-        // In fraction comparition, a/b = c/d can represent as ad = bc.
-        // 1. To remove left side devider, let both sides multiplied by b. (a = bc/d)
-        // 2. To remove right side devider, let both sides multipied by d. (ad = bc)
-        //
-        // If a, b, c, and d are positive, the result of a/b > c/d can represent as ad > bc.
-        //
-
-        // when ad == bc, returns 0
-        // when ad > bc, returns 1
-        // when ad < bc, returns -1
-        return  (ad > bc).intValue - (ad < bc).intValue
-    }
-
     /// Returns a new simplified rational.
     ///
     /// Returns new value when the numerator and the denominator have common devider except for ± 1,
@@ -315,7 +292,20 @@ extension Rational : Equatable {
 extension Rational : Comparable {
 
     public static func < (lhs: Rational, rhs: Rational) -> Bool {
-        return lhs.compare(to: rhs) < 0
+
+        // If a, b, c, and d are positive, the result of a/b < c/d can represent as ad < bc.
+        // 1. To remove left side devider, let both sides multiplied by b. (a < bc/d)
+        // 2. To remove right side devider, let both sides multipied by d. (ad < bc)
+        
+        let a = lhs.numerator
+        let b = lhs.denominator
+        let c = rhs.numerator
+        let d = rhs.denominator
+
+        let ad: Int64 = Int64(a * d)
+        let bc: Int64 = Int64(b * c)
+
+        return ad < bc
     }
 
 }

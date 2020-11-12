@@ -52,11 +52,11 @@ public func intermediate(left: Rational?, right: Rational?) throws -> Rational {
     let innerLeft = left ?? low
     let innerRight = right ?? high
 
-    if innerLeft.compare(to: low) < 0 || innerRight.compare(to: low) < 0 {
+    if innerLeft < low || innerRight < low {
         throw IntermediateError.negativeArgument(innerLeft, innerRight)
     }
 
-    if innerLeft.compare(to: innerRight) >= 0 {
+    if innerLeft >= innerRight {
         throw IntermediateError.leftMustBeSmallerThanRight(innerLeft, innerRight)
     }
 
@@ -64,9 +64,9 @@ public func intermediate(left: Rational?, right: Rational?) throws -> Rational {
     while true {
         mediant = Rational.mediant(left: low, right: high)
 
-        if mediant!.compare(to: innerLeft) < 1 {
+        if mediant! <= innerLeft {
             low = mediant!
-        } else if mediant!.compare(to: innerRight) > -1 {
+        } else if innerRight <= mediant! {
             high = mediant!
         } else {
             break
