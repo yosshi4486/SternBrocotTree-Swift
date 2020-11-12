@@ -13,16 +13,35 @@ public struct Rational {
     /// The numerator of the rational number.
     public var numerator: Int32
 
+
     /// The denominator of the rational number.
     public var denominator: Int32
 
-    public init(numerator: Int32, denominator: Int32) {
+
+    /// Creates an instance initialized by the given numerator and denominator.
+    ///
+    /// - Parameters:
+    ///   - numerator: The value acts as numerator of this instance.
+    ///   - denominator: The value acts as denominator of this instance.
+    /// - Throws: An initizalization error.
+    public init(numerator: Int32, denominator: Int32) throws {
+
+        guard denominator != 0 else {
+            throw InitializationError.zeroDinominator
+        }
+
         self.numerator = numerator
         self.denominator = denominator
     }
 
-    // In some cases, initialized by string is more readable in terms of use.
-    public init?(fraction: String) {
+
+    /// Creates an instance initizalized by the given string value splited by `/` separator.
+    ///
+    /// In some cases, Initialized by string literal is more readable in terms of use.
+    ///
+    /// - Parameter fraction: The string value represents a fruction.
+    /// - Throws: An initizalization error
+    public init?(fraction: String) throws {
 
         let splited = fraction.split(separator: "/")
 
@@ -30,8 +49,25 @@ public struct Rational {
             return nil
         }
 
+        try self.init(numerator: numerator, denominator: denominator)
+    }
+
+    
+    // Ignore zero denominator error
+    private init(_ numerator: Int32, _ denominator: Int32) {
         self.numerator = numerator
         self.denominator = denominator
+    }
+
+
+    // Ignore zero denominator error
+    private init(_ fraction: String) {
+
+        let splited = fraction.split(separator: "/")
+        let numerator = Int32(splited[0])
+        let denominator = Int32(splited[1])
+
+        self.init(numerator!, denominator!)
     }
 
 
@@ -81,7 +117,7 @@ public struct Rational {
             denominator *= -1
         }
 
-        return (Rational(numerator: numerator, denominator: denominator), true)
+        return (Rational(numerator, denominator), true)
     }
 
 
@@ -147,7 +183,7 @@ public struct Rational {
 
         }
 
-        return Rational(numerator: numerator, denominator: denominator)
+        return Rational(numerator, denominator)
     }
 
 
@@ -202,7 +238,7 @@ public struct Rational {
             }
         }
 
-        return Rational(numerator: numerator, denominator: denominator)
+        return Rational(numerator, denominator)
     }
 
 
@@ -231,30 +267,27 @@ public struct Rational {
             if simplified.numerator == Int32.min {
 
                 // denominator can't be MIN too or fraction would have previosly simplifed to 1/1.
-                return Rational(numerator: simplified.numerator, denominator: simplified.denominator * -1)
+                return Rational(simplified.numerator, simplified.denominator * -1)
             }
 
         }
 
-        return Rational(numerator: numerator * -1, denominator: denominator)
+        return Rational(numerator * -1, denominator)
     }
 
     
     /// Returns a mediant from two fractions.
     public static func mediant(left: Rational, right: Rational) -> Rational {
-        Rational(
-            numerator: left.numerator + right.numerator,
-            denominator: left.denominator + right.denominator
-        )
+        Rational(left.numerator + right.numerator, left.denominator + right.denominator)
     }
 
 
     /// The low root node of SBTree. 0/1.
-    public static var rootLow: Rational { Rational(fraction: "0/1")! }
+    public static var rootLow: Rational { Rational("0/1") }
 
 
     /// The low high node of SBTree. 1/0.
-    public static var rootHigh: Rational { Rational(fraction: "1/0")! }
+    public static var rootHigh: Rational { Rational("1/0") }
 
 }
 
@@ -290,5 +323,22 @@ extension Rational : CustomStringConvertible {
 extension Rational {
 
     public var floatingValue: Float64 { Float64(numerator) / Float64(denominator) }
+
+}
+
+extension Rational {
+
+    enum InitializationError : LocalizedError {
+
+        case zeroDinominator
+
+        var errorDescription: String? {
+
+            switch self {
+            case .zeroDinominator:
+                return "Fraction cannot have zero denominator."
+            }
+        }
+    }
 
 }
