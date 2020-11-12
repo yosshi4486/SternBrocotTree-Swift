@@ -50,4 +50,14 @@ class RationalArithmeticTests: XCTestCase {
         XCTAssertEqual(result.description, "3/9")
     }
 
+    func testDiv() throws {
+        let a = Rational(fraction: "2/3")!
+        let b = Rational(fraction: "1/3")!
+        let result = try a.divided(by: b)
+
+        // Why does it not reduced?
+        XCTAssertEqual(result.description, "6/3")
+    }
+
+
 }

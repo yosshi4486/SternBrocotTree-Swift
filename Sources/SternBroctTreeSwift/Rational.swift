@@ -84,6 +84,10 @@ struct Rational {
         return (Rational(numerator: numerator, denominator: denominator), true)
     }
 
+
+    // MARK: - Arithmetic Operations
+
+
     /// An arithmetic error of rational.
     enum ArithmeticError : LocalizedError {
 
@@ -201,6 +205,22 @@ struct Rational {
         return Rational(numerator: numerator, denominator: denominator)
     }
 
+
+    /// Returns the quatient obtained by dividing this value by the given value.
+    /// 
+    /// - Parameter other: The value to divide this value by.
+    /// - Throws: An AddingError may be thrown.
+    /// - Returns: A rational that is devided.
+    func divided(by other: Rational) throws -> Rational {
+
+        var y = other
+
+        swap(&y.numerator, &y.denominator)
+
+        return try multiplied(by: y)
+    }
+
+
     private var negative: Rational {
 
         if numerator == Int32.min {
@@ -219,6 +239,7 @@ struct Rational {
         return Rational(numerator: numerator * -1, denominator: denominator)
     }
 
+    
     /// Returns a mediant from two fractions.
     static func mediant(left: Rational, right: Rational) -> Rational {
         Rational(
