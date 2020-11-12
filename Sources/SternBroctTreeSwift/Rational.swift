@@ -84,7 +84,8 @@ struct Rational {
         return (Rational(numerator: numerator, denominator: denominator), true)
     }
 
-    enum AddingError : LocalizedError {
+    /// An arithmetic error of rational.
+    enum ArithmeticError : LocalizedError {
 
         case outOfRange
 
@@ -98,11 +99,11 @@ struct Rational {
     }
 
 
-    /// Returns the sum of rationals.
+    /// Returns the sum of this value and the given value.
     /// 
-    /// - Parameter other: The rational you want to add.
+    /// - Parameter other: The value to add to this value.
     /// - Throws: An AddingError may be thrown.
-    /// - Returns: A rational that is added to the given other.
+    /// - Returns: A rational that is added.
     func adding(to other: Rational) throws -> Rational {
 
         var x = self
@@ -131,7 +132,7 @@ struct Rational {
 
                     // neither fraction could reduce, cannot proceed
                     // (me): I don't understand how to reproduce this error now.
-                    throw AddingError.outOfRange
+                    throw ArithmeticError.outOfRange
                 }
 
                 // the fraction(s) reduced, good for one more retry
@@ -140,6 +141,51 @@ struct Rational {
                 retry = false
             }
 
+        }
+
+        return Rational(numerator: numerator, denominator: denominator)
+    }
+
+
+    /// Returns the product of this value and the given value.
+    ///
+    /// - Parameter other: The value to multiply by this value.
+    /// - Throws: An AddingError may be thrown
+    /// - Returns: A rational that is multiplied.
+    func multiplied(to other: Rational) throws -> Rational {
+
+        var x = self
+        var y = other
+        var numerator, denominator: Int32!
+        var isNumeratorOverflowed, isDenominatorOverflowed: Bool!
+
+        var retry = true
+        while retry {
+
+            (numerator, isNumeratorOverflowed) = x.numerator.multipliedReportingOverflow(by: y.numerator)
+            (denominator, isDenominatorOverflowed) = x.denominator.multipliedReportingOverflow(by: y.denominator)
+
+            if isNumeratorOverflowed || isDenominatorOverflowed {
+
+                let xSuccess: Bool
+                (x, xSuccess) = x.simplifiedReportingSuccess()
+
+                let ySuccess: Bool
+                (y, ySuccess) = y.simplifiedReportingSuccess()
+
+                // overflow in intermediate value
+                if !xSuccess && !ySuccess {
+
+                    // neither fraction could reduce, cannot proceed
+                    // (me): I don't understand how to reproduce this error now.
+                    throw ArithmeticError.outOfRange
+                }
+
+                // the fraction(s) reduced, good for one more retry
+                retry = true
+            } else {
+                retry = false
+            }
         }
 
         return Rational(numerator: numerator, denominator: denominator)
