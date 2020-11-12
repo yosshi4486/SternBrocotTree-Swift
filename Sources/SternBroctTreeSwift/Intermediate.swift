@@ -26,6 +26,24 @@ public enum IntermediateError : LocalizedError {
 
 }
 
+/// Returns a new node from the given left and right nodes.
+///
+/// This function finds proper fruction for new node like bellow:
+///
+///     let initialNode = try intermediate(nil, nil)
+///     // initialNode.description is 1/1
+///
+///     let secondNode = try intermediate(initialNode, nil)
+///     // secondNode.description is 2/1
+///
+///     let thirdNode = try intermediate(secondNode, nil)
+///     // thirdNode.description is 3/1
+///
+/// - Parameters:
+///   - left: The node positioned at left of inserting postion you expected.
+///   - right: The node positioned at right of inserting postion you expected.
+/// - Throws: An intermdediate error.
+/// - Returns:
 public func intermediate(left: Rational?, right: Rational?) throws -> Rational {
 
     var low = Rational.rootLow

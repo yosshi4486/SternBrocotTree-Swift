@@ -48,6 +48,7 @@ final class IntermediateTests: XCTestCase {
         XCTAssertEqual(right?.description, "1/10")
     }
 
+    // In SBTree, go down LRLRLR... makes fibonacci sequence.
     func testFibonacciPath() throws {
         
         var left: Rational?
