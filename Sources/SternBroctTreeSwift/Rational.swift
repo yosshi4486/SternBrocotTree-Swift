@@ -8,21 +8,21 @@
 import Foundation
 
 /// A rational number used in sbtree terms.
-struct Rational {
+public struct Rational {
 
     /// The numerator of the rational number.
-    var numerator: Int32
+    public var numerator: Int32
 
     /// The denominator of the rational number.
-    var denominator: Int32
+    public var denominator: Int32
 
-    init(numerator: Int32, denominator: Int32) {
+    public init(numerator: Int32, denominator: Int32) {
         self.numerator = numerator
         self.denominator = denominator
     }
 
     // In some cases, initialized by string is more readable in terms of use.
-    init?(fraction: String) {
+    public init?(fraction: String) {
 
         let splited = fraction.split(separator: "/")
 
@@ -36,7 +36,7 @@ struct Rational {
 
 
     // I don't know why the form is used to comparison although I know it is used in `adjacent`.
-    func compare(to other: Rational) -> Int32 {
+    public func compare(to other: Rational) -> Int32 {
 
         // Two fractions r=a/b and s=c/d in reduced form are adjacent ⇄ ad - bc = ±1.
         let aTimesD: Int64 = Int64(self.numerator * other.denominator)
@@ -59,7 +59,7 @@ struct Rational {
     ///
     /// - Note:
     /// `Reduce` is term used to reduce numerics by gcm, but  `simplified` execute sign inversion of the numerator and the denominator in addition.
-    func simplifiedReportingSuccess() -> (result: Rational, success: Bool) {
+    public func simplifiedReportingSuccess() -> (result: Rational, success: Bool) {
 
         let common = gcd(numerator, denominator)
 
@@ -89,11 +89,11 @@ struct Rational {
 
 
     /// An arithmetic error of rational.
-    enum ArithmeticError : LocalizedError {
+    public enum ArithmeticError : LocalizedError {
 
         case outOfRange
 
-        var errorDescription: String? {
+        public var errorDescription: String? {
             switch self {
             case .outOfRange:
                 return "intermediate value overflow in rational addition"
@@ -108,7 +108,7 @@ struct Rational {
     /// - Parameter other: The value to add to this value.
     /// - Throws: An AddingError may be thrown.
     /// - Returns: A rational that is added.
-    func adding(to other: Rational) throws -> Rational {
+    public func adding(to other: Rational) throws -> Rational {
 
         var x = self
         var y = other
@@ -156,7 +156,7 @@ struct Rational {
     /// - Parameter other: The value to subtract from this value.
     /// - Throws: An AddingError may be thrown
     /// - Returns: A rational that is subtracted.
-    func subtracting(_ other: Rational) throws -> Rational {
+    public func subtracting(_ other: Rational) throws -> Rational {
         try adding(to: other.negative)
     }
 
@@ -166,7 +166,7 @@ struct Rational {
     /// - Parameter other: The value to multiply by this value.
     /// - Throws: An AddingError may be thrown
     /// - Returns: A rational that is multiplied.
-    func multiplied(by other: Rational) throws -> Rational {
+    public func multiplied(by other: Rational) throws -> Rational {
 
         var x = self
         var y = other
@@ -207,11 +207,11 @@ struct Rational {
 
 
     /// Returns the quatient obtained by dividing this value by the given value.
-    /// 
+    ///
     /// - Parameter other: The value to divide this value by.
     /// - Throws: An AddingError may be thrown.
     /// - Returns: A rational that is devided.
-    func divided(by other: Rational) throws -> Rational {
+    public func divided(by other: Rational) throws -> Rational {
 
         var y = other
 
@@ -241,7 +241,7 @@ struct Rational {
 
     
     /// Returns a mediant from two fractions.
-    static func mediant(left: Rational, right: Rational) -> Rational {
+    public static func mediant(left: Rational, right: Rational) -> Rational {
         Rational(
             numerator: left.numerator + right.numerator,
             denominator: left.denominator + right.denominator
@@ -250,17 +250,17 @@ struct Rational {
 
 
     /// The low root node of SBTree. 0/1.
-    static var rootLow: Rational { Rational(fraction: "0/1")! }
+    public static var rootLow: Rational { Rational(fraction: "0/1")! }
 
 
     /// The low high node of SBTree. 1/0.
-    static var rootHigh: Rational { Rational(fraction: "1/0")! }
+    public static var rootHigh: Rational { Rational(fraction: "1/0")! }
 
 }
 
 extension Rational : Equatable {
 
-    static func == (lhs: Rational, rhs: Rational) -> Bool {
+    public static func == (lhs: Rational, rhs: Rational) -> Bool {
         return lhs.numerator == rhs.numerator && lhs.denominator == rhs.denominator
     }
 
@@ -268,7 +268,7 @@ extension Rational : Equatable {
 
 extension Rational : Comparable {
 
-    static func < (lhs: Rational, rhs: Rational) -> Bool {
+    public static func < (lhs: Rational, rhs: Rational) -> Bool {
         return lhs.compare(to: rhs) < 0
     }
 
@@ -282,13 +282,13 @@ private extension Bool {
 
 extension Rational : CustomStringConvertible {
 
-    var description: String { "\(numerator)/\(denominator)" }
+    public var description: String { "\(numerator)/\(denominator)" }
 
 }
 
 
 extension Rational {
 
-    var floatingValue: Float64 { Float64(numerator) / Float64(denominator) }
+    public var floatingValue: Float64 { Float64(numerator) / Float64(denominator) }
 
 }
