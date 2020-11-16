@@ -161,7 +161,7 @@ public struct Rational {
     }
 
 
-    /// Returns the sum of this value and the given value.
+    /// Returns the sum of this value and the given value **in simplified form**.
     /// 
     /// - Parameter other: The value to add to this value.
     /// - Throws: An AddingError may be thrown.
@@ -209,11 +209,11 @@ public struct Rational {
 
         }
 
-        return Rational(numerator, denominator)
+        return Rational(numerator, denominator).simplified()
     }
 
 
-    /// Returns the defference obtained by subtracting the given value from this value.
+    /// Returns the defference obtained by subtracting the given value from this value **in simplified form**.
     ///
     /// - Parameter other: The value to subtract from this value.
     /// - Throws: An AddingError may be thrown
@@ -223,7 +223,7 @@ public struct Rational {
     }
 
 
-    /// Returns the product of this value and the given value.
+    /// Returns the product of this value and the given value **in simplified form**.
     ///
     /// - Parameter other: The value to multiply by this value.
     /// - Throws: An AddingError may be thrown
@@ -266,11 +266,11 @@ public struct Rational {
             }
         }
 
-        return Rational(numerator, denominator)
+        return Rational(numerator, denominator).simplified()
     }
 
 
-    /// Returns the quatient obtained by dividing this value by the given value.
+    /// Returns the quatient obtained by dividing this value by the given value **in simplified form**.
     ///
     /// - Parameter other: The value to divide this value by.
     /// - Throws: An AddingError may be thrown.
