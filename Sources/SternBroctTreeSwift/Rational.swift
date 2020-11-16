@@ -70,6 +70,13 @@ public struct Rational {
         self.init(numerator!, denominator!)
     }
 
+    /// Returns a value wether this value can simplify or not.
+    ///
+    /// - Complexity: O(log n) where n is digits of the given `denominator`.
+    var canSimplify: Bool {
+        let commonFactor = gcd(numerator, denominator)
+        return commonFactor != 1 && commonFactor != -1
+    }
 
     /// Returns a new simplified rational.
     ///
@@ -89,7 +96,6 @@ public struct Rational {
 
         let common = gcd(numerator, denominator)
 
-        let canSimplify = common != 1 && common != -1
         guard canSimplify else { return (self, false) }
 
         var numerator = self.numerator

@@ -10,6 +10,16 @@ import XCTest
 
 class RationalArithmeticTests: XCTestCase {
 
+    func testCanSimplify() throws {
+        let rational = try Rational(fraction: "3/9")!
+        XCTAssertTrue(rational.canSimplify)
+    }
+
+    func testCannotSimplify() throws {
+        let rational = try Rational(fraction: "3/10")!
+        XCTAssertFalse(rational.canSimplify)
+    }
+
     func testSimplified() throws {
         let rational = try Rational(fraction: "3/9")
         XCTAssertTrue(rational!.simplifiedReportingSuccess().success)
