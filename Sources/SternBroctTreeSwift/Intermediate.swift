@@ -10,17 +10,22 @@ import Foundation
 /// An error that is thrown in `intermediate`.
 public enum IntermediateError : LocalizedError {
 
-    case negativeArgument(Rational, Rational)
+    case negativeArgument(lhs: Rational, rhs: Rational)
 
-    case leftMustBeSmallerThanRight(Rational, Rational)
+    case leftMustBeSmallerThanRight(lhs: Rational, rhs: Rational)
+
+    case overflow(lhs: Rational, rhs: Rational)
 
     public var errorDescription: String? {
         switch self {
-        case .negativeArgument(_, _):
-            return "arguments must be non-negative"
+        case .negativeArgument(let lhs, let rhs):
+            return "arguments(lhs: \(lhs), rhs: \(rhs) must be non-negative"
 
-        case .leftMustBeSmallerThanRight(_, _):
-            return "left argument must be strictly smaller than right"
+        case .leftMustBeSmallerThanRight(let lhs, let rhs):
+            return "left argument(\(lhs)) must be strictly smaller than right(\(rhs))"
+
+        case .overflow(lhs: let lhs, rhs: let rhs):
+            return "numerator or denominator of new node exceeds Int32.max, it means overflow. lhs: \(lhs), rhs: \(rhs)"
         }
     }
 
@@ -42,7 +47,7 @@ public enum IntermediateError : LocalizedError {
 /// - Parameters:
 ///   - left: The node positioned at left of inserting postion you expected.
 ///   - right: The node positioned at right of inserting postion you expected.
-/// - Throws: An intermdediate error.
+/// - Throws: If you see `.overflow` error, user may walk fibonacci path 47 times. In that situation, re-normalization should be executed.
 /// - Returns:
 public func intermediate(left: Rational?, right: Rational?) throws -> Rational {
 
@@ -53,16 +58,16 @@ public func intermediate(left: Rational?, right: Rational?) throws -> Rational {
     let right = right ?? high
 
     if left < low || right < low {
-        throw IntermediateError.negativeArgument(left, right)
+        throw IntermediateError.negativeArgument(lhs: left, rhs: right)
     }
 
     if left >= right {
-        throw IntermediateError.leftMustBeSmallerThanRight(left, right)
+        throw IntermediateError.leftMustBeSmallerThanRight(lhs: left, rhs: right)
     }
 
     var mediant: Rational?
     while true {
-        mediant = Rational.mediant(left: low, right: high)
+        mediant = try Rational.mediant(left: low, right: high)
 
         if mediant! <= left {
             low = mediant!

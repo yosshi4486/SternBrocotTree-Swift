@@ -96,6 +96,26 @@ final class IntermediateTests: XCTestCase {
 
     }
 
+    func testErrorNegativeArguments() {
+        XCTAssertThrowsError(try intermediate(left: Rational(fraction: "-1/1"), right: nil))
+    }
+
+    func testErrorLeftArgIsSmallerThanRight() {
+        XCTAssertThrowsError(try intermediate(left: Rational(fraction: "2/3"), right:  Rational(fraction: "1/3")))
+    }
+
+    func testErrorLeftArgIsSmallerThanRightWhenEqual() {
+        XCTAssertThrowsError(try intermediate(left: Rational(fraction: "2/3"), right:  Rational(fraction: "2/3")))
+    }
+
+    func testErrorOverflowDenominator() {
+        XCTAssertThrowsError(try intermediate(left: Rational(fraction: "1/1"), right: Rational(fraction: "1/2147483647")))
+    }
+
+    func testErrorOverflowNumerator() {
+        XCTAssertThrowsError(try intermediate(left:  Rational(fraction: "2147483647/1"), right: Rational(fraction: "1/1")))
+    }
+
     static var allTests = [
         ("testMediantsOnlyLeft", testMediantsOnlyLeft),
     ]

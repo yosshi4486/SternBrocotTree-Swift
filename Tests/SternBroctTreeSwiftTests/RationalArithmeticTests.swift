@@ -10,25 +10,45 @@ import XCTest
 
 class RationalArithmeticTests: XCTestCase {
 
-    func testSimplified() throws {
-        let rational = try Rational(fraction: "3/9")
-        XCTAssertTrue(rational!.simplifiedReportingSuccess().success)
-        XCTAssertEqual(rational?.simplifiedReportingSuccess().result.description, "1/3")
+    func testCanSimplify() throws {
+        let rational = try Rational(fraction: "3/9")!
+        XCTAssertTrue(rational.canSimplify)
     }
 
-    func testSimplifiedNil() throws {
-        let rational = try Rational(fraction: "3/10")
-        XCTAssertFalse(rational!.simplifiedReportingSuccess().success)
-        XCTAssertEqual(rational?.simplifiedReportingSuccess().result.description, "3/10")
+    func testCannotSimplify() throws {
+        let rational = try Rational(fraction: "3/10")!
+        XCTAssertFalse(rational.canSimplify)
     }
+
+    func testSimplified() throws {
+        let rational = try Rational(fraction: "3/9")
+        XCTAssertEqual(rational?.simplified().description, "1/3")
+    }
+
+    func testSimplifiedNotChanged() throws {
+        let rational = try Rational(fraction: "3/10")
+        XCTAssertEqual(rational?.simplified().description, "3/10")
+    }
+
+    func testSimplify() throws {
+        var rational = try Rational(fraction: "3/9")
+        rational?.simplify()
+        XCTAssertEqual(rational?.description, "1/3")
+    }
+
+    func testSimplifyNotChanged() throws {
+        var rational = try Rational(fraction: "3/10")
+        rational?.simplify()
+        XCTAssertEqual(rational?.description, "3/10")
+    }
+
 
     func testAdd() throws {
         let a = try Rational(fraction: "1/3")!
         let b = try Rational(fraction: "1/3")!
         let result = try a.adding(to: b)
 
-        // Why does it not reduced?
-        XCTAssertEqual(result.description, "6/9")
+        XCTAssertEqual(result.description, "2/3")
     }
 
     func testMult() throws {
@@ -36,9 +56,7 @@ class RationalArithmeticTests: XCTestCase {
         let b = try Rational(fraction: "1/3")!
         let result = try a.multiplied(by: b)
 
-        // Why does it not reduced?
         XCTAssertEqual(result.description, "1/9")
-
     }
 
     func testSub() throws {
@@ -46,8 +64,7 @@ class RationalArithmeticTests: XCTestCase {
         let b = try Rational(fraction: "1/3")!
         let result = try a.subtracting(b)
 
-        // Why does it not reduced?
-        XCTAssertEqual(result.description, "3/9")
+        XCTAssertEqual(result.description, "1/3")
     }
 
     func testDiv() throws {
@@ -55,8 +72,7 @@ class RationalArithmeticTests: XCTestCase {
         let b = try Rational(fraction: "1/3")!
         let result = try a.divided(by: b)
 
-        // Why does it not reduced?
-        XCTAssertEqual(result.description, "6/3")
+        XCTAssertEqual(result.description, "2/1")
     }
 
 
