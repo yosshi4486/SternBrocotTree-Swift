@@ -174,6 +174,8 @@ public struct Rational {
     /// - Parameter other: The value to add to this value.
     /// - Throws: An AddingError may be thrown.
     /// - Returns: A rational that is added.
+    ///
+    /// - TODO: I find that this method doesn't simplify the result when it doesn't caluse overflow internally.
     public func adding(to other: Rational) throws -> Rational {
 
         var x = self
@@ -189,6 +191,9 @@ public struct Rational {
             (numerator,isNumeratorOverflowed) = xNumeratorYDenominator.addingReportingOverflow(yNumeratorYDenominator)
             (denominator, isDenominatorOverflowed) = x.denominator.multipliedReportingOverflow(by: y.denominator)
 
+            // 1. Go into a branch if r,s, numerator or denominator is overflowed.
+            // 2. If they can simplify, do it. If not, throw outOfRange(overflow) error.
+            // 3. Continue the steps to resolve overflow completely.
             if isROverflowed || isSOverflowed || isNumeratorOverflowed || isDenominatorOverflowed {
 
                 // overflow in intermediate value
@@ -229,6 +234,8 @@ public struct Rational {
     /// - Parameter other: The value to multiply by this value.
     /// - Throws: An AddingError may be thrown
     /// - Returns: A rational that is multiplied.
+    ///
+    /// - TODO: I find that this method doesn't simplify the result when it doesn't caluse overflow internally.
     public func multiplied(by other: Rational) throws -> Rational {
 
         var x = self
@@ -242,6 +249,9 @@ public struct Rational {
             (numerator, isNumeratorOverflowed) = x.numerator.multipliedReportingOverflow(by: y.numerator)
             (denominator, isDenominatorOverflowed) = x.denominator.multipliedReportingOverflow(by: y.denominator)
 
+            // 1. Go into a branch if x or y is overflowed.
+            // 2. If they can simplify, do it. If not, throw outOfRange(overflow) error.
+            // 3. Continue the steps to resolve overflow completely.
             if isNumeratorOverflowed || isDenominatorOverflowed {
 
                 // overflow in intermediate value
