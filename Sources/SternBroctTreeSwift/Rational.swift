@@ -175,6 +175,8 @@ public struct Rational {
         var xNumeratorYDenominator, yNumeratorYDenominator, numerator, denominator: Int32!
         var isROverflowed, isSOverflowed, isNumeratorOverflowed, isDenominatorOverflowed: Bool!
 
+        // Question: I know devide by GCD only take one step to reach simple fraction.
+        // Should it run loop? or only once?
         var retry = true
         while retry {
 
