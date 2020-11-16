@@ -82,31 +82,33 @@ public struct Rational {
     ///
     /// Returns new value when the numerator and the denominator have common devider except for ± 1,
     ///
-    ///     let new = Rational(fraction: "3/9").simplifiedReportingSuccess().result
+    ///     let new = Rational(fraction: "3/9").simplified
     ///     // new.description is 1/3.
     ///
     /// otherwise always returns self.
     ///
-    ///     let new = Rational(fraction: "3/10").simplifiedReportingSuccess().result
+    ///     let new = Rational(fraction: "3/10").simplified
     ///     // new.description is 3/10.
     ///
     /// - Note:
     /// `Reduce` is term used to reduce numerics by gcm, but  `simplified` execute sign inversion of the numerator and the denominator in addition.
-    public func simplifiedReportingSuccess() -> (result: Rational, success: Bool) {
+    public func simplified() -> Rational {
 
-        let common = gcd(numerator, denominator)
+        // TODO: - For simplicty of API, separating `simplified` and `canSimplify` is reasonable, but it produces
+        // overhead by calling gcd twice.
+        guard canSimplify else { return self }
 
-        guard canSimplify else { return (self, false) }
+        let commonFactor = gcd(numerator, denominator)
 
         var numerator = self.numerator
         var denominator = self.denominator
 
-        // tricky: avoid overflow from (INT32_MIN / -1)
+        // Tricky: avoid overflow from (INT32_MIN / -1)
         // The range of Int32 is 2147483647 ~ -2147483648. Because positive range includes zero, these ranges are
         // asymmetry, so an error will occur when trying to multiplied Int32.min by -1. It causes overflow.
-        if common != -1 || (numerator != Int32.min && denominator != Int32.min) {
-            numerator /= common
-            denominator /= common
+        if commonFactor != -1 || (numerator != Int32.min && denominator != Int32.min) {
+            numerator /= commonFactor
+            denominator /= commonFactor
         }
 
         // prevent negative denominator, but do not negate the smallest value that would produce overflow
@@ -115,7 +117,37 @@ public struct Rational {
             denominator *= -1
         }
 
-        return (Rational(numerator, denominator), true)
+        return Rational(numerator, denominator)
+    }
+
+    /// Mutate this value to a simplified rational.
+    public mutating func simplify() {
+
+        // TODO: - For simplicty of API, separating `simplified` and `canSimplify` is reasonable, but it produces
+        // overhead by calling gcd twice.
+        guard canSimplify else { return }
+
+        let commonFactor = gcd(numerator, denominator)
+
+        var numerator = self.numerator
+        var denominator = self.denominator
+
+        // Tricky: avoid overflow from (INT32_MIN / -1)
+        // The range of Int32 is 2147483647 ~ -2147483648. Because positive range includes zero, these ranges are
+        // asymmetry, so an error will occur when trying to multiplied Int32.min by -1. It causes overflow.
+        if commonFactor != -1 || (numerator != Int32.min && denominator != Int32.min) {
+            numerator /= commonFactor
+            denominator /= commonFactor
+        }
+
+        // prevent negative denominator, but do not negate the smallest value that would produce overflow
+        if denominator < 0 && numerator != Int32.min && denominator != Int32.min {
+            numerator *= -1
+            denominator *= -1
+        }
+
+        self.numerator = numerator
+        self.denominator = denominator
     }
 
 
@@ -159,19 +191,16 @@ public struct Rational {
 
             if isROverflowed || isSOverflowed || isNumeratorOverflowed || isDenominatorOverflowed {
 
-                let xSuccess: Bool
-                (x, xSuccess) = x.simplifiedReportingSuccess()
-
-                let ySuccess: Bool
-                (y, ySuccess) = y.simplifiedReportingSuccess()
-
                 // overflow in intermediate value
-                if !xSuccess && !ySuccess {
+                if !x.canSimplify && !y.canSimplify {
 
                     // neither fraction could reduce, cannot proceed
                     // (me): I don't understand how to reproduce this error now.
                     throw ArithmeticError.outOfRange
                 }
+
+                x.simplify()
+                y.simplify()
 
                 // the fraction(s) reduced, good for one more retry
                 retry = true
@@ -215,19 +244,16 @@ public struct Rational {
 
             if isNumeratorOverflowed || isDenominatorOverflowed {
 
-                let xSuccess: Bool
-                (x, xSuccess) = x.simplifiedReportingSuccess()
-
-                let ySuccess: Bool
-                (y, ySuccess) = y.simplifiedReportingSuccess()
-
                 // overflow in intermediate value
-                if !xSuccess && !ySuccess {
+                if !x.canSimplify && !y.canSimplify {
 
                     // neither fraction could reduce, cannot proceed
                     // (me): I don't understand how to reproduce this error now.
                     throw ArithmeticError.outOfRange
                 }
+
+                x.simplify()
+                y.simplify()
 
                 // the fraction(s) reduced, good for one more retry
                 retry = true
@@ -259,7 +285,7 @@ public struct Rational {
 
         if numerator == Int32.min {
 
-            let simplified = self.simplifiedReportingSuccess().result
+            let simplified = self.simplified()
 
             // check again
             if simplified.numerator == Int32.min {
@@ -323,7 +349,7 @@ extension Rational : Hashable {
     public func hash(into hasher: inout Hasher) {
 
         // In reduced form, SBTree node's fruction must be identified in the tree.
-        let x = simplifiedReportingSuccess().result
+        let x = simplified()
         hasher.combine(x.numerator)
         hasher.combine(x.denominator)
     }

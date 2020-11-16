@@ -22,15 +22,26 @@ class RationalArithmeticTests: XCTestCase {
 
     func testSimplified() throws {
         let rational = try Rational(fraction: "3/9")
-        XCTAssertTrue(rational!.simplifiedReportingSuccess().success)
-        XCTAssertEqual(rational?.simplifiedReportingSuccess().result.description, "1/3")
+        XCTAssertEqual(rational?.simplified().description, "1/3")
     }
 
-    func testSimplifiedNil() throws {
+    func testSimplifiedNotChanged() throws {
         let rational = try Rational(fraction: "3/10")
-        XCTAssertFalse(rational!.simplifiedReportingSuccess().success)
-        XCTAssertEqual(rational?.simplifiedReportingSuccess().result.description, "3/10")
+        XCTAssertEqual(rational?.simplified().description, "3/10")
     }
+
+    func testSimplify() throws {
+        var rational = try Rational(fraction: "3/9")
+        rational?.simplify()
+        XCTAssertEqual(rational?.description, "1/3")
+    }
+
+    func testSimplifyNotChanged() throws {
+        var rational = try Rational(fraction: "3/10")
+        rational?.simplify()
+        XCTAssertEqual(rational?.description, "3/10")
+    }
+
 
     func testAdd() throws {
         let a = try Rational(fraction: "1/3")!
