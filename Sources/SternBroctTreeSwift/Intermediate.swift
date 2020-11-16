@@ -14,6 +14,8 @@ public enum IntermediateError : LocalizedError {
 
     case leftMustBeSmallerThanRight(Rational, Rational)
 
+    case overflow(lhs: Rational, rhs: Rational)
+
     public var errorDescription: String? {
         switch self {
         case .negativeArgument(_, _):
@@ -21,6 +23,9 @@ public enum IntermediateError : LocalizedError {
 
         case .leftMustBeSmallerThanRight(_, _):
             return "left argument must be strictly smaller than right"
+
+        case .overflow(lhs: let lhs, rhs: let rhs):
+            return "Numerator or denominator of new node exceeds Int32.max, it means overflow. lhs: \(lhs), rhs: \(rhs)"
         }
     }
 
@@ -62,7 +67,7 @@ public func intermediate(left: Rational?, right: Rational?) throws -> Rational {
 
     var mediant: Rational?
     while true {
-        mediant = Rational.mediant(left: low, right: high)
+        mediant = try Rational.mediant(left: low, right: high)
 
         if mediant! <= left {
             low = mediant!

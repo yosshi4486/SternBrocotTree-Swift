@@ -96,6 +96,14 @@ final class IntermediateTests: XCTestCase {
 
     }
 
+    func testOverflowDenominator() {
+        XCTAssertThrowsError(try intermediate(left: Rational(fraction: "1/1"), right: Rational(fraction: "1/2147483647")))
+    }
+
+    func testOverflowNumerator() {
+        XCTAssertThrowsError(try intermediate(left:  Rational(fraction: "2147483647/1"), right: Rational(fraction: "1/1")))
+    }
+
     static var allTests = [
         ("testMediantsOnlyLeft", testMediantsOnlyLeft),
     ]

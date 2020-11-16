@@ -178,7 +178,6 @@ public struct Rational {
                 if !x.canSimplify && !y.canSimplify {
 
                     // neither fraction could reduce, cannot proceed
-                    // (me): I don't understand how to reproduce this error now.
                     throw ArithmeticError.outOfRange
                 }
 
@@ -236,7 +235,6 @@ public struct Rational {
                 if !x.canSimplify && !y.canSimplify {
 
                     // neither fraction could reduce, cannot proceed
-                    // (me): I don't understand how to reproduce this error now.
                     throw ArithmeticError.outOfRange
                 }
 
@@ -289,8 +287,16 @@ public struct Rational {
 
     
     /// Returns a mediant from two fractions.
-    public static func mediant(left: Rational, right: Rational) -> Rational {
-        Rational(left.numerator + right.numerator, left.denominator + right.denominator)
+    public static func mediant(left: Rational, right: Rational) throws -> Rational {
+
+        let (numeratorAddingResult, numeratorAddingOverflow) = left.numerator.addingReportingOverflow(right.numerator)
+        let (denominatorAddingResult, denominatorAddingOverflow) = left.denominator.addingReportingOverflow(right.denominator)
+
+        if numeratorAddingOverflow || denominatorAddingOverflow {
+            throw MediantError.overflow(lhs: left, rhs: right)
+        }
+
+        return Rational(numeratorAddingResult,denominatorAddingResult)
     }
 
 
@@ -371,4 +377,20 @@ extension Rational {
         }
     }
 
+}
+
+extension Rational {
+
+    enum MediantError : LocalizedError {
+
+        case overflow(lhs: Rational, rhs: Rational)
+
+        var errorDescription: String? {
+
+            switch self {
+            case .overflow(lhs: let lhs, rhs: let rhs):
+                return "Overflow. lhs: \(lhs), rhs: \(rhs)"
+            }
+        }
+    }
 }
