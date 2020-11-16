@@ -94,26 +94,10 @@ public struct Rational {
     /// `Reduce` is term used to reduce numerics by gcm, but  `simplified` execute sign inversion of the numerator and the denominator in addition.
     public func simplified() -> Rational {
 
-        let commonFactor = gcd(numerator, denominator)
+        var x = self
+        x.simplify()
 
-        var numerator = self.numerator
-        var denominator = self.denominator
-
-        // Tricky: avoid overflow from (INT32_MIN / -1)
-        // The range of Int32 is 2147483647 ~ -2147483648. Because positive range includes zero, these ranges are
-        // asymmetry, so an error will occur when trying to multiplied Int32.min by -1. It causes overflow.
-        if commonFactor != -1 || (numerator != Int32.min && denominator != Int32.min) {
-            numerator /= commonFactor
-            denominator /= commonFactor
-        }
-
-        // prevent negative denominator, but do not negate the smallest value that would produce overflow
-        if denominator < 0 && numerator != Int32.min && denominator != Int32.min {
-            numerator *= -1
-            denominator *= -1
-        }
-
-        return Rational(numerator, denominator)
+        return x
     }
 
     /// Mutate this value to a simplified rational.
