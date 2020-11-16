@@ -10,11 +10,11 @@ import Foundation
 /// Returns a greatest common divider(gcd) for the given factors.
 ///
 /// - Complexity: O(log n) where n is digits of the given `b`.
-func gcd(_ a: Int32, _ b: Int32) -> Int32 {
+func gcd<Integer : SignedInteger>(_ a: Integer, _ b: Integer) -> Integer {
 
     var a = a
     var b = b
-    var r: Int32
+    var r: Integer
 
     // Euclidean algorithm
     // https://en.wikipedia.org/wiki/Euclidean_algorithm
