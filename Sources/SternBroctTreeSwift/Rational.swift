@@ -94,10 +94,6 @@ public struct Rational {
     /// `Reduce` is term used to reduce numerics by gcm, but  `simplified` execute sign inversion of the numerator and the denominator in addition.
     public func simplified() -> Rational {
 
-        // TODO: - For simplicty of API, separating `simplified` and `canSimplify` is reasonable, but it produces
-        // overhead by calling gcd twice.
-        guard canSimplify else { return self }
-
         let commonFactor = gcd(numerator, denominator)
 
         var numerator = self.numerator
@@ -122,10 +118,6 @@ public struct Rational {
 
     /// Mutate this value to a simplified rational.
     public mutating func simplify() {
-
-        // TODO: - For simplicty of API, separating `simplified` and `canSimplify` is reasonable, but it produces
-        // overhead by calling gcd twice.
-        guard canSimplify else { return }
 
         let commonFactor = gcd(numerator, denominator)
 
