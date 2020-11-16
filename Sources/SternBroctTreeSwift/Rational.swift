@@ -96,6 +96,8 @@ public struct Rational {
         var denominator = self.denominator
 
         // tricky: avoid overflow from (INT32_MIN / -1)
+        // The range of Int32 is 2147483647 ~ -2147483648. Because positive range includes zero, these ranges are
+        // asymmetry, so an error will occur when trying to multiplied Int32.min by -1. It causes overflow.
         if common != -1 || (numerator != Int32.min && denominator != Int32.min) {
             numerator /= common
             denominator /= common
