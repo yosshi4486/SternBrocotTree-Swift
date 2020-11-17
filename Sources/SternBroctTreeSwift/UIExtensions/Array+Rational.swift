@@ -43,17 +43,13 @@ public extension Array where Element : RationalOrderable {
 
     /// Normalize rationals.
     ///
-    /// For simplicity of implementation, This method only moves to right now. This means that it is not correct normalization.
-    ///
-    /// - TODO: Correct normalization
+    /// - Note:
+    /// TableViewのような構造において、insertせずに最初から最後までappendだけ実行していた場合のorderはRRRRRR...のシークエンスとなる。
+    /// その状態を「正規形」と定義して正規化をすれば、分子を1づつ増やしていくだけの処理と等価になるため計算量をかなり削減できる。
     mutating func normalize() throws {
 
-        var left: Rational?
-
         for i in 0..<count {
-            let result = try intermediate(left: left, right: nil)
-            left = result
-            self[i].rational = result
+            self[i].rational = try Rational(numerator: Int32(i + 1), denominator: 1)
         }
 
     }

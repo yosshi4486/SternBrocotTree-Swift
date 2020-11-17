@@ -108,22 +108,22 @@ class ArrayPlusRationalExtensionTests: XCTestCase {
         XCTAssertEqual(array[5].rational.description, "6/1")
     }
 
-    // Too slow!
-//    func testNormalizePerformance() throws {
-//
-//        // Preparation
-//        var array = (1..<100000).compactMap({ try? Rational(numerator: 1, denominator: $0)} ).map({ StubRationalOrderable(rational: $0) })
-//
-//        let comparator = try Rational(fraction: "1/1")!
-//        XCTAssertTrue(array.allSatisfy({ $0.rational <= comparator }))
-//
-//        // Execution and Measurement
-//        measure {
-//            try? array.normalize()
-//        }
-//
-//        XCTAssertTrue(array.allSatisfy({ $0.rational >= comparator }))
-//    }
+    // Average 0.008
+    func testNormalizePerformance() throws {
+        
+        // Preparation
+        var array = (1..<100000).compactMap({ try? Rational(numerator: 1, denominator: $0)} ).map({ StubRationalOrderable(rational: $0) })
+        
+        let comparator = try Rational(fraction: "1/1")!
+        XCTAssertTrue(array.allSatisfy({ $0.rational <= comparator }))
+        
+        // Execution and Measurement
+        measure {
+            try? array.normalize()
+        }
+        
+        XCTAssertTrue(array.allSatisfy({ $0.rational >= comparator }))
+    }
 
     func makeFibonacciPathArray() -> Array<StubRationalOrderable> {
         return (0...5)
