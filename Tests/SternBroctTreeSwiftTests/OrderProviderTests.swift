@@ -50,8 +50,8 @@ class OrderProviderTests: XCTestCase {
         let provider = StubProvider()
 
         // Execution
-        let result = try provider.provideRationalForInserting(between: .init(rational: Rational(fraction: "3/2")!),
-                                                              and: .init(rational: Rational(fraction: "2/1")!))
+        let result = try provider.provideRationalForInserting(between: .init(rational: try Rational(fraction: "3/2")!),
+                                                              and: .init(rational: try Rational(fraction: "2/1")!))
 
         // Assertion
         XCTAssertEqual(result.first?.description, "5/3")
@@ -63,8 +63,8 @@ class OrderProviderTests: XCTestCase {
         let provider = StubProvider()
 
         // Execution
-        let result = try provider.provideRationalForInserting(between: .init(rational: Rational(fraction: "3/2")!),
-                                                              and: .init(rational: Rational(fraction: "2/1")!),
+        let result = try provider.provideRationalForInserting(between: .init(rational: try Rational(fraction: "3/2")!),
+                                                              and: .init(rational: try Rational(fraction: "2/1")!),
                                                               numberOfItems: 3)
 
         // Assertion
