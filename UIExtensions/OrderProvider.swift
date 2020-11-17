@@ -10,40 +10,46 @@ import CoreData
 /// A provider of order.
 protocol OrderProvider {
 
-    associatedtype Item
+    associatedtype Item : RationalOrdering
 
     associatedtype OrderType
 
+    /// The items for ordering.
     var items: [Item] { get }
 
 
     /// Returns a rational for new appending item.
+    ///
+    /// Default implementation is provided.
+    ///
     /// - Parameters:
     ///    - last: The last element before adding new element.
-    func rationalForAppending() throws -> OrderType
+    func provideRationalForAppending() throws -> OrderType?
 
 
     /// Returns a rational for new inserting item.
+    ///
+    /// Default implementation is provided.
+    ///
     /// - Parameters:
-    ///    - adove: The element positioned the new inserting element adove.
-    ///    - bellow: The element positioned  the new inserting element bellow.
-    func rationalForInserting(between above: Item, and bellow: Item, numberOfItems: Int) throws -> [OrderType]
+    ///    - adove: The element positioned adove the new inserting element.
+    ///    - bellow: The element positioned bellow  the new inserting element.
+    func provideRationalForInserting(between above: Item, and bellow: Item, numberOfItems: Int) throws -> [OrderType]
 
 }
 
-struct RationalOrderProvider<Item : RationalOrdering> : OrderProvider {
+extension OrderProvider {
 
-    typealias Item = Item
+    func provideRationalForAppending() throws -> Rational? {
 
-    typealias OrderType = Rational
+        guard let lastItemRational = items.last?.rational else {
+            return nil
+        }
 
-    var items: [Item]
-
-    func rationalForAppending() throws -> Rational {
-        return try intermediate(left: items.last!.rational, right: nil)
+        return try intermediate(left: lastItemRational, right: nil)
     }
 
-    func rationalForInserting(between above: Item, and bellow: Item, numberOfItems: Int = 1) throws -> [Rational] {
+    func provideRationalForInserting(between above: Item, and bellow: Item, numberOfItems: Int = 1) throws -> [Rational] {
 
         var rationals: [Rational] = []
         var left: Rational = above.rational
