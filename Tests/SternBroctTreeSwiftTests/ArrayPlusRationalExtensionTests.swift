@@ -69,5 +69,60 @@ class ArrayPlusRationalExtensionTests: XCTestCase {
         XCTAssertEqual(result[2].description, "9/5")
     }
 
+    func testMakeFibonacciPathArray() {
 
+        // Preparation
+        let array: Array<StubRationalOrderable>
+
+        // Execution
+        array = makeFibonacciPathArray()
+
+        //Assertion
+        XCTAssertEqual(array[0].rational.description, "1/2")
+        XCTAssertEqual(array[1].rational.description, "3/5")
+        XCTAssertEqual(array[2].rational.description, "8/13")
+        XCTAssertEqual(array[3].rational.description, "5/8")
+        XCTAssertEqual(array[4].rational.description, "2/3")
+        XCTAssertEqual(array[5].rational.description, "1/1")
+
+        // Visualize
+        for element in array {
+            print("fraction: \(element.rational), float: \(element.rational.floatValue)")
+        }
+    }
+
+    func testNormalize() throws {
+
+        // Preparation
+        var array = makeFibonacciPathArray()
+
+        // Execution
+        try array.normalize()
+
+        // Assertion
+        XCTAssertEqual(array[0].rational.description, "1/1")
+        XCTAssertEqual(array[1].rational.description, "2/1")
+        XCTAssertEqual(array[2].rational.description, "3/1")
+        XCTAssertEqual(array[3].rational.description, "4/1")
+        XCTAssertEqual(array[4].rational.description, "5/1")
+        XCTAssertEqual(array[5].rational.description, "6/1")
+    }
+
+    func makeFibonacciPathArray() -> Array<StubRationalOrderable> {
+        return (0...5)
+            .compactMap({ try? Rational(numerator: fib(n: $0), denominator: fib(n: $0 + 1)) })
+            .sorted()
+            .map({ StubRationalOrderable(rational: $0) })
+    }
+
+    func fib(n: Int32) -> Int32 {
+        var a: Int32 = 1
+        var b: Int32 = 1
+        guard n > 1 else { return a }
+
+        (2...n).forEach { _ in
+            (a, b) = (a + b, a)
+        }
+        return a
+    }
 }

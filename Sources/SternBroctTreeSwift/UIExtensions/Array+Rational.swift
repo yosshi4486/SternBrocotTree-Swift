@@ -41,4 +41,21 @@ public extension Array where Element : RationalOrderable {
         return rationals
     }
 
+    /// Normalize rationals.
+    ///
+    /// For simplicity of implementation, This method only moves to right now. This means that it is not correct normalization.
+    ///
+    /// - TODO: Correct normalization
+    mutating func normalize() throws {
+
+        var left: Rational?
+
+        for i in 0..<count {
+            let result = try intermediate(left: left, right: nil)
+            left = result
+            self[i].rational = result
+        }
+
+    }
+
 }
