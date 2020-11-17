@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol RationalOrdering {
+public protocol RationalOrderable {
 
     var rational: Rational { get set }
 

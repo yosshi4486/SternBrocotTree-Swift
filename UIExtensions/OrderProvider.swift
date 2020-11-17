@@ -8,9 +8,9 @@
 import CoreData
 
 /// A provider of order.
-protocol OrderProvider {
+public protocol OrderProvider {
 
-    associatedtype Item : RationalOrdering
+    associatedtype Item : RationalOrderable
 
     associatedtype OrderType
 
@@ -20,10 +20,7 @@ protocol OrderProvider {
 
     /// Returns a rational for new appending item.
     ///
-    /// Default implementation is provided.
-    ///
-    /// - Parameters:
-    ///    - last: The last element before adding new element.
+    /// This method should be called before appending actual item to any database or table. Default implementation is provided.
     func provideRationalForAppending() throws -> OrderType?
 
 
@@ -32,13 +29,13 @@ protocol OrderProvider {
     /// Default implementation is provided.
     ///
     /// - Parameters:
-    ///    - adove: The element positioned adove the new inserting element.
-    ///    - bellow: The element positioned bellow  the new inserting element.
+    ///    - adove: The item positioned adove the new inserting element.
+    ///    - bellow: The item positioned bellow  the new inserting element.
     func provideRationalForInserting(between above: Item, and bellow: Item, numberOfItems: Int) throws -> [OrderType]
 
 }
 
-extension OrderProvider {
+public extension OrderProvider {
 
     func provideRationalForAppending() throws -> Rational? {
 
