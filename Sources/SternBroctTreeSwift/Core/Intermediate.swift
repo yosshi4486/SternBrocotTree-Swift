@@ -44,10 +44,14 @@ public enum IntermediateError : LocalizedError {
 ///     let thirdNode = try intermediate(secondNode, nil)
 ///     // thirdNode.description is 3/1
 ///
+/// Give the left and right argument if possible.
+///
 /// - Parameters:
 ///   - left: The node positioned at left of inserting postion you expected.
 ///   - right: The node positioned at right of inserting postion you expected.
+///
 /// - Throws: If you see `.overflow` error, user may walk fibonacci path 47 times. In that situation, re-normalization should be executed.
+///
 /// - Returns:
 public func intermediate(left: Rational?, right: Rational?) throws -> Rational {
 
