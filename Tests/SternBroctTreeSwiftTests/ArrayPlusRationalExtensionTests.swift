@@ -87,7 +87,7 @@ class ArrayPlusRationalExtensionTests: XCTestCase {
 
         // Visualize
         for element in array {
-            print("fraction: \(element.rational), float: \(element.rational.floatValue)")
+            print("fraction: \(element.rational), float: \(element.rational.float64Value)")
         }
     }
 

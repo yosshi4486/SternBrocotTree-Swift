@@ -9,6 +9,8 @@ import Foundation
 
 public protocol CustomFloatConvertible {
 
-    var floatValue: Float64 { get }
+    var float32Value: Float32 { get }
+    
+    var float64Value: Float64 { get }
     
 }
