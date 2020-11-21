@@ -357,9 +357,23 @@ extension Rational : CustomStringConvertible {
 }
 
 extension Rational : CustomFloatConvertible {
-    
-    public var floatValue: Float64 { Float64(numerator) / Float64(denominator) }
 
+    public var float32Value: Float32 { Float32(numerator) / Float32(denominator) }
+
+    public var float64Value: Float64 { Float64(numerator) / Float64(denominator) }
+
+}
+
+extension Rational : CustomDoubleConvertible {
+
+    public var doubleValue: Double { Double(numerator) / Double(denominator) }
+
+}
+
+extension Rational : CustomDecimalConvertible {
+
+    public var decimalValue: Decimal { Decimal(numerator) / Decimal(denominator) }
+    
 }
 
 extension Rational {
