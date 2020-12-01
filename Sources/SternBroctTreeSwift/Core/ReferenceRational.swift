@@ -60,7 +60,7 @@ open class ReferenceRational : RationalProtocol {
         return try! Self(numerator: result.numerator, denominator: result.denominator)
     }
 
-    open func simplyfy() {
+    open func simplify() {
         rational.simplify()
     }
 
