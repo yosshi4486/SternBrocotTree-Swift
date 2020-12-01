@@ -7,8 +7,8 @@
 
 import Foundation
 
-/// A rational number used in sbtree terms.
-public struct Rational {
+/// A rational type for value semantics.
+public struct Rational : RationalProtocol {
 
     /// The numerator of the rational number.
     public var numerator: Int32
@@ -61,9 +61,9 @@ public struct Rational {
 
 
     // Ignore zero denominator error
-    private init(_ fraction: String) {
+    public init(fractionWithNoError: String) {
 
-        let splited = fraction.split(separator: "/")
+        let splited = fractionWithNoError.split(separator: "/")
         let numerator = Int32(splited[0])
         let denominator = Int32(splited[1])
 
@@ -73,7 +73,7 @@ public struct Rational {
     /// Returns a value wether this value can simplify or not.
     ///
     /// - Complexity: O(log n) where n is digits of the given `denominator`.
-    var canSimplify: Bool {
+    public var canSimplify: Bool {
         let commonFactor = gcd(numerator, denominator)
         return commonFactor != 1 && commonFactor != -1
     }
@@ -128,22 +128,6 @@ public struct Rational {
 
 
     // MARK: - Arithmetic Operations
-
-
-    /// An arithmetic error of rational.
-    public enum ArithmeticError : LocalizedError {
-
-        case outOfRange
-
-        public var errorDescription: String? {
-            switch self {
-            case .outOfRange:
-                return "intermediate value overflow in rational addition"
-            }
-        }
-
-    }
-
 
     /// Returns the sum of this value and the given value **in simplified form**.
     /// 
@@ -299,112 +283,4 @@ public struct Rational {
         return Rational(numeratorAddingResult,denominatorAddingResult)
     }
 
-
-    /// The low root node of SBTree. 0/1.
-    public static var rootLow: Rational { Rational("0/1") }
-
-
-    /// The low high node of SBTree. 1/0.
-    public static var rootHigh: Rational { Rational("1/0") }
-
-}
-
-extension Rational : Equatable {
-
-    public static func == (lhs: Rational, rhs: Rational) -> Bool {
-        return lhs.numerator == rhs.numerator && lhs.denominator == rhs.denominator
-    }
-
-}
-
-extension Rational : Comparable {
-
-    public static func < (lhs: Rational, rhs: Rational) -> Bool {
-
-        // If a, b, c, and d are positive, the result of a/b < c/d can represent as ad < bc.
-        // 1. To remove left side devider, let both sides multiplied by b. (a < bc/d)
-        // 2. To remove right side devider, let both sides multipied by d. (ad < bc)
-        
-        let a = lhs.numerator
-        let b = lhs.denominator
-        let c = rhs.numerator
-        let d = rhs.denominator
-
-        let ad: Int64 = Int64(a * d)
-        let bc: Int64 = Int64(b * c)
-
-        return ad < bc
-    }
-
-}
-
-extension Rational : Hashable {
-
-    public func hash(into hasher: inout Hasher) {
-
-        // In reduced form, SBTree node's fruction must be identified in the tree.
-        let x = simplified()
-        hasher.combine(x.numerator)
-        hasher.combine(x.denominator)
-    }
-
-}
-
-extension Rational : CustomStringConvertible {
-
-    public var description: String { "\(numerator)/\(denominator)" }
-
-}
-
-extension Rational : CustomFloatConvertible {
-
-    public var float32Value: Float32 { Float32(numerator) / Float32(denominator) }
-
-    public var float64Value: Float64 { Float64(numerator) / Float64(denominator) }
-
-}
-
-extension Rational : CustomDoubleConvertible {
-
-    public var doubleValue: Double { Double(numerator) / Double(denominator) }
-
-}
-
-extension Rational : CustomDecimalConvertible {
-
-    public var decimalValue: Decimal { Decimal(numerator) / Decimal(denominator) }
-    
-}
-
-extension Rational {
-
-    enum InitializationError : LocalizedError {
-
-        case zeroDinominator
-
-        var errorDescription: String? {
-
-            switch self {
-            case .zeroDinominator:
-                return "Fraction cannot have zero denominator."
-            }
-        }
-    }
-
-}
-
-extension Rational {
-
-    enum MediantError : LocalizedError {
-
-        case overflow(lhs: Rational, rhs: Rational)
-
-        var errorDescription: String? {
-
-            switch self {
-            case .overflow(lhs: let lhs, rhs: let rhs):
-                return "Overflow. lhs: \(lhs), rhs: \(rhs)"
-            }
-        }
-    }
 }

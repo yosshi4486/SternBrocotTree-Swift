@@ -2,19 +2,19 @@
 //  Intermediate.swift
 //  SternBroctTreeSwift
 //
-//  Created by seijin4486 on 2020/11/11.
+//  Created by yosshi4486 on 2020/11/11.
 //
 
 import Foundation
 
 /// An error that is thrown in `intermediate`.
-public enum IntermediateError : LocalizedError {
+public enum IntermediateError<ConcreteRational : RationalProtocol> : LocalizedError {
 
-    case negativeArgument(lhs: Rational, rhs: Rational)
+    case negativeArgument(lhs: ConcreteRational, rhs: ConcreteRational)
 
-    case leftMustBeSmallerThanRight(lhs: Rational, rhs: Rational)
+    case leftMustBeSmallerThanRight(lhs: ConcreteRational, rhs: ConcreteRational)
 
-    case overflow(lhs: Rational, rhs: Rational)
+    case overflow(lhs: ConcreteRational, rhs: ConcreteRational)
 
     public var errorDescription: String? {
         switch self {
@@ -53,10 +53,10 @@ public enum IntermediateError : LocalizedError {
 /// - Throws: If you see `.overflow` error, user may walk fibonacci path 47 times. In that situation, re-normalization should be executed.
 ///
 /// - Returns:
-public func intermediate(left: Rational?, right: Rational?) throws -> Rational {
+public func intermediate<ConcreteRational : RationalProtocol>(left: ConcreteRational?, right: ConcreteRational?) throws -> ConcreteRational {
 
-    var low = Rational.rootLow
-    var high = Rational.rootHigh
+    var low = ConcreteRational(fractionWithNoError: RationalConstants.rootLowFraction)
+    var high = ConcreteRational(fractionWithNoError: RationalConstants.rootHighFraction)
 
     let left = left ?? low
     let right = right ?? high
@@ -69,9 +69,9 @@ public func intermediate(left: Rational?, right: Rational?) throws -> Rational {
         throw IntermediateError.leftMustBeSmallerThanRight(lhs: left, rhs: right)
     }
 
-    var mediant: Rational?
+    var mediant: ConcreteRational?
     while true {
-        mediant = try Rational.mediant(left: low, right: high)
+        mediant = try ConcreteRational.mediant(left: low, right: high)
 
         if mediant! <= left {
             low = mediant!

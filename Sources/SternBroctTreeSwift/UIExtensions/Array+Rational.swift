@@ -2,7 +2,7 @@
 //  Array+Rational.swift
 //  SternBroctTreeSwift
 //
-//  Created by seijin4486 on 2020/11/17.
+//  Created by yosshi4486 on 2020/11/17.
 //
 
 import Foundation
