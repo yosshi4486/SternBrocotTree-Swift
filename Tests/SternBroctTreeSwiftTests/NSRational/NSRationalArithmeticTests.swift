@@ -8,7 +8,7 @@
 import XCTest
 @testable import SternBroctTreeSwift
 
-class ReferenceRationalArithmeticTests: XCTestCase {
+class NSRationalArithmeticTests: XCTestCase {
 
     func testCanSimplify() throws {
         let rational = try NSRational(fraction: "3/9")!
