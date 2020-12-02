@@ -89,6 +89,8 @@ open class NSRational : NSObject, NSSecureCoding, RationalProtocol {
         return try! Self(numerator: result.numerator, denominator: result.denominator)
     }
 
+    // MARK: - NSObject Protocol
+
     open override var description: String {
         return rational.description
     }
@@ -106,7 +108,7 @@ open class NSRational : NSObject, NSSecureCoding, RationalProtocol {
         return rational.hashValue
     }
 
-    // MARK: - NSCoding
+    // MARK: - NSSecureCoding
 
     private enum CodingKeys: String, CodingKey {
         case numerator
