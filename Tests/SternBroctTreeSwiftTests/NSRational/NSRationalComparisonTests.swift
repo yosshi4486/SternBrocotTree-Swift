@@ -8,7 +8,7 @@
 import XCTest
 @testable import SternBroctTreeSwift
 
-class ReferenceRationalComparisonTests: XCTestCase {
+class NSRationalComparisonTests: XCTestCase {
 
     func testEqual() throws {
         let a = try NSRational(fraction: "1/3")
