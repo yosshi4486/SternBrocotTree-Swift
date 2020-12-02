@@ -49,6 +49,6 @@ open class NSRationalToDataTransformer : NSSecureUnarchiveFromDataTransformer {
 
 extension NSValueTransformerName {
 
-    static let NSRationalToDataTransformer = NSValueTransformerName(rawValue: "NSRationalToDataTransformer")
+    public static let NSRationalToDataTransformer = NSValueTransformerName(rawValue: "NSRationalToDataTransformer")
 
 }
