@@ -25,8 +25,8 @@ class TransformerTests: XCTestCase {
         let referenceRational = NSRational(fractionWithNoError: "1/3")
         let transformer = NSRationalToDataTransformer()
         let transformed = transformer.transformedValue(referenceRational)
-        let reversed = transformer.reverseTransformedValue(transformed)
-        XCTAssertNotNil(reversed)
+        let reversed = transformer.reverseTransformedValue(transformed) as? NSRational
+        XCTAssertEqual(reversed?.description, "1/3")
     }
 
     
