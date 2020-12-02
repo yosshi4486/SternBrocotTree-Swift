@@ -5,7 +5,7 @@
 //  Created by yosshi4486 on 2020/12/02.
 //
 
-import UIKit
+import Foundation
 
 @available(iOS 12.0, *)
 open class NSRationalToDataTransformer : NSSecureUnarchiveFromDataTransformer {
