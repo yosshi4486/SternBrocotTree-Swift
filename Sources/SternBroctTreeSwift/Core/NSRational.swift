@@ -7,8 +7,8 @@
 
 import Foundation
 
-/// A rational type for reference semantics.
-open class ReferenceRational : RationalProtocol {
+/// A rational type for reference semantics. The type stores and uses value rational internally.
+open class NSRational : NSObject, NSSecureCoding, RationalProtocol {
 
     private var rational: Rational
 
@@ -64,29 +64,71 @@ open class ReferenceRational : RationalProtocol {
         rational.simplify()
     }
 
-    open func adding(to other: ReferenceRational) throws -> Self {
+    open func adding(to other: NSRational) throws -> Self {
         let result = try rational.adding(to: other.rational)
         return try! Self(numerator: result.numerator, denominator: result.denominator)
     }
 
-    open func subtracting(_ other: ReferenceRational) throws -> Self {
+    open func subtracting(_ other: NSRational) throws -> Self {
         let result = try rational.subtracting(other.rational)
         return try! Self(numerator: result.numerator, denominator: result.denominator)
     }
 
-    open func multiplied(by other: ReferenceRational) throws -> Self {
+    open func multiplied(by other: NSRational) throws -> Self {
         let result = try rational.multiplied(by: other.rational)
         return try! Self(numerator: result.numerator, denominator: result.denominator)
     }
 
-    open func divided(by other: ReferenceRational) throws -> Self {
+    open func divided(by other: NSRational) throws -> Self {
         let result = try rational.divided(by: other.rational)
         return try! Self(numerator: result.numerator, denominator: result.denominator)
     }
 
-    public static func mediant(left: ReferenceRational, right: ReferenceRational) throws -> Self {
+    public static func mediant(left: NSRational, right: NSRational) throws -> Self {
         let result = try Rational.mediant(left: left.rational, right: right.rational)
         return try! Self(numerator: result.numerator, denominator: result.denominator)
+    }
+
+    open override var description: String {
+        return rational.description
+    }
+
+    open override func isEqual(_ object: Any?) -> Bool {
+
+        guard let otherReferenceRational = object as? NSRational else {
+            return false
+        }
+
+        return self.rational == otherReferenceRational.rational
+    }
+
+    public override var hash: Int {
+        return rational.hashValue
+    }
+
+    // MARK: - NSCoding
+
+    private enum CodingKeys: String, CodingKey {
+        case numerator
+        case denominator
+    }
+
+    public static var supportsSecureCoding: Bool = true
+
+    public func encode(with coder: NSCoder) {
+        coder.encode(rational.numerator, forKey: CodingKeys.numerator.rawValue)
+        coder.encode(rational.denominator, forKey: CodingKeys.denominator.rawValue)
+    }
+
+    public required init?(coder: NSCoder) {
+        let numerator = coder.decodeInt32(forKey: CodingKeys.numerator.rawValue)
+        let denominator = coder.decodeInt32(forKey: CodingKeys.denominator.rawValue)
+
+        guard let rational = try? Rational(numerator: numerator, denominator: denominator) else {
+            return nil
+        }
+
+        self.rational = rational
     }
 
 }

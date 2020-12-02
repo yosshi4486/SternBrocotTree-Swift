@@ -12,7 +12,7 @@ class ReferenceIntermediateTests: XCTestCase {
     
     func testMediantsOnlyLeft() throws {
 
-        var right: ReferenceRational?
+        var right: NSRational?
 
         // 1
         right = try intermediate(left: nil, right: right)
@@ -58,8 +58,8 @@ class ReferenceIntermediateTests: XCTestCase {
     // In SBTree, go down LRLRLR... makes fibonacci sequence.
     func testFibonacciPath() throws {
 
-        var left: ReferenceRational?
-        var right: ReferenceRational?
+        var left: NSRational?
+        var right: NSRational?
 
         // 1
         right = try intermediate(left: left, right: right)
@@ -104,23 +104,23 @@ class ReferenceIntermediateTests: XCTestCase {
     }
 
     func testErrorNegativeArguments() {
-        XCTAssertThrowsError(try intermediate(left: ReferenceRational(fraction: "-1/1"), right: nil))
+        XCTAssertThrowsError(try intermediate(left: NSRational(fraction: "-1/1"), right: nil))
     }
 
     func testErrorLeftArgIsSmallerThanRight() {
-        XCTAssertThrowsError(try intermediate(left: ReferenceRational(fraction: "2/3"), right:  ReferenceRational(fraction: "1/3")))
+        XCTAssertThrowsError(try intermediate(left: NSRational(fraction: "2/3"), right:  NSRational(fraction: "1/3")))
     }
 
     func testErrorLeftArgIsSmallerThanRightWhenEqual() {
-        XCTAssertThrowsError(try intermediate(left: ReferenceRational(fraction: "2/3"), right:  ReferenceRational(fraction: "2/3")))
+        XCTAssertThrowsError(try intermediate(left: NSRational(fraction: "2/3"), right:  NSRational(fraction: "2/3")))
     }
 
     func testErrorOverflowDenominator() {
-        XCTAssertThrowsError(try intermediate(left: ReferenceRational(fraction: "1/1"), right: ReferenceRational(fraction: "1/2147483647")))
+        XCTAssertThrowsError(try intermediate(left: NSRational(fraction: "1/1"), right: NSRational(fraction: "1/2147483647")))
     }
 
     func testErrorOverflowNumerator() {
-        XCTAssertThrowsError(try intermediate(left:  ReferenceRational(fraction: "2147483647/1"), right: ReferenceRational(fraction: "1/1")))
+        XCTAssertThrowsError(try intermediate(left:  NSRational(fraction: "2147483647/1"), right: NSRational(fraction: "1/1")))
     }
 
 }

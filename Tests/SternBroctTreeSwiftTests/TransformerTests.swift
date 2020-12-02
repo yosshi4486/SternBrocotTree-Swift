@@ -11,19 +11,19 @@ import XCTest
 class TransformerTests: XCTestCase {
 
     override class func setUp() {
-        ReferenceRationalToDataTransformer.register()
+        NSRationalToDataTransformer.register()
     }
     
     func testTransform() {
-        let referenceRational = ReferenceRational(fractionWithNoError: "1/3")
-        let transformer = ReferenceRationalToDataTransformer()
+        let referenceRational = NSRational(fractionWithNoError: "1/3")
+        let transformer = NSRationalToDataTransformer()
         let transformed = transformer.transformedValue(referenceRational)
         XCTAssertNotNil(transformed)
     }
 
     func testTransformThenReverse() {
-        let referenceRational = ReferenceRational(fractionWithNoError: "1/3")
-        let transformer = ReferenceRationalToDataTransformer()
+        let referenceRational = NSRational(fractionWithNoError: "1/3")
+        let transformer = NSRationalToDataTransformer()
         let transformed = transformer.transformedValue(referenceRational)
         let reversed = transformer.reverseTransformedValue(transformed)
         XCTAssertNotNil(reversed)
