@@ -7,7 +7,7 @@
 
 import Foundation
 
-@available(iOS 12.0, *)
+@available(iOS 12.0, macOS 10.14, *)
 open class NSRationalToDataTransformer : NSSecureUnarchiveFromDataTransformer {
 
     open override class func allowsReverseTransformation() -> Bool {
