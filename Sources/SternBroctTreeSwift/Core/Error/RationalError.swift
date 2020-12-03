@@ -27,3 +27,5 @@ public enum RationalError<ConcreteRational : RationalProtocol> : LocalizedError 
     }
 
 }
+
+extension RationalError : Equatable { }

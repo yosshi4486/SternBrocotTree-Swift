@@ -34,3 +34,4 @@ public enum RationalIntermediateError<ConcreteRational : RationalProtocol> : Loc
 
 }
 
+extension RationalIntermediateError : Equatable { }
