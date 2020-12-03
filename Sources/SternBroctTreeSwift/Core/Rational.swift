@@ -27,7 +27,7 @@ public struct Rational : RationalProtocol {
     public init(numerator: Int32, denominator: Int32) throws {
 
         guard denominator != 0 else {
-            throw InitializationError.zeroDinominator
+            throw RationalInitializationError.zeroDenominator
         }
 
         self.numerator = numerator
@@ -154,7 +154,7 @@ public struct Rational : RationalProtocol {
             (denominator, isDenominatorOverflowed) = x.denominator.multipliedReportingOverflow(by: y.denominator)
 
             // 1. Go into a branch if r,s, numerator or denominator is overflowed.
-            // 2. If they can simplify, do it. If not, throw outOfRange(overflow) error.
+            // 2. If they can simplify, do it. If not, throw overflow error.
             // 3. Continue the steps to resolve overflow completely.
             if isROverflowed || isSOverflowed || isNumeratorOverflowed || isDenominatorOverflowed {
 
@@ -162,7 +162,7 @@ public struct Rational : RationalProtocol {
                 if !x.canSimplify && !y.canSimplify {
 
                     // neither fraction could reduce, cannot proceed
-                    throw ArithmeticError.outOfRange
+                    throw RationalArithmeticError.overflow(self: self, other: other)
                 }
 
                 x.simplify()
@@ -219,7 +219,7 @@ public struct Rational : RationalProtocol {
                 if !x.canSimplify && !y.canSimplify {
 
                     // neither fraction could reduce, cannot proceed
-                    throw ArithmeticError.outOfRange
+                    throw RationalArithmeticError.overflow(self: self, other: other)
                 }
 
                 x.simplify()
@@ -277,7 +277,7 @@ public struct Rational : RationalProtocol {
         let (denominatorAddingResult, denominatorAddingOverflow) = left.denominator.addingReportingOverflow(right.denominator)
 
         if numeratorAddingOverflow || denominatorAddingOverflow {
-            throw MediantError.overflow(lhs: left, rhs: right)
+            throw RationalMediantError.overflow(lhs: left, rhs: right)
         }
 
         return Rational(numeratorAddingResult,denominatorAddingResult)

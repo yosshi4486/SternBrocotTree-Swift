@@ -7,7 +7,8 @@
 
 import Foundation
 
-public enum MediantError<ConcreteRational : RationalProtocol> : LocalizedError {
+/// Error codes for rational's mediant operation.
+public enum RationalMediantError<ConcreteRational : RationalProtocol> : LocalizedError {
 
     case overflow(lhs: ConcreteRational, rhs: ConcreteRational)
 
