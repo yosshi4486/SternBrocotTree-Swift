@@ -31,8 +31,8 @@ import Foundation
 /// - Returns:
 public func intermediate<ConcreteRational : RationalProtocol>(left: ConcreteRational?, right: ConcreteRational?) throws -> ConcreteRational {
 
-    var low = ConcreteRational(fractionWithNoError: RationalConstants.rootLowFraction)
-    var high = ConcreteRational(fractionWithNoError: RationalConstants.rootHighFraction)
+    let low = ConcreteRational(fractionWithNoError: RationalConstants.rootLowFraction)
+    let high = ConcreteRational(fractionWithNoError: RationalConstants.rootHighFraction)
 
     let left = left ?? low
     let right = right ?? high
@@ -45,24 +45,36 @@ public func intermediate<ConcreteRational : RationalProtocol>(left: ConcreteRati
         throw RationalIntermediateError.leftMustBeSmallerThanRight(lhs: left, rhs: right)
     }
 
-    var mediant: ConcreteRational?
-    while true {
-        
-        do {
-            mediant = try ConcreteRational.mediant(left: low, right: high)
-        } catch {
-            throw RationalIntermediateError.overflow(lhs: low, rhs: high)
-        }
+    /*
+     Old implemetation using while loop took too long time to approximate a fruction has large numer or denom,
+     so I've changed it to new, but it may have some mathematical problems what I don't understand.
 
-        if mediant! <= left {
-            low = mediant!
-        } else if right <= mediant! {
-            high = mediant!
-        } else {
-            break
-        }
+     var mediant: ConcreteRational?
+     while true {
+
+         do {
+             mediant = try ConcreteRational.mediant(left: low, right: high)
+         } catch {
+             throw RationalIntermediateError.overflow(lhs: low, rhs: high)
+         }
+
+         if mediant! <= left {
+             low = mediant!
+         } else if right <= mediant! {
+             high = mediant!
+         } else {
+             break
+         }
+     }
+
+     return mediant!
+     */
+
+    do {
+        return try ConcreteRational.mediant(left: left, right: right)
+    } catch {
+        throw RationalIntermediateError.overflow(lhs: left, rhs: right)
     }
 
-    return mediant!
 }
 
