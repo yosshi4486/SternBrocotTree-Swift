@@ -7,30 +7,6 @@
 
 import Foundation
 
-/// An error that is thrown in `intermediate`.
-public enum IntermediateError<ConcreteRational : RationalProtocol> : LocalizedError {
-
-    case negativeArgument(lhs: ConcreteRational, rhs: ConcreteRational)
-
-    case leftMustBeSmallerThanRight(lhs: ConcreteRational, rhs: ConcreteRational)
-
-    case overflow(lhs: ConcreteRational, rhs: ConcreteRational)
-
-    public var errorDescription: String? {
-        switch self {
-        case .negativeArgument(let lhs, let rhs):
-            return "arguments(lhs: \(lhs), rhs: \(rhs) must be non-negative"
-
-        case .leftMustBeSmallerThanRight(let lhs, let rhs):
-            return "left argument(\(lhs)) must be strictly smaller than right(\(rhs))"
-
-        case .overflow(lhs: let lhs, rhs: let rhs):
-            return "numerator or denominator of new node exceeds Int32.max, it means overflow. lhs: \(lhs), rhs: \(rhs)"
-        }
-    }
-
-}
-
 /// Returns a new node from the given left and right nodes.
 ///
 /// This function finds proper fruction for new node like bellow:
@@ -55,33 +31,50 @@ public enum IntermediateError<ConcreteRational : RationalProtocol> : LocalizedEr
 /// - Returns:
 public func intermediate<ConcreteRational : RationalProtocol>(left: ConcreteRational?, right: ConcreteRational?) throws -> ConcreteRational {
 
-    var low = ConcreteRational(fractionWithNoError: RationalConstants.rootLowFraction)
-    var high = ConcreteRational(fractionWithNoError: RationalConstants.rootHighFraction)
+    let low = ConcreteRational(fractionWithNoError: RationalConstants.rootLowFraction)
+    let high = ConcreteRational(fractionWithNoError: RationalConstants.rootHighFraction)
 
     let left = left ?? low
     let right = right ?? high
 
     if left < low || right < low {
-        throw IntermediateError.negativeArgument(lhs: left, rhs: right)
+        throw RationalIntermediateError.negativeArgument(lhs: left, rhs: right)
     }
 
     if left >= right {
-        throw IntermediateError.leftMustBeSmallerThanRight(lhs: left, rhs: right)
+        throw RationalIntermediateError.leftMustBeSmallerThanRight(lhs: left, rhs: right)
     }
 
-    var mediant: ConcreteRational?
-    while true {
-        mediant = try ConcreteRational.mediant(left: low, right: high)
+    /*
+     Old implemetation using while loop took too long time to approximate a fruction has large numer or denom,
+     so I've changed it to new, but it may have some mathematical problems what I don't understand.
 
-        if mediant! <= left {
-            low = mediant!
-        } else if right <= mediant! {
-            high = mediant!
-        } else {
-            break
-        }
+     var mediant: ConcreteRational?
+     while true {
+
+         do {
+             mediant = try ConcreteRational.mediant(left: low, right: high)
+         } catch {
+             throw RationalIntermediateError.overflow(lhs: low, rhs: high)
+         }
+
+         if mediant! <= left {
+             low = mediant!
+         } else if right <= mediant! {
+             high = mediant!
+         } else {
+             break
+         }
+     }
+
+     return mediant!
+     */
+
+    do {
+        return try ConcreteRational.mediant(left: left, right: right)
+    } catch {
+        throw RationalIntermediateError.overflow(lhs: left, rhs: right)
     }
 
-    return mediant!
 }
 

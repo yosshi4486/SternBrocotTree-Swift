@@ -55,9 +55,13 @@ open class NSRational : NSObject, NSSecureCoding, RationalProtocol {
         return rational.canSimplify
     }
 
+    /*
+     A RationalProtocol(fractionWithNoError:) is also usefull in compatibility of Rational and NSRational.
+     */
+
     open func simplified() -> Self {
         let result = rational.simplified()
-        return try! Self(numerator: result.numerator, denominator: result.denominator)
+        return Self(fractionWithNoError: result.description)
     }
 
     open func simplify() {
@@ -66,27 +70,27 @@ open class NSRational : NSObject, NSSecureCoding, RationalProtocol {
 
     open func adding(to other: NSRational) throws -> Self {
         let result = try rational.adding(to: other.rational)
-        return try! Self(numerator: result.numerator, denominator: result.denominator)
+        return Self(fractionWithNoError: result.description)
     }
 
     open func subtracting(_ other: NSRational) throws -> Self {
         let result = try rational.subtracting(other.rational)
-        return try! Self(numerator: result.numerator, denominator: result.denominator)
+        return Self(fractionWithNoError: result.description)
     }
 
     open func multiplied(by other: NSRational) throws -> Self {
         let result = try rational.multiplied(by: other.rational)
-        return try! Self(numerator: result.numerator, denominator: result.denominator)
+        return Self(fractionWithNoError: result.description)
     }
 
     open func divided(by other: NSRational) throws -> Self {
         let result = try rational.divided(by: other.rational)
-        return try! Self(numerator: result.numerator, denominator: result.denominator)
+        return Self(fractionWithNoError: result.description)
     }
 
     public static func mediant(left: NSRational, right: NSRational) throws -> Self {
         let result = try Rational.mediant(left: left.rational, right: right.rational)
-        return try! Self(numerator: result.numerator, denominator: result.denominator)
+        return Self(fractionWithNoError: result.description)
     }
 
     // MARK: - NSObject Protocol
