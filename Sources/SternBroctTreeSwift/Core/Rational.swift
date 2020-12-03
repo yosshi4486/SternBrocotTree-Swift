@@ -60,7 +60,12 @@ public struct Rational : RationalProtocol {
     }
 
 
-    // Ignore zero denominator error
+    /// Create an instance by the given string vlaue splited by '/' separator with ignoring zero denominator error.
+    ///
+    /// In an `intermediate` operation, `1/0`, that is illigal value in math is used to represent an infinity node of SBTree.
+    /// This `init` is required for the situation.
+    ///
+    /// - Parameter fractionWithNodeError:  The string value represents a fruction.
     public init(fractionWithNoError: String) {
 
         let splited = fractionWithNoError.split(separator: "/")
