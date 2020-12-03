@@ -27,7 +27,7 @@ public struct Rational : RationalProtocol {
     public init(numerator: Int32, denominator: Int32) throws {
 
         guard denominator != 0 else {
-            throw RationalInitializationError.zeroDenominator
+            throw RationalError<Self>.zeroDenominator
         }
 
         self.numerator = numerator
@@ -162,7 +162,7 @@ public struct Rational : RationalProtocol {
                 if !x.canSimplify && !y.canSimplify {
 
                     // neither fraction could reduce, cannot proceed
-                    throw RationalArithmeticError.overflow(self: self, other: other)
+                    throw RationalError.overflow(lhs: self, rhs: other, operation: #function)
                 }
 
                 x.simplify()
@@ -219,7 +219,7 @@ public struct Rational : RationalProtocol {
                 if !x.canSimplify && !y.canSimplify {
 
                     // neither fraction could reduce, cannot proceed
-                    throw RationalArithmeticError.overflow(self: self, other: other)
+                    throw RationalError.overflow(lhs: self, rhs: other, operation: #function)
                 }
 
                 x.simplify()
@@ -277,7 +277,7 @@ public struct Rational : RationalProtocol {
         let (denominatorAddingResult, denominatorAddingOverflow) = left.denominator.addingReportingOverflow(right.denominator)
 
         if numeratorAddingOverflow || denominatorAddingOverflow {
-            throw RationalMediantError.overflow(lhs: left, rhs: right)
+            throw RationalError.overflow(lhs: left, rhs: right, operation: #function)
         }
 
         return Rational(numeratorAddingResult,denominatorAddingResult)
