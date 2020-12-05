@@ -8,7 +8,9 @@
 import Foundation
 
 public protocol RationalOrderable {
+    
+    associatedtype ConcreteRational : RationalProtocol
 
-    var rational: Rational { get set }
+    var rational: ConcreteRational { get set }
 
 }

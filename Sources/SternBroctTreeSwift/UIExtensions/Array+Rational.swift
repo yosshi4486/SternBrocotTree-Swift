@@ -12,7 +12,7 @@ public extension Array where Element : RationalOrderable {
     /// Returns a rational for new appending item.
     ///
     /// This method should be called before appending actual item to any database or table.
-    func rationalForAppending() throws -> Rational? {
+    func rationalForAppending() throws -> Element.ConcreteRational? {
 
         guard let lastItemRational = last?.rational else {
             return nil
@@ -28,10 +28,10 @@ public extension Array where Element : RationalOrderable {
     /// - Parameters:
     ///    - adove: The item positioned adove the new inserting element.
     ///    - bellow: The item positioned bellow  the new inserting element.
-    func rationalForInserting(between above: Element, and bellow: Element, numberOfItems: Int = 1) throws -> [Rational] {
+    func rationalForInserting(between above: Element, and bellow: Element, numberOfItems: Int = 1) throws -> [Element.ConcreteRational] {
 
-        var rationals: [Rational] = []
-        var left: Rational = above.rational
+        var rationals: [Element.ConcreteRational] = []
+        var left: Element.ConcreteRational = above.rational
 
         for _ in 0..<numberOfItems {
             left = try intermediate(left: left, right: bellow.rational)
@@ -49,7 +49,7 @@ public extension Array where Element : RationalOrderable {
     mutating func normalize() throws {
 
         for i in 0..<count {
-            self[i].rational = try Rational(numerator: Int32(i + 1), denominator: 1)
+            self[i].rational = try Element.ConcreteRational(numerator: Int32(i + 1), denominator: 1)
         }
 
     }
