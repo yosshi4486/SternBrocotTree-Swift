@@ -7,6 +7,12 @@
 
 import Foundation
 
+// FIXME: 
+// Setting NSRationalToDataTransformer to .xcdatamodeld property attribute, CoreData doesn't call transformedValue(:).
+// Implementation of this class may have some problems what I don't understand.
+//
+// For workaround, settting empty to it, then, setting 'NSRational' to 'Custom Class' attribute.
+// It works better.
 @available(iOS 12.0, macOS 10.14, *)
 open class NSRationalToDataTransformer : NSSecureUnarchiveFromDataTransformer {
 
