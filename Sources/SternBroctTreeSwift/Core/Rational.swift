@@ -139,8 +139,6 @@ public struct Rational : RationalProtocol {
     /// - Parameter other: The value to add to this value.
     /// - Throws: An AddingError may be thrown.
     /// - Returns: A rational that is added.
-    ///
-    /// - TODO: I find that this method doesn't simplify the result when it doesn't caluse overflow internally.
     public func adding(to other: Rational) throws -> Rational {
 
         var x = self
@@ -200,8 +198,6 @@ public struct Rational : RationalProtocol {
     /// - Parameter other: The value to multiply by this value.
     /// - Throws: An AddingError may be thrown
     /// - Returns: A rational that is multiplied.
-    ///
-    /// - TODO: I find that this method doesn't simplify the result when it doesn't caluse overflow internally.
     public func multiplied(by other: Rational) throws -> Rational {
 
         var x = self
