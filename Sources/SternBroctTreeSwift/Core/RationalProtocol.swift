@@ -106,7 +106,24 @@ extension RationalProtocol {
     public static func random(max: Int32 = 1000000) -> Self {
         let numerator = Int32.random(in: 0...max)
         let denominator = Int32.random(in: 1...max)
-        return Self.init(fractionWithNoError: "\(numerator)/\(denominator)")
+        return Self(fractionWithNoError: "\(numerator)/\(denominator)")
+    }
+
+    /// Returns zero representation of sternbrocot-tree.
+    public static var zero: Self {
+        return Self(fractionWithNoError: "0/1")
+    }
+
+    /// Returns one representation of sternbrocot-tree.
+    ///
+    /// - TODO: Add identity static var when matrix features are implemented.
+    public static var one: Self {
+        return Self(fractionWithNoError: "1/1")
+    }
+
+    /// Returns infinity representation of sternbrocot-tree.
+    public static var infinity: Self {
+        return Self(fractionWithNoError: "1/0")
     }
 
 }

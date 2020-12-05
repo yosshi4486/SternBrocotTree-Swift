@@ -31,8 +31,8 @@ import Foundation
 /// - Returns:
 public func intermediate<ConcreteRational : RationalProtocol>(left: ConcreteRational?, right: ConcreteRational?) throws -> ConcreteRational {
 
-    let low = ConcreteRational(fractionWithNoError: RationalConstants.rootLowFraction)
-    let high = ConcreteRational(fractionWithNoError: RationalConstants.rootHighFraction)
+    let low = ConcreteRational.zero
+    let high = ConcreteRational.infinity
 
     let left = left ?? low
     let right = right ?? high
