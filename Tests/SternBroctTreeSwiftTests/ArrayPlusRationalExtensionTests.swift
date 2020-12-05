@@ -97,7 +97,7 @@ class ArrayPlusRationalExtensionTests: XCTestCase {
         var array = makeFibonacciPathArray()
 
         // Execution
-        try array.normalize()
+        array.normalize()
 
         // Assertion
         XCTAssertEqual(array[0].rational.description, "1/1")
@@ -119,7 +119,7 @@ class ArrayPlusRationalExtensionTests: XCTestCase {
         
         // Execution and Measurement
         measure {
-            try? array.normalize()
+            array.normalize()
         }
         
         XCTAssertTrue(array.allSatisfy({ $0.rational >= comparator }))

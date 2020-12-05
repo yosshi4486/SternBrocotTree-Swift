@@ -46,10 +46,11 @@ public extension Array where Element : RationalOrderable {
     /// - Note:
     /// TableViewのような構造において、insertせずに最初から最後までappendだけ実行していた場合のorderはRRRRRR...のシークエンスとなる。
     /// その状態を「正規形」と定義して正規化をすれば、分子を1づつ増やしていくだけの処理と等価になるため計算量をかなり削減できる。
-    mutating func normalize() throws {
+    mutating func normalize() {
 
         for i in 0..<count {
-            self[i].rational = try Element.ConcreteRational(numerator: Int32(i + 1), denominator: 1)
+            // The denominator is always one, zero denominator error is never thrown.
+            self[i].rational = try! Element.ConcreteRational(numerator: Int32(i + 1), denominator: 1)
         }
 
     }
