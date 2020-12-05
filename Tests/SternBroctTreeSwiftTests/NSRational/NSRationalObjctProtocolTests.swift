@@ -39,4 +39,10 @@ class NSRationalObjctProtocolTests: XCTestCase {
         XCTAssertNotEqual(rationalA.hash, rationalB.hash)
     }
 
+    func testRandom() {
+        let randomRational = NSRational.random()
+        XCTAssertGreaterThanOrEqual(randomRational.numerator, 0)
+        XCTAssertGreaterThanOrEqual(randomRational.denominator, 1)
+    }
+
 }
