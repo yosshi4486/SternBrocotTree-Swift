@@ -95,6 +95,21 @@ public protocol RationalProtocol : Comparable, Hashable, CustomStringConvertible
 
 }
 
+extension RationalProtocol {
+
+    /// Returns an new insntance from random numer and denom.
+    ///
+    /// The denominator must not be zero.
+    ///
+    /// - Parameter max: The maximum value of numer and denom.
+    /// - Returns: A concrete rational type is instanciated by random values.
+    public static func random(max: Int32 = 1000000) -> Self {
+        let numerator = Int32.random(in: 0...max)
+        let denominator = Int32.random(in: 1...max)
+        return Self.init(fractionWithNoError: "\(numerator)/\(denominator)")
+    }
+
+}
 
 // MARK: - Equatable
 extension RationalProtocol {
