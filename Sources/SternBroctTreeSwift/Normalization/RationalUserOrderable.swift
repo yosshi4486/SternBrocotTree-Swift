@@ -13,6 +13,6 @@ public protocol RationalUserOrderable {
     associatedtype ConcreteRational : RationalProtocol
 
     /// The user defined order as rational.
-    var userOrder: ConcreteRational { get set }
+    var rationalUserDefinedOrder: ConcreteRational { get set }
 
 }

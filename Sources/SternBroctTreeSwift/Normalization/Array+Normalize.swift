@@ -31,7 +31,7 @@ public extension Array where Element : RationalUserOrderable {
 
         for i in 0..<count {
             // The denominator is always one, zero denominator error is never thrown.
-            self[i].userOrder = try! Element.ConcreteRational(numerator: Int32(i + 1), denominator: 1)
+            self[i].rationalUserDefinedOrder = try! Element.ConcreteRational(numerator: Int32(i + 1), denominator: 1)
         }
 
     }
