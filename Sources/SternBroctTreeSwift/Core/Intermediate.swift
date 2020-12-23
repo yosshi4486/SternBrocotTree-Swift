@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Returns a new node from the given left and right nodes.
+/// Returns a valid new node of stern brocot tree from the given left and right nodes.
 ///
 /// This function finds proper fruction for new node like bellow:
 ///
@@ -22,6 +22,10 @@ import Foundation
 ///
 /// Give the left and right argument if possible.
 ///
+/// - Remark:
+/// `Rational.mediant` is much faster, but it doesn't ensure whether the new node is valid or not because it only adds each numer and denom.
+/// You should use this `intermediate` operation if you can't ensure the correctness of stern brocot node.
+///
 /// - Parameters:
 ///   - left: The node positioned at left of inserting postion you expected.
 ///   - right: The node positioned at right of inserting postion you expected.
@@ -31,8 +35,8 @@ import Foundation
 /// - Returns:
 public func intermediate<ConcreteRational : RationalProtocol>(left: ConcreteRational?, right: ConcreteRational?) throws -> ConcreteRational {
 
-    let low = ConcreteRational.zero
-    let high = ConcreteRational.infinity
+    var low = ConcreteRational.zero
+    var high = ConcreteRational.infinity
 
     let left = left ?? low
     let right = right ?? high
@@ -45,36 +49,25 @@ public func intermediate<ConcreteRational : RationalProtocol>(left: ConcreteRati
         throw RationalIntermediateError.leftMustBeSmallerThanRight(lhs: left, rhs: right)
     }
 
-    /*
-     Old implemetation using while loop took too long time to approximate a fruction has large numer or denom,
-     so I've changed it to new, but it may have some mathematical problems what I don't understand.
+    var mediant: ConcreteRational?
+    while true {
 
-     var mediant: ConcreteRational?
-     while true {
+        do {
+            mediant = try ConcreteRational.mediant(left: low, right: high)
+        } catch {
+            throw RationalIntermediateError.overflow(lhs: low, rhs: high)
+        }
 
-         do {
-             mediant = try ConcreteRational.mediant(left: low, right: high)
-         } catch {
-             throw RationalIntermediateError.overflow(lhs: low, rhs: high)
-         }
-
-         if mediant! <= left {
-             low = mediant!
-         } else if right <= mediant! {
-             high = mediant!
-         } else {
-             break
-         }
-     }
-
-     return mediant!
-     */
-
-    do {
-        return try ConcreteRational.mediant(left: left, right: right)
-    } catch {
-        throw RationalIntermediateError.overflow(lhs: left, rhs: right)
+        if mediant! <= left {
+            low = mediant!
+        } else if right <= mediant! {
+            high = mediant!
+        } else {
+            break
+        }
     }
+
+    return mediant!
 
 }
 

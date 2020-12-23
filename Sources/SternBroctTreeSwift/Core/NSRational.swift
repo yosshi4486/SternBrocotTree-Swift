@@ -89,8 +89,14 @@ open class NSRational : NSObject, NSSecureCoding, RationalProtocol {
     }
 
     public static func mediant(left: NSRational, right: NSRational) throws -> Self {
-        let result = try Rational.mediant(left: left.rational, right: right.rational)
-        return Self(fractionWithNoError: result.description)
+        let (numeratorAddingResult, numeratorAddingOverflow) = left.numerator.addingReportingOverflow(right.numerator)
+        let (denominatorAddingResult, denominatorAddingOverflow) = left.denominator.addingReportingOverflow(right.denominator)
+
+        if numeratorAddingOverflow || denominatorAddingOverflow {
+            throw RationalError.overflow(lhs: left, rhs: right)
+        }
+
+        return try Self(numerator: numeratorAddingResult, denominator: denominatorAddingResult)
     }
 
     // MARK: - NSObject Protocol
