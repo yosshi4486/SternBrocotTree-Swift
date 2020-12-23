@@ -285,3 +285,31 @@ public struct Rational : RationalProtocol {
     }
 
 }
+
+extension Rational : ReferenceConvertible {
+
+    public func _bridgeToObjectiveC() -> NSRational {
+        return NSRational(rational: self)
+    }
+
+    public static func _forceBridgeFromObjectiveC(_ source: NSRational, result: inout Rational?) {
+        result = source.rational
+    }
+
+    public static func _conditionallyBridgeFromObjectiveC(_ source: NSRational, result: inout Rational?) -> Bool {
+        result = source.rational
+        return true
+    }
+
+    public static func _unconditionallyBridgeFromObjectiveC(_ source: NSRational?) -> Rational {
+        return source!.rational
+    }
+
+    public typealias ReferenceType = NSRational
+    public typealias _ObjectiveCType = NSRational
+
+    public var debugDescription: String {
+        return "debug: \(description)"
+    }
+
+}

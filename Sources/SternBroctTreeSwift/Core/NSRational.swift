@@ -8,9 +8,9 @@
 import Foundation
 
 /// A rational type for reference semantics. The type stores and uses value rational internally.
-open class NSRational : NSObject, NSSecureCoding, RationalProtocol {
+open class NSRational : NSObject, NSCopying, NSSecureCoding, RationalProtocol {
 
-    private var rational: Rational
+    var rational: Rational
 
     public var denominator: Int32 {
         get {
@@ -110,6 +110,14 @@ open class NSRational : NSObject, NSSecureCoding, RationalProtocol {
 
     public override var hash: Int {
         return rational.hashValue
+    }
+
+    // MARK: - NSCopying
+
+    // Zone is ignored.
+    public func copy(with zone: NSZone? = nil) -> Any {
+        let newInstance = NSRational(rational: self.rational)
+        return newInstance
     }
 
     // MARK: - NSSecureCoding
