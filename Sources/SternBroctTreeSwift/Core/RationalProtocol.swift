@@ -91,6 +91,11 @@ public protocol RationalProtocol : Comparable, Hashable, CustomStringConvertible
     func divided(by other: Self) throws -> Self
 
     /// Returns a mediant from two fractions.
+    ///
+    /// - Remark:
+    /// Use this method for ordering if you can ensure the correctness of stern brocot tree by your self.
+    ///
+    /// - SeeAlso: `intermediate(left:right)`
     static func mediant(left: Self, right: Self) throws -> Self
 
 }

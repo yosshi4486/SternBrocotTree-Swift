@@ -165,7 +165,7 @@ public struct Rational : RationalProtocol {
                 if !x.canSimplify && !y.canSimplify {
 
                     // neither fraction could reduce, cannot proceed
-                    throw RationalError.overflow(lhs: self, rhs: other, operation: #function)
+                    throw RationalError.overflow(lhs: self, rhs: other)
                 }
 
                 x.simplify()
@@ -220,7 +220,7 @@ public struct Rational : RationalProtocol {
                 if !x.canSimplify && !y.canSimplify {
 
                     // neither fraction could reduce, cannot proceed
-                    throw RationalError.overflow(lhs: self, rhs: other, operation: #function)
+                    throw RationalError.overflow(lhs: self, rhs: other)
                 }
 
                 x.simplify()
@@ -278,7 +278,7 @@ public struct Rational : RationalProtocol {
         let (denominatorAddingResult, denominatorAddingOverflow) = left.denominator.addingReportingOverflow(right.denominator)
 
         if numeratorAddingOverflow || denominatorAddingOverflow {
-            throw RationalError.overflow(lhs: left, rhs: right, operation: #function)
+            throw RationalError.overflow(lhs: left, rhs: right)
         }
 
         return Rational(numeratorAddingResult,denominatorAddingResult)

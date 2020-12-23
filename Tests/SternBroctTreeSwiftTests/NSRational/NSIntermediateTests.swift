@@ -124,18 +124,18 @@ class NSIntermediateTests: XCTestCase {
                        throws: RationalIntermediateError<NSRational>.leftMustBeSmallerThanRight(lhs: left, rhs: right))
     }
 
-    func testErrorOverflowDenominator() {
+    func testMediantErrorOverflowDenominator() {
         let left = NSRational(fractionWithNoError: "1/2147483647")
         let right = NSRational(fractionWithNoError: "1/1")
-        XCTAssertError(try intermediate(left: left, right: right),
-                                        throws: RationalIntermediateError<NSRational>.overflow(lhs: left, rhs: right))
+        XCTAssertError(try NSRational.mediant(left: left, right: right),
+                       throws: RationalError<NSRational>.overflow(lhs: left, rhs: right))
     }
 
-    func testErrorOverflowNumerator() {
+    func testMediantErrorOverflowNumerator() {
         let left = NSRational(fractionWithNoError: "1/1")
         let right = NSRational(fractionWithNoError: "2147483647/1")
-        XCTAssertError(try intermediate(left: left, right: right),
-                                        throws: RationalIntermediateError<NSRational>.overflow(lhs: left, rhs: right))
+        XCTAssertError(try NSRational.mediant(left: left, right: right),
+                       throws: RationalError<NSRational>.overflow(lhs: left, rhs: right))
     }
 
 }
