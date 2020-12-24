@@ -8,7 +8,7 @@
 import Foundation
 
 /// A protocol that represents rational
-public protocol RationalProtocol : Comparable, Hashable, CustomStringConvertible, CustomFloatConvertible, CustomDoubleConvertible, CustomDecimalConvertible {
+public protocol RationalProtocol : SBTreeNode, Hashable, CustomFloatConvertible, CustomDoubleConvertible, CustomDecimalConvertible {
 
     /// The denominator of the rational number.
     var denominator: Int32 { get set }
@@ -63,8 +63,6 @@ public protocol RationalProtocol : Comparable, Hashable, CustomStringConvertible
     /// - Parameter other: The value to add to this value.
     /// - Throws: An AddingError may be thrown.
     /// - Returns: A rational that is added.
-    ///
-    /// - TODO: I find that this method doesn't simplify the result when it doesn't caluse overflow internally.
     func adding(to other: Self) throws -> Self
 
     /// Returns the defference obtained by subtracting the given value from this value **in simplified form**.
@@ -79,8 +77,6 @@ public protocol RationalProtocol : Comparable, Hashable, CustomStringConvertible
     /// - Parameter other: The value to multiply by this value.
     /// - Throws: An AddingError may be thrown
     /// - Returns: A rational that is multiplied.
-    ///
-    /// - TODO: I find that this method doesn't simplify the result when it doesn't caluse overflow internally.
     func multiplied(by other: Self) throws -> Self
 
     /// Returns the quatient obtained by dividing this value by the given value **in simplified form**.
@@ -90,14 +86,6 @@ public protocol RationalProtocol : Comparable, Hashable, CustomStringConvertible
     /// - Returns: A rational that is devided.
     func divided(by other: Self) throws -> Self
 
-    /// Returns a mediant from two fractions.
-    ///
-    /// - Remark:
-    /// Use this method for ordering if you can ensure the correctness of stern brocot tree by your self.
-    ///
-    /// - SeeAlso: `intermediate(left:right)`
-    static func mediant(left: Self, right: Self) throws -> Self
-
 }
 
 extension RationalProtocol {
@@ -106,7 +94,7 @@ extension RationalProtocol {
     ///
     /// - Parameter other: The other concrete rational to determine adjacent.
     /// - Returns: The two values are adjacent or not.
-    func isAdjacent(to other: Self) -> Bool {
+    public func isAdjacent(to other: Self) -> Bool {
         let ad = Int64(numerator * other.denominator)
         let bc = Int64(denominator * other.numerator)
         return abs(ad - bc) == 1
@@ -126,6 +114,20 @@ extension RationalProtocol {
     var total: Int32 {
         return numerator + denominator
     }
+
+    /// Returns a mediant from two fractions.
+    public static func mediant(left: Self, right: Self) throws -> Self {
+
+        let (numeratorAddingResult, numeratorAddingOverflow) = left.numerator.addingReportingOverflow(right.numerator)
+        let (denominatorAddingResult, denominatorAddingOverflow) = left.denominator.addingReportingOverflow(right.denominator)
+
+        if numeratorAddingOverflow || denominatorAddingOverflow {
+            throw RationalError.overflow(lhs: left, rhs: right)
+        }
+
+        return try Self(numerator: numeratorAddingResult,denominator: denominatorAddingResult)
+    }
+
 
 }
 
@@ -149,8 +151,6 @@ extension RationalProtocol {
     }
 
     /// Returns one representation of sternbrocot-tree.
-    ///
-    /// - TODO: Add identity static var when matrix features are implemented.
     public static var one: Self {
         return Self(fractionWithNoError: "1/1")
     }
@@ -160,7 +160,6 @@ extension RationalProtocol {
         return Self(fractionWithNoError: "1/0")
     }
     
-
 }
 
 // MARK: - Equatable

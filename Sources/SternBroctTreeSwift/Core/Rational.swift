@@ -13,10 +13,8 @@ public struct Rational : RationalProtocol {
     /// The numerator of the rational number.
     public var numerator: Int32
 
-
     /// The denominator of the rational number.
     public var denominator: Int32
-
 
     /// Creates an instance initialized by the given numerator and denominator.
     ///
@@ -33,7 +31,6 @@ public struct Rational : RationalProtocol {
         self.numerator = numerator
         self.denominator = denominator
     }
-
 
     /// Creates an instance initizalized by the given string value splited by `/` separator.
     ///
@@ -52,13 +49,11 @@ public struct Rational : RationalProtocol {
         try self.init(numerator: numerator, denominator: denominator)
     }
 
-
     // Ignore zero denominator error
     private init(_ numerator: Int32, _ denominator: Int32) {
         self.numerator = numerator
         self.denominator = denominator
     }
-
 
     /// Create an instance by the given string vlaue splited by '/' separator with ignoring zero denominator error.
     ///
@@ -182,7 +177,6 @@ public struct Rational : RationalProtocol {
         return Rational(numerator, denominator).simplified()
     }
 
-
     /// Returns the defference obtained by subtracting the given value from this value **in simplified form**.
     ///
     /// - Parameter other: The value to subtract from this value.
@@ -236,7 +230,6 @@ public struct Rational : RationalProtocol {
         return Rational(numerator, denominator).simplified()
     }
 
-
     /// Returns the quatient obtained by dividing this value by the given value **in simplified form**.
     ///
     /// - Parameter other: The value to divide this value by.
@@ -250,7 +243,6 @@ public struct Rational : RationalProtocol {
 
         return try multiplied(by: y)
     }
-
 
     private var negative: Rational {
 
@@ -268,20 +260,6 @@ public struct Rational : RationalProtocol {
         }
 
         return Rational(numerator * -1, denominator)
-    }
-
-    
-    /// Returns a mediant from two fractions.
-    public static func mediant(left: Rational, right: Rational) throws -> Rational {
-
-        let (numeratorAddingResult, numeratorAddingOverflow) = left.numerator.addingReportingOverflow(right.numerator)
-        let (denominatorAddingResult, denominatorAddingOverflow) = left.denominator.addingReportingOverflow(right.denominator)
-
-        if numeratorAddingOverflow || denominatorAddingOverflow {
-            throw RationalError.overflow(lhs: left, rhs: right)
-        }
-
-        return Rational(numeratorAddingResult,denominatorAddingResult)
     }
 
 }
