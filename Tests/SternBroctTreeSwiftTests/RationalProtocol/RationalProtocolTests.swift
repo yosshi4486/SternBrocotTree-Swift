@@ -103,4 +103,11 @@ class RationalProtocolTests: XCTestCase {
         XCTAssertEqual(sum, expected)
     }
 
+    func testBackwardsMatrixSequnce() {
+        let rational = Rational(fractionWithNoError: "3/11")
+        let matrixSequence = rational.backwardingMatrixSequence()
+
+        XCTAssertEqual(matrixSequence, [.L, .L, .L, .R, .L])
+    }
+
 }

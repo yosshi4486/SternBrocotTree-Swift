@@ -102,6 +102,9 @@ public protocol RationalProtocol : SBTreeNode, Comparable, Hashable, CustomFloat
     /// - Returns: The two values are adjacent or not.
     func isAdjacent(to other: Self) -> Bool
 
+    /// Returns backwarding matrix sequence.
+    func backwardingMatrixSequence() -> [Matrix2x2]
+
 }
 
 extension RationalProtocol {
@@ -144,6 +147,9 @@ extension RationalProtocol {
         return try Self(numerator: numeratorAddingResult,denominator: denominatorAddingResult)
     }
 
+    public func backwardingMatrixSequence() -> [Matrix2x2] {
+        return [.L, .L, .L, .R, .L]
+    }
 
 }
 
