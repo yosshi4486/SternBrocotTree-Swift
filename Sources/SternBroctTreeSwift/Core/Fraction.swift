@@ -9,10 +9,6 @@ import Foundation
 
 public struct Fraction {
 
-    enum Error : Swift.Error {
-        case zeroDenominator
-    }
-
     /// The numerator of the fraction.
     public var numerator: Int
 
