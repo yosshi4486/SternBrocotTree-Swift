@@ -8,7 +8,7 @@
 import Foundation
 
 /// A rational type for reference semantics. The type stores and uses value rational internally.
-open class NSRational : NSObject, NSSecureCoding, RationalProtocol {
+public final class NSRational : NSObject, NSSecureCoding, RationalProtocol {
 
     private var rational: Rational
 
@@ -51,7 +51,7 @@ open class NSRational : NSObject, NSSecureCoding, RationalProtocol {
         self.rational = Rational(fractionWithNoError: fractionWithNoError)
     }
 
-    open var canSimplify: Bool {
+    public var canSimplify: Bool {
         return rational.canSimplify
     }
 
@@ -59,53 +59,42 @@ open class NSRational : NSObject, NSSecureCoding, RationalProtocol {
      A RationalProtocol(fractionWithNoError:) is also usefull in compatibility of Rational and NSRational.
      */
 
-    open func simplified() -> Self {
+    public func simplified() -> Self {
         let result = rational.simplified()
         return Self(fractionWithNoError: result.description)
     }
 
-    open func simplify() {
+    public func simplify() {
         rational.simplify()
     }
 
-    open func adding(to other: NSRational) throws -> Self {
+    public func adding(to other: NSRational) throws -> Self {
         let result = try rational.adding(to: other.rational)
         return Self(fractionWithNoError: result.description)
     }
 
-    open func subtracting(_ other: NSRational) throws -> Self {
+    public func subtracting(_ other: NSRational) throws -> Self {
         let result = try rational.subtracting(other.rational)
         return Self(fractionWithNoError: result.description)
     }
 
-    open func multiplied(by other: NSRational) throws -> Self {
+    public func multiplied(by other: NSRational) throws -> Self {
         let result = try rational.multiplied(by: other.rational)
         return Self(fractionWithNoError: result.description)
     }
 
-    open func divided(by other: NSRational) throws -> Self {
+    public func divided(by other: NSRational) throws -> Self {
         let result = try rational.divided(by: other.rational)
         return Self(fractionWithNoError: result.description)
     }
 
-    public static func mediant(left: NSRational, right: NSRational) throws -> Self {
-        let (numeratorAddingResult, numeratorAddingOverflow) = left.numerator.addingReportingOverflow(right.numerator)
-        let (denominatorAddingResult, denominatorAddingOverflow) = left.denominator.addingReportingOverflow(right.denominator)
-
-        if numeratorAddingOverflow || denominatorAddingOverflow {
-            throw RationalError.overflow(lhs: left, rhs: right)
-        }
-
-        return try Self(numerator: numeratorAddingResult, denominator: denominatorAddingResult)
-    }
-
     // MARK: - NSObject Protocol
 
-    open override var description: String {
+    public override var description: String {
         return rational.description
     }
 
-    open override func isEqual(_ object: Any?) -> Bool {
+    public override func isEqual(_ object: Any?) -> Bool {
 
         guard let otherReferenceRational = object as? NSRational else {
             return false
