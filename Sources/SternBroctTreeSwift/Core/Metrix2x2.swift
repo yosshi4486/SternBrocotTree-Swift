@@ -44,6 +44,18 @@ public struct Matrix2x2 {
         )
     }
 
+    /// Multiplies two 2x2 matrix and stores the result in the left-hand-side variable..
+    ///
+    /// A * B and B * A are not always equal.
+    ///
+    /// - Parameters:
+    ///   - lhs: The first matrix to multipy.
+    ///   - rhs: The second matrix to multiply.
+    public static func *= (lhs: inout Matrix2x2, rhs: Matrix2x2) {
+        lhs = lhs * rhs
+    }
+
+
 }
 
 extension Matrix2x2 : AdditiveArithmetic {
@@ -72,3 +84,57 @@ extension Matrix2x2 : AdditiveArithmetic {
 
 }
 
+extension Matrix2x2 : Equatable { }
+
+extension Matrix2x2 : SBTreeNode {
+
+    public static var identity: Matrix2x2 {
+        return Matrix2x2(a: 1, b: 0, c: 0, d: 1)
+    }
+    
+    public func recoveredRational<ConcreteRational : RationalProtocol>() throws -> ConcreteRational {
+        return try ConcreteRational(numerator: a + b, denominator: c + d)
+    }
+
+    /// The metrix for generating left matrix form node.
+    public static var L: Matrix2x2 {
+        return Matrix2x2(a: 1, b: 0, c: 1, d: 1)
+    }
+
+    /// The metrix for generating right matrix form node.
+    public static var R: Matrix2x2 {
+        return Matrix2x2(a: 1, b: 1, c: 0, d: 1)
+    }
+
+    /// Moves to left.
+    public mutating func moveLeft() {
+        self *= Matrix2x2.L
+    }
+
+    /// Moves to right.
+    public mutating func moveRight() {
+        self *= Matrix2x2.R
+    }
+
+    /// Returns a new 2x2 matrix which positioned at left of this matrix.
+    public func makeLeft() -> Matrix2x2 {
+        return self * Matrix2x2.L
+    }
+
+    /// Returns a new 2x2 matrix which positioned at right of this matrix.
+    public func makeRight() -> Matrix2x2 {
+        return self * Matrix2x2.R
+    }
+
+}
+
+extension Matrix2x2 : CustomStringConvertible {
+
+    public var description: String {
+        """
+        \(a) \(b)
+        \(c) \(d)
+        """
+    }
+
+}
