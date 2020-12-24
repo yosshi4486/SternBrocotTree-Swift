@@ -112,6 +112,14 @@ extension RationalProtocol {
         return abs(ad - bc) == 1
     }
 
+    /// Returns simplicity of a rational.
+    ///
+    /// if **r=a/b** is in reduced form, **the simplicity of r** is defined to be **L(r)≡1/ab**.
+    var simplicity: Self {
+        let ab = Int64(numerator * denominator)
+        return Self(fractionWithNoError: "1/\(ab)")
+    }
+
 }
 
 extension RationalProtocol {
