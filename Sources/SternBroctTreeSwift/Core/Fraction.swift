@@ -49,6 +49,27 @@ public struct Fraction {
     
 }
 
+extension Fraction : Comparable {
+
+    public static func < (lhs: Fraction, rhs: Fraction) -> Bool {
+
+        // If a, b, c, and d are positive, the result of a/b < c/d can represent as ad < bc.
+        // 1. To remove left side devider, let both sides multiplied by b. (a < bc/d)
+        // 2. To remove right side devider, let both sides multipied by d. (ad < bc)
+
+        let a = lhs.numerator
+        let b = lhs.denominator
+        let c = rhs.numerator
+        let d = rhs.denominator
+
+        let ad = a * d
+        let bc = b * c
+
+        return ad < bc
+    }
+
+}
+
 extension Fraction : CustomStringConvertible {
 
     public var description: String {
