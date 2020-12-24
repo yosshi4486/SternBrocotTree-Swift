@@ -70,6 +70,45 @@ extension Fraction : Comparable {
 
 }
 
+extension Fraction : SignedNumeric {
+
+    public typealias Magnitude = Double
+    public typealias IntegerLiteralType = Int
+
+    public var magnitude: Double {
+        return abs(Double(numerator)/Double(denominator))
+    }
+
+    public init?<T>(exactly source: T) where T : BinaryInteger {
+        self.init(numerator: Int(source), denominator: 1)
+    }
+
+    public init(integerLiteral value: Int) {
+        self.init(numerator: value, denominator: 1)
+    }
+
+    public static func + (lhs: Fraction, rhs: Fraction) -> Fraction {
+        let denominator = lhs.denominator * rhs.denominator
+        let numerator = (lhs.numerator * rhs.denominator) + (rhs.numerator * lhs.denominator)
+        return Fraction(numerator: numerator, denominator: denominator)
+    }
+
+    public static func - (lhs: Fraction, rhs: Fraction) -> Fraction {
+        let denominator = lhs.denominator * rhs.denominator
+        let numerator = (lhs.numerator * rhs.denominator) - (rhs.numerator * lhs.denominator)
+        return Fraction(numerator: numerator, denominator: denominator)
+    }
+
+    public static func * (lhs: Fraction, rhs: Fraction) -> Fraction {
+        return Fraction(numerator: lhs.numerator * rhs.numerator, denominator: lhs.denominator * rhs.denominator)
+    }
+
+    public static func *= (lhs: inout Fraction, rhs: Fraction) {
+        lhs = lhs * rhs
+    }
+
+}
+
 extension Fraction : CustomStringConvertible {
 
     public var description: String {
