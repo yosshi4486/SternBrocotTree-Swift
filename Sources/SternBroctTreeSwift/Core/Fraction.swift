@@ -22,13 +22,12 @@ public struct Fraction {
     /// Creates an instance initialized by the given numerator and denominator.
     ///
     /// - Precondition:
-    /// The denominator shouldn't be zero.
+    /// The denominator must not be zero.
     ///
     /// - Parameters:
     ///   - numerator: The value acts as numerator of this instance.
     ///   - denominator: The value acts as denominator of this instance.
     public init(numerator: Int, denominator: Int) {
-        precondition(denominator != 0)
         self.numerator = numerator
         self.denominator = denominator
     }
@@ -105,6 +104,23 @@ extension Fraction : SignedNumeric {
 
     public static func *= (lhs: inout Fraction, rhs: Fraction) {
         lhs = lhs * rhs
+    }
+
+    /// Returns the quotient of dividing the first value by the second.
+    ///
+    /// - Parameters:
+    ///   - lhs: The value to divide.
+    ///   - rhs: The value to divide lhs by. rhs must not be zeo.
+    public static func / (lhs: Fraction, rhs: Fraction) -> Fraction {
+        return lhs * Fraction(numerator: rhs.denominator, denominator: rhs.numerator)
+    }
+
+    /// Divides the first value by the second and stores the quotient in the left-hand-side variable
+    /// - Parameters:
+    ///   - lhs: The value to divide.
+    ///   - rhs: The value to divide lhs by. rhs must not be zeo.
+    public static func /= (lhs: inout Fraction, rhs: Fraction) {
+        lhs = lhs / rhs
     }
 
 }

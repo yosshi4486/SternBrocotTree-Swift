@@ -153,6 +153,19 @@ class FractionTests: XCTestCase {
         XCTAssertEqual(f.denominator, 12)
     }
 
+    func testDivide() {
+        let result = Fraction("7/3") / Fraction("3/4")
+        XCTAssertEqual(result.numerator, 28)
+        XCTAssertEqual(result.denominator, 9)
+    }
+
+    func testDivideAssing() {
+        var f = Fraction("7/3")
+        f /= Fraction("3/4")
+        XCTAssertEqual(f.numerator, 28)
+        XCTAssertEqual(f.denominator, 9)
+    }
+
     func testNegative() {
         var f = Fraction("7/3")
         f.negate()
