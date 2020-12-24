@@ -62,4 +62,45 @@ class RationalProtocolTests: XCTestCase {
         XCTAssertFalse(s.isAdjacent(to: Rational(fractionWithNoError: "4/1")))
     }
 
+    func testSimplicity() {
+        let r = Rational(fractionWithNoError: "2/3")
+        XCTAssertEqual(r.simplicity, Rational(fractionWithNoError: "1/6"))
+    }
+
+    func testSumOfSimplicitiesForRow() throws {
+        let rows: [Rational] = [
+            Rational(fractionWithNoError: "1/3"),
+            Rational(fractionWithNoError: "2/3"),
+            Rational(fractionWithNoError: "3/2"),
+            Rational(fractionWithNoError: "3/1")
+        ]
+        let simplicities = rows.map({ $0.simplicity })
+        let sum = try simplicities[0]
+            .adding(to: simplicities[1])
+            .adding(to: simplicities[2])
+            .adding(to: simplicities[3])
+
+        XCTAssertEqual(sum.description, "1/1")
+    }
+
+    func testTotal() {
+        let r = Rational(fractionWithNoError: "2/3")
+        XCTAssertEqual(r.total, 5)
+    }
+
+    func testSumOfTotalForRow() throws {
+        // The sum of the totals alog any row is twice a power of 3.
+
+        let rows: [Rational] = [
+            Rational(fractionWithNoError: "1/3"),
+            Rational(fractionWithNoError: "2/3"),
+            Rational(fractionWithNoError: "3/2"),
+            Rational(fractionWithNoError: "3/1")
+        ]
+        let totals = rows.map({ $0.total })
+        let sum = totals.reduce(0, +)
+        let expected = 2 * Int32(pow(3.0, 2.0))
+        XCTAssertEqual(sum, expected)
+    }
+
 }
