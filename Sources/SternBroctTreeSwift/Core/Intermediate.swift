@@ -22,10 +22,6 @@ import Foundation
 ///
 /// Give the left and right argument if possible.
 ///
-/// - Remark:
-/// `Rational.mediant` is much faster, but it doesn't ensure whether the new node is valid or not because it only adds each numer and denom.
-/// You should use this `intermediate` operation if you can't ensure the correctness of stern brocot node.
-///
 /// - Parameters:
 ///   - left: The node positioned at left of inserting postion you expected.
 ///   - right: The node positioned at right of inserting postion you expected.
@@ -49,6 +45,17 @@ public func intermediate<ConcreteRational : RationalProtocol>(left: ConcreteRati
         throw RationalIntermediateError.leftMustBeSmallerThanRight(lhs: left, rhs: right)
     }
 
+    // If arguments are adjacent, taking mediant works perfectly.
+    // It is much faster than searching sbtree.
+    guard !left.isAdjacent(to: right) else {
+        do {
+            return try ConcreteRational.mediant(left: left, right: right)
+        } catch {
+            throw RationalIntermediateError.overflow(lhs: low, rhs: high)
+        }
+    }
+
+    // If arguments are not adjacent, search proper node which matches SB-Tree requirements.
     var mediant: ConcreteRational?
     while true {
 
