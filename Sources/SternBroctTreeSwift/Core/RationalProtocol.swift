@@ -120,6 +120,13 @@ extension RationalProtocol {
         return Self(fractionWithNoError: "1/\(ab)")
     }
 
+    /// Returns total of a rational.
+    ///
+    /// if **r=a/b** is in reduced form, define the total of r to be **t(r) ≡ a+b**.
+    var total: Int32 {
+        return numerator + denominator
+    }
+
 }
 
 extension RationalProtocol {
