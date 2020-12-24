@@ -102,6 +102,20 @@ public protocol RationalProtocol : Comparable, Hashable, CustomStringConvertible
 
 extension RationalProtocol {
 
+    /// Returns a boolean value whether this and the other are adjacent.
+    ///
+    /// - Parameter other: The other concrete rational to determine adjacent.
+    /// - Returns: The two values are adjacent or not.
+    func isAdjacent(to other: Self) -> Bool {
+        let ad = Int64(numerator * other.denominator)
+        let bc = Int64(denominator * other.numerator)
+        return abs(ad - bc) == 1
+    }
+
+}
+
+extension RationalProtocol {
+
     /// Returns an new insntance from random numer and denom.
     ///
     /// The denominator must not be zero.
@@ -130,6 +144,7 @@ extension RationalProtocol {
     public static var infinity: Self {
         return Self(fractionWithNoError: "1/0")
     }
+    
 
 }
 
