@@ -126,17 +126,17 @@ final class IntermediateTests: XCTestCase {
     }
 
     func testMediantErrorOverflowDenominator() {
-        let left = Rational("1/2147483647")
-        let right = Rational("1/1")
-        XCTAssertError(try Rational.mediant(left: left, right: right),
-                       throws: RationalError<Rational>.overflow(lhs: left, rhs: right))
+        let left = Rational32("1/2147483647")
+        let right = Rational32("1/1")
+        XCTAssertError(try Rational32.mediant(left: left, right: right),
+                       throws: RationalError<Rational32>.overflow(lhs: left, rhs: right))
     }
 
     func testMediantErrorOverflowNumerator() {
-        let left = Rational("1/1")
-        let right = Rational("2147483647/1")
-        XCTAssertError(try Rational.mediant(left: left, right: right),
-                       throws: RationalError<Rational>.overflow(lhs: left, rhs: right))
+        let left = Rational32("1/1")
+        let right = Rational32("2147483647/1")
+        XCTAssertError(try Rational32.mediant(left: left, right: right),
+                       throws: RationalError<Rational32>.overflow(lhs: left, rhs: right))
     }
 
     static var allTests = [

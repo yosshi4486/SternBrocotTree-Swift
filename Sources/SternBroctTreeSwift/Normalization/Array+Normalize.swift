@@ -7,7 +7,7 @@
 
 import Foundation
 
-public extension Array where Element : RationalUserOrderable, Element.ConcreteRational.Number == Int32 {
+public extension Array where Element : RationalUserOrderable {
 
     /// Normalize rationals.
     ///
@@ -31,7 +31,7 @@ public extension Array where Element : RationalUserOrderable, Element.ConcreteRa
 
         for i in 0..<count {
             // The denominator is always one, zero denominator error is never thrown.
-            self[i].rationalUserDefinedOrder = Element.ConcreteRational(numerator: Int32(i + 1), denominator: 1)
+            self[i].rationalUserDefinedOrder = NSRational(numerator: i + 1, denominator: 1)
         }
 
     }

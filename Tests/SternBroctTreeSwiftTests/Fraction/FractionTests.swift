@@ -99,7 +99,7 @@ class FractionTests: XCTestCase {
         ]
         let totals = rows.map({ $0.total })
         let sum = totals.reduce(0, +)
-        let expected = 2 * Int32(pow(3.0, 2.0))
+        let expected = 2 * Int(pow(3.0, 2.0))
         XCTAssertEqual(sum, expected)
     }
 
