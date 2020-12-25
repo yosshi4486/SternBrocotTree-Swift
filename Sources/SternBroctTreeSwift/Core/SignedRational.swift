@@ -14,7 +14,14 @@ import Foundation
 public protocol SignedRational : Fraction, CustomFloatConvertible, CustomDoubleConvertible, CustomDecimalConvertible where Number : SignedInteger & FixedWidthInteger {
 
     /// Returns a mediant from two fractions.
-    static func mediant(left: Self, right: Self) throws -> Self
+    static func mediant(left: Self, right: Self) -> Self
+
+    /// Retuns the result of mediant of the given left and right, along with a Boolean value indicating whether overflow occurred in the operation.
+    ///
+    /// - Parameters:
+    ///   - left: The left value to mediant.
+    ///   - right: The right value to mediant.
+    static func mediantReportingOverflow(left: Self, right: Self) -> (partialValue: Self, overflow: Bool)
 
     /// Returns a boolean value whether this and the other are adjacent.
     ///
@@ -80,16 +87,22 @@ extension SignedRational {
     }
 
     /// Returns a mediant from two fractions.
-    public static func mediant(left: Self, right: Self) throws -> Self {
+    public static func mediant(left: Self, right: Self) -> Self {
+        let numerator = left.numerator + right.numerator
+        let denominator = left.denominator + right.denominator
+        return Self(numerator: numerator, denominator: denominator)
+    }
 
+    /// Returns a mediant from two fractions.
+    public static func mediantReportingOverflow(left: Self, right: Self) -> (partialValue: Self, overflow: Bool) {
         let (numeratorAddingResult, numeratorAddingOverflow) = left.numerator.addingReportingOverflow(right.numerator)
         let (denominatorAddingResult, denominatorAddingOverflow) = left.denominator.addingReportingOverflow(right.denominator)
 
         if numeratorAddingOverflow || denominatorAddingOverflow {
-            throw RationalError.arithmeticOverflow(lhs: left, rhs: right)
+            return (Self(numerator: numeratorAddingResult, denominator: denominatorAddingResult), true)
         }
 
-        return Self(numerator: numeratorAddingResult,denominator: denominatorAddingResult)
+        return (Self(numerator: numeratorAddingResult,denominator: denominatorAddingResult), false)
     }
 
     public func backwardingMatrixSequence() -> [Matrix2x2] {

@@ -46,10 +46,6 @@ public final class NSRational : NSObject, NSSecureCoding, SignedRational {
         self.rational = Rational(stringValue)
     }
 
-    public var canSimplify: Bool {
-        return rational.canSimplify
-    }
-
     /*
      A RationalProtocol(fractionWithNoError:) is also usefull in compatibility of Rational and NSRational.
      */
@@ -95,19 +91,6 @@ public final class NSRational : NSObject, NSSecureCoding, SignedRational {
             }
         }
         self.rational = Rational(numerator: numerator * -1, denominator: denominator)
-    }
-
-    /// Returns a mediant from two fractions.
-    public static func mediant(left: NSRational, right: NSRational) throws -> Self {
-
-        let (numeratorAddingResult, numeratorAddingOverflow) = left.numerator.addingReportingOverflow(right.numerator)
-        let (denominatorAddingResult, denominatorAddingOverflow) = left.denominator.addingReportingOverflow(right.denominator)
-
-        if numeratorAddingOverflow || denominatorAddingOverflow {
-            throw RationalError.arithmeticOverflow(lhs: left, rhs: right)
-        }
-
-        return Self(numerator: numeratorAddingResult,denominator: denominatorAddingResult)
     }
 
 
