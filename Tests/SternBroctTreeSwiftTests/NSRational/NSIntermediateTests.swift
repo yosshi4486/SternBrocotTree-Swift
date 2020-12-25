@@ -127,15 +127,16 @@ class NSIntermediateTests: XCTestCase {
     func testMediantErrorOverflowDenominator() {
         let left = NSRational("1/9223372036854775807")
         let right = NSRational("1/1")
-        XCTAssertError(try NSRational.mediant(left: left, right: right),
-                       throws: RationalError<NSRational>.overflow(lhs: left, rhs: right))
+        let result = NSRational.mediantReportingOverflow(left: left, right: right)
+
+        XCTAssertTrue(result.overflow)
     }
 
     func testMediantErrorOverflowNumerator() {
         let left = NSRational("1/1")
         let right = NSRational("9223372036854775807/1")
-        XCTAssertError(try NSRational.mediant(left: left, right: right),
-                       throws: RationalError<NSRational>.overflow(lhs: left, rhs: right))
+        let result = NSRational.mediantReportingOverflow(left: left, right: right)
+        XCTAssertTrue(result.overflow)
     }
 
 }
