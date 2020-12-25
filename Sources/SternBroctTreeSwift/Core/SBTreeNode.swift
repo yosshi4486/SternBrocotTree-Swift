@@ -17,11 +17,6 @@ public protocol SBTreeNode {
 
 extension SBTreeNode where Self : Fraction {
 
-    /// Returns zero representation of sternbrocot-tree.
-    public static var zero: Self {
-        return Self("0/1")
-    }
-
     /// Returns one representation of sternbrocot-tree.
     public static var identity: Self {
         return Self("1/1")

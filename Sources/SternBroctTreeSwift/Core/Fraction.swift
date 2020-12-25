@@ -262,6 +262,10 @@ extension Fraction where Number == Int64 {
 /// Default implementation for SignedNumeric.
 extension Fraction where Number == Int32, Magnitude == Double, IntegerLiteralType == Int32 {
 
+    public static var zero: Self {
+        return Self("0/1")
+    }
+
     public var magnitude: Double {
         return abs(Double(numerator)/Double(denominator))
     }
