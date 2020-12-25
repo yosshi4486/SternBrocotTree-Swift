@@ -59,24 +59,24 @@ public final class NSRational : NSObject, NSSecureCoding, RationalProtocol {
         rational.simplify()
     }
 
-    public func adding(to other: NSRational) throws -> Self {
-        let result = try rational.adding(to: other.rational)
-        return Self(result.description)
+    public func addingReportingOverflow(_ other: NSRational) -> (partialValue: NSRational, overflow: Bool) {
+        let (partialValue, overflow) = rational.addingReportingOverflow(other.rational)
+        return (NSRational(rational: partialValue), overflow)
     }
 
-    public func subtracting(_ other: NSRational) throws -> Self {
-        let result = try rational.subtracting(other.rational)
-        return Self(result.description)
+    public func subtractingReportingOverflow(_ other: NSRational) -> (partialValue: NSRational, overflow: Bool) {
+        let (partialValue, overflow) = rational.subtractingReportingOverflow(other.rational)
+        return (NSRational(rational: partialValue), overflow)
     }
 
-    public func multiplied(by other: NSRational) throws -> Self {
-        let result = try rational.multiplied(by: other.rational)
-        return Self(result.description)
+    public func multipliedReportingOverflow(by other: NSRational) -> (partialValue: NSRational, overflow: Bool) {
+        let (partialValue, overflow) = rational.multipliedReportingOverflow(by: other.rational)
+        return (NSRational(rational: partialValue), overflow)
     }
 
-    public func divided(by other: NSRational) throws -> Self {
-        let result = try rational.divided(by: other.rational)
-        return Self(result.description)
+    public func dividedReportingOverflow(by other: NSRational) -> (partialValue: NSRational, overflow: Bool) {
+        let (partialValue, overflow) = rational.dividedReportingOverflow(by: other.rational)
+        return (NSRational(rational: partialValue), overflow)
     }
 
     // MARK: - NSObject Protocol

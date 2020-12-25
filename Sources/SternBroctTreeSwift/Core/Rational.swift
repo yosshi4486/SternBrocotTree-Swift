@@ -93,23 +93,15 @@ public struct Rational : RationalProtocol {
         self.denominator = denominator
     }
 
-
     // MARK: - Arithmetic Operations
 
-    /// Returns the sum of this value and the given value **in simplified form**.
-    /// 
-    /// - Parameter other: The value to add to this value.
-    /// - Throws: An AddingError may be thrown.
-    /// - Returns: A rational that is added.
-    public func adding(to other: Rational) throws -> Rational {
+    public func addingReportingOverflow(_ other: Rational) -> (partialValue: Rational, overflow: Bool) {
 
         var x = self
         var y = other
         var xNumeratorYDenominator, yNumeratorYDenominator, numerator, denominator: Int32!
         var isROverflowed, isSOverflowed, isNumeratorOverflowed, isDenominatorOverflowed: Bool!
 
-        // Question: I know devide by GCD only take one step to reach simple fraction.
-        // Should it run loop? or only once?
         var retry = true
         while retry {
 
@@ -127,7 +119,7 @@ public struct Rational : RationalProtocol {
                 if !x.canSimplify && !y.canSimplify {
 
                     // neither fraction could reduce, cannot proceed
-                    throw RationalError.overflow(lhs: self, rhs: other)
+                    return (Rational(numerator, denominator), true)
                 }
 
                 x.simplify()
@@ -141,26 +133,15 @@ public struct Rational : RationalProtocol {
 
         }
 
-        return Rational(numerator, denominator).simplified()
+        return (Rational(numerator, denominator).simplified(), false)
+
     }
 
-    /// Returns the defference obtained by subtracting the given value from this value **in simplified form**.
-    ///
-    /// - Parameter other: The value to subtract from this value.
-    /// - Throws: An AddingError may be thrown
-    /// - Returns: A rational that is subtracted.
-    public func subtracting(_ other: Rational) throws -> Rational {
-        try adding(to: other.negative)
+    public func subtractingReportingOverflow(_ other: Rational) -> (partialValue: Rational, overflow: Bool) {
+        return addingReportingOverflow(-other)
     }
 
-
-    /// Returns the product of this value and the given value **in simplified form**.
-    ///
-    /// - Parameter other: The value to multiply by this value.
-    /// - Throws: An AddingError may be thrown
-    /// - Returns: A rational that is multiplied.
-    public func multiplied(by other: Rational) throws -> Rational {
-
+    public func multipliedReportingOverflow(by other: Rational) -> (partialValue: Rational, overflow: Bool) {
         var x = self
         var y = other
         var numerator, denominator: Int32!
@@ -181,7 +162,7 @@ public struct Rational : RationalProtocol {
                 if !x.canSimplify && !y.canSimplify {
 
                     // neither fraction could reduce, cannot proceed
-                    throw RationalError.overflow(lhs: self, rhs: other)
+                    return (Rational(numerator, denominator), true)
                 }
 
                 x.simplify()
@@ -194,21 +175,11 @@ public struct Rational : RationalProtocol {
             }
         }
 
-        return Rational(numerator, denominator).simplified()
+        return (Rational(numerator, denominator).simplified(), false)
     }
 
-    /// Returns the quatient obtained by dividing this value by the given value **in simplified form**.
-    ///
-    /// - Parameter other: The value to divide this value by.
-    /// - Throws: An AddingError may be thrown.
-    /// - Returns: A rational that is devided.
-    public func divided(by other: Rational) throws -> Rational {
-
-        var y = other
-
-        swap(&y.numerator, &y.denominator)
-
-        return try multiplied(by: y)
+    public func dividedReportingOverflow(by other: Rational) -> (partialValue: Rational, overflow: Bool) {
+        return multipliedReportingOverflow(by: Rational(other.denominator, other.numerator))
     }
 
     private var negative: Rational {

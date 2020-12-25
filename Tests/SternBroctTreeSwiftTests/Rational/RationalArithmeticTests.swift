@@ -46,7 +46,7 @@ class RationalArithmeticTests: XCTestCase {
     func testAdd() throws {
         let a = Rational("1/3")
         let b = Rational("1/3")
-        let result = try a.adding(to: b)
+        let result = a.addingReportingOverflow(b).partialValue
 
         XCTAssertEqual(result.description, "2/3")
     }
@@ -54,7 +54,7 @@ class RationalArithmeticTests: XCTestCase {
     func testMult() throws {
         let a = Rational("1/3")
         let b = Rational("1/3")
-        let result = try a.multiplied(by: b)
+        let result = a.multipliedReportingOverflow(by: b).partialValue
 
         XCTAssertEqual(result.description, "1/9")
     }
@@ -62,7 +62,7 @@ class RationalArithmeticTests: XCTestCase {
     func testSub() throws {
         let a = Rational("2/3")
         let b = Rational("1/3")
-        let result = try a.subtracting(b)
+        let result = a.subtractingReportingOverflow(b).partialValue
 
         XCTAssertEqual(result.description, "1/3")
     }
@@ -70,7 +70,7 @@ class RationalArithmeticTests: XCTestCase {
     func testDiv() throws {
         let a = Rational("2/3")
         let b = Rational("1/3")
-        let result = try a.divided(by: b)
+        let result = a.dividedReportingOverflow(by: b).partialValue
 
         XCTAssertEqual(result.description, "2/1")
     }

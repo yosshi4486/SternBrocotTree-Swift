@@ -75,10 +75,10 @@ class RationalProtocolTests: XCTestCase {
             Rational("3/1")
         ]
         let simplicities = rows.map({ $0.simplicity })
-        let sum = try simplicities[0]
-            .adding(to: simplicities[1])
-            .adding(to: simplicities[2])
-            .adding(to: simplicities[3])
+        let sum = simplicities[0]
+            .addingReportingOverflow(simplicities[1]).partialValue
+            .addingReportingOverflow(simplicities[2]).partialValue
+            .addingReportingOverflow(simplicities[3]).partialValue
 
         XCTAssertEqual(sum.description, "1/1")
     }
