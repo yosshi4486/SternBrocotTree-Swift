@@ -81,6 +81,20 @@ public final class NSRational : NSObject, NSSecureCoding, Fraction {
         return (NSRational(rational: partialValue), overflow)
     }
 
+    public func negate() {
+        if numerator == Int32.min {
+            let simplified = self.simplified()
+
+            // check again
+            if simplified.numerator == Int32.min {
+
+                // denominator can't be MIN too or fraction would have previosly simplifed to 1/1.
+                self.rational = Rational(numerator: simplified.numerator, denominator: simplified.denominator * -1)
+            }
+        }
+        self.rational = Rational(numerator: numerator * -1, denominator: denominator)
+    }
+
     // MARK: - NSObject Protocol
 
     public override var description: String {

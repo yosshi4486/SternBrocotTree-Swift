@@ -185,8 +185,7 @@ public struct Rational : Fraction {
         return multipliedReportingOverflow(by: Rational(other.denominator, other.numerator))
     }
 
-    private var negative: Rational {
-
+    public mutating func negate() {
         if numerator == Int32.min {
 
             let simplified = self.simplified()
@@ -195,12 +194,10 @@ public struct Rational : Fraction {
             if simplified.numerator == Int32.min {
 
                 // denominator can't be MIN too or fraction would have previosly simplifed to 1/1.
-                return Rational(simplified.numerator, simplified.denominator * -1)
+                self = Rational(simplified.numerator, simplified.denominator * -1)
             }
-
         }
-
-        return Rational(numerator * -1, denominator)
+        self = Rational(numerator * -1, denominator)
     }
 
 }
