@@ -18,6 +18,8 @@ public struct Rational16 : MutableSignedRational {
     /// The denominator of the rational number.
     public var denominator: Int16
 
+    public var decimalValue: Decimal { Decimal(numerator) / Decimal(denominator) }
+
     public init(numerator: Int16, denominator: Int16) {
         self.numerator = numerator
         self.denominator = denominator

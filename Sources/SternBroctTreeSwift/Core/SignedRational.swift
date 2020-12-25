@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol SignedRational : Fraction where Number : SignedInteger & FixedWidthInteger {
+public protocol SignedRational : Fraction, CustomFloatConvertible, CustomDoubleConvertible, CustomDecimalConvertible where Number : SignedInteger & FixedWidthInteger {
 
     /// Returns a mediant from two fractions.
     static func mediant(left: Self, right: Self) throws -> Self
@@ -85,8 +85,10 @@ extension SignedRational {
         // Start from R.
         var mixPartSequence: [Number] = []
         var continueFraction = self
+
         while continueFraction.numerator > 1 || continueFraction.denominator > 1 {
-            if continueFraction.numerator == 2 && continueFraction.denominator == 1 {
+            let isEndIndeciesOfContinueFraction = continueFraction.numerator == 2 && continueFraction.denominator == 1
+            if isEndIndeciesOfContinueFraction {
                 mixPartSequence.append(1)
                 break
             } else {
@@ -95,20 +97,20 @@ extension SignedRational {
             continueFraction = Self(numerator: continueFraction.denominator, denominator: continueFraction.mixedRemainder)
         }
 
-        let box: [[Matrix2x2]] = mixPartSequence.enumerated()
-            .compactMap({ index, value in
-                guard value > 0 else {
-                    return nil
-                }
+        let boxOfRLMatrixes: [[Matrix2x2]] = mixPartSequence.enumerated().compactMap({ index, value in
+            guard value > 0 else {
+                return nil
+            }
 
-                if (index % 2 == 0) || index == 0 {
-                    return Array(repeating: Matrix2x2.R, count: Int(value))
-                } else {
-                    return Array(repeating: Matrix2x2.L, count: Int(value))
-                }
-            })
+            let isEven = index % 2 == 0
+            if isEven || index == 0 {
+                return Array(repeating: Matrix2x2.R, count: Int(value))
+            } else {
+                return Array(repeating: Matrix2x2.L, count: Int(value))
+            }
+        })
 
-        return box.flatMap({ $0 })
+        return boxOfRLMatrixes.flatMap({ $0 })
     }
 
 }

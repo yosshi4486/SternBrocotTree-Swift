@@ -31,6 +31,8 @@ public final class NSRational : NSObject, NSSecureCoding, SignedRational {
             rational.numerator = newValue
         }
     }
+    
+    public var decimalValue: Decimal { Decimal(numerator) / Decimal(denominator) }
 
     required public init(rational: Rational) {
         self.rational = rational
