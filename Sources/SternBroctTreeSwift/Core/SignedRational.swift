@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol SignedRational : Fraction where Number : SignedInteger & FixedWidthInteger {
+public protocol SignedRational : Fraction, CustomFloatConvertible, CustomDoubleConvertible, CustomDecimalConvertible where Number : SignedInteger & FixedWidthInteger {
 
     /// Returns a mediant from two fractions.
     static func mediant(left: Self, right: Self) throws -> Self

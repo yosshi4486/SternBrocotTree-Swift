@@ -10,7 +10,7 @@ import Foundation
 /// A protocol that represents fraction.
 ///
 /// Rational is number that can represent it as ratio of two integer values.
-public protocol Fraction : SBTreeNode, SignedNumeric, Comparable, Hashable, CustomFloatConvertible, CustomDoubleConvertible, CustomDecimalConvertible {
+public protocol Fraction : SBTreeNode, SignedNumeric, Comparable, Hashable {
 
     associatedtype Number : SignedNumeric
 
@@ -62,35 +62,5 @@ public protocol Fraction : SBTreeNode, SignedNumeric, Comparable, Hashable, Cust
     /// - Note:
     /// `Reduce` is term used to reduce numerics by gcm, but  `simplified` execute sign inversion of the numerator and the denominator in addition.
     func simplified() -> Self
-
-}
-
-extension Fraction where Number == Int {
-
-    public var decimalValue: Decimal { Decimal(numerator) / Decimal(denominator) }
-
-}
-
-extension Fraction where Number == Int8 {
-
-    public var decimalValue: Decimal { Decimal(numerator) / Decimal(denominator) }
-
-}
-
-extension Fraction where Number == Int16 {
-
-    public var decimalValue: Decimal { Decimal(numerator) / Decimal(denominator) }
-
-}
-
-extension Fraction where Number == Int32 {
-
-    public var decimalValue: Decimal { Decimal(numerator) / Decimal(denominator) }
-
-}
-
-extension Fraction where Number == Int64 {
-
-    public var decimalValue: Decimal { Decimal(numerator) / Decimal(denominator) }
 
 }
