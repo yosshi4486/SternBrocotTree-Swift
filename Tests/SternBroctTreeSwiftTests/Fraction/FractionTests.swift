@@ -165,21 +165,38 @@ class FractionTests: XCTestCase {
         XCTAssertEqual(f.denominator, 3)
     }
 
-    func testMidexPart() {
+    func testMixedPart() {
         let f = Rational("11/3")
         XCTAssertEqual(f.mixedPart, 3)
     }
 
-    func testMidexPartZero() {
+    func testMixedPartZero() {
         let f = Rational("3/11")
         XCTAssertEqual(f.mixedPart, 0)
     }
 
-    func testBackwardsMatrixSequnce() {
+    func testMixedRemainder() {
+        let f = Rational("11/3")
+        XCTAssertEqual(f.mixedRemainder, 2)
+    }
+
+    func testMixedRemainderZer0() {
+        let f = Rational("3/3")
+        XCTAssertEqual(f.mixedRemainder, 0)
+    }
+
+    func testBackwardsMatrixSequnce1() {
         let rational = Rational("3/11")
         let matrixSequence = rational.backwardingMatrixSequence()
 
         XCTAssertEqual(matrixSequence, [.L, .L, .L, .R, .L])
+    }
+
+    func testBackwardsMatrixSequnce2() {
+        let rational = Rational("19/8")
+        let matrixSequence = rational.backwardingMatrixSequence()
+
+        XCTAssertEqual(matrixSequence, [.R, .R, .L, .L, .R, .L])
     }
 
 }

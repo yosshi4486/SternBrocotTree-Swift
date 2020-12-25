@@ -105,9 +105,6 @@ public protocol Fraction : SBTreeNode, SignedNumeric, Comparable, Hashable, Cust
     /// - Returns: The two values are adjacent or not.
     func isAdjacent(to other: Self) -> Bool
 
-    /// Returns backwarding matrix sequence.
-    func backwardingMatrixSequence() -> [Matrix2x2]
-
 }
 
 /// Default implementation for SBTreeNode.
@@ -151,13 +148,14 @@ extension Fraction where Number == Int32 {
         return Self(numerator: numeratorAddingResult,denominator: denominatorAddingResult)
     }
 
-    public func backwardingMatrixSequence() -> [Matrix2x2] {
-        return [.L, .L, .L, .R, .L]
-    }
-
     /// Returns the interger value of mixed rational.
     public var mixedPart: Number {
         return numerator / denominator
+    }
+
+    /// Returns the numerator of mixed rational.
+    public var mixedRemainder: Number {
+        return numerator % denominator
     }
 
 }
