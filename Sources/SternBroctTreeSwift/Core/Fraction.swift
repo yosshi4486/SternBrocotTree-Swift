@@ -126,7 +126,7 @@ extension Fraction where Number == Int32 {
     /// Returns simplicity of a rational.
     ///
     /// if **r=a/b** is in reduced form, **the simplicity of r** is defined to be **L(r)≡1/ab**.
-    var simplicity: Self {
+    public var simplicity: Self {
         let ab = Int64(numerator * denominator)
         return Self("1/\(ab)")
     }
@@ -134,7 +134,7 @@ extension Fraction where Number == Int32 {
     /// Returns total of a rational.
     ///
     /// if **r=a/b** is in reduced form, define the total of r to be **t(r) ≡ a+b**.
-    var total: Int32 {
+    public var total: Int32 {
         return numerator + denominator
     }
 
@@ -153,6 +153,11 @@ extension Fraction where Number == Int32 {
 
     public func backwardingMatrixSequence() -> [Matrix2x2] {
         return [.L, .L, .L, .R, .L]
+    }
+
+    /// Returns the interger value of mixed rational.
+    public var mixedPart: Number {
+        return numerator / denominator
     }
 
 }

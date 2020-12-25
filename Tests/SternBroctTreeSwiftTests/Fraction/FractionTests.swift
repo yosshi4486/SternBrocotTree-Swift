@@ -165,6 +165,15 @@ class FractionTests: XCTestCase {
         XCTAssertEqual(f.denominator, 3)
     }
 
+    func testMidexPart() {
+        let f = Rational("11/3")
+        XCTAssertEqual(f.mixedPart, 3)
+    }
+
+    func testMidexPartZero() {
+        let f = Rational("3/11")
+        XCTAssertEqual(f.mixedPart, 0)
+    }
 
     func testBackwardsMatrixSequnce() {
         let rational = Rational("3/11")
