@@ -7,22 +7,18 @@
 
 import Foundation
 
-/// A protocol that represents rational.
+/// A protocol that represents fraction.
 ///
 /// Rational is number that can represent it as ratio of two integer values.
-public protocol RationalProtocol : SBTreeNode, SignedNumeric, Comparable, Hashable, CustomFloatConvertible, CustomDoubleConvertible, CustomDecimalConvertible {
+public protocol Fraction : SBTreeNode, SignedNumeric, Comparable, Hashable, CustomFloatConvertible, CustomDoubleConvertible, CustomDecimalConvertible {
 
-    /// Returns zero representation of sternbrocot-tree.
-    static var zero: Self { get }
-
-    /// Returns infinity representation of sternbrocot-tree.
-    static var infinity: Self { get }
+    associatedtype Number : Numeric
 
     /// The denominator of the rational number.
-    var denominator: Int32 { get set }
+    var denominator: Number { get set }
 
     /// The numerator of the rational number.
-    var numerator: Int32 { get set }
+    var numerator: Number { get set }
 
     /// Creates an instance initialized by the given numerator and denominator.
     ///
@@ -32,7 +28,7 @@ public protocol RationalProtocol : SBTreeNode, SignedNumeric, Comparable, Hashab
     /// - Parameters:
     ///   - numerator: The value acts as numerator of this instance.
     ///   - denominator: The value acts as denominator of this instance.
-    init(numerator: Int32, denominator: Int32)
+    init(numerator: Number, denominator: Number)
 
     /// Creates an instance initizalized by the given string value splited by `/` separator.
     ///
@@ -115,7 +111,7 @@ public protocol RationalProtocol : SBTreeNode, SignedNumeric, Comparable, Hashab
 }
 
 /// Default implementation for SBTreeNode.
-extension RationalProtocol {
+extension Fraction where Number == Int32 {
 
     /// Returns a boolean value whether this and the other are adjacent.
     ///
@@ -161,7 +157,7 @@ extension RationalProtocol {
 
 }
 
-extension RationalProtocol {
+extension Fraction {
 
     /// Returns an new insntance from random numer and denom.
     ///
@@ -174,26 +170,11 @@ extension RationalProtocol {
         let denominator = Int32.random(in: 1...max)
         return Self("\(numerator)/\(denominator)")
     }
-
-    /// Returns zero representation of sternbrocot-tree.
-    public static var zero: Self {
-        return Self("0/1")
-    }
-
-    /// Returns one representation of sternbrocot-tree.
-    public static var identity: Self {
-        return Self("1/1")
-    }
-
-    /// Returns infinity representation of sternbrocot-tree.
-    public static var infinity: Self {
-        return Self("1/0")
-    }
     
 }
 
 /// Default implementation for Equtable.
-extension RationalProtocol {
+extension Fraction where Number : SignedInteger {
 
     public static func == (lhs: Self, rhs: Self) -> Bool {
         return lhs.numerator == rhs.numerator && lhs.denominator == rhs.denominator
@@ -202,7 +183,7 @@ extension RationalProtocol {
 }
 
 /// Default implementation for Comparable.
-extension RationalProtocol {
+extension Fraction where Number : SignedInteger {
 
     public static func < (lhs: Self, rhs: Self) -> Bool {
 
@@ -224,7 +205,7 @@ extension RationalProtocol {
 }
 
 /// Default implementation for Hashable.
-extension RationalProtocol {
+extension Fraction where Number : SignedInteger {
 
     public func hash(into hasher: inout Hasher) {
 
@@ -237,7 +218,7 @@ extension RationalProtocol {
 }
 
 /// Default implementation for Convertibles.
-extension RationalProtocol {
+extension Fraction where Number : SignedInteger {
 
     public var description: String { "\(numerator)/\(denominator)" }
 
@@ -247,12 +228,34 @@ extension RationalProtocol {
 
     public var doubleValue: Double { Double(numerator) / Double(denominator) }
 
+}
+
+extension Fraction where Number == Int8 {
+
+    public var decimalValue: Decimal { Decimal(numerator) / Decimal(denominator) }
+
+}
+
+extension Fraction where Number == Int16 {
+
+    public var decimalValue: Decimal { Decimal(numerator) / Decimal(denominator) }
+
+}
+
+extension Fraction where Number == Int32 {
+
+    public var decimalValue: Decimal { Decimal(numerator) / Decimal(denominator) }
+
+}
+
+extension Fraction where Number == Int64 {
+
     public var decimalValue: Decimal { Decimal(numerator) / Decimal(denominator) }
 
 }
 
 /// Default implementation for SignedNumeric.
-extension RationalProtocol where Magnitude == Double, IntegerLiteralType == Int32 {
+extension Fraction where Number == Int32, Magnitude == Double, IntegerLiteralType == Int32 {
 
     public var magnitude: Double {
         return abs(Double(numerator)/Double(denominator))

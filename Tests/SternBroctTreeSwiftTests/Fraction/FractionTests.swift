@@ -8,7 +8,7 @@
 import XCTest
 @testable import SternBroctTreeSwift
 
-class RationalProtocolTests: XCTestCase {
+class FractionTests: XCTestCase {
 
     func testAdjacent() {
         let left = Rational("2/3")

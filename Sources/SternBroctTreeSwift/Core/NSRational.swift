@@ -8,7 +8,9 @@
 import Foundation
 
 /// A rational type for reference semantics. The type stores and uses value rational internally.
-public final class NSRational : NSObject, NSSecureCoding, RationalProtocol {
+public final class NSRational : NSObject, NSSecureCoding, Fraction {
+
+    public typealias Number = Int32
 
     private var rational: Rational
 

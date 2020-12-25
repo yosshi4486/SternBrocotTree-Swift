@@ -8,8 +8,12 @@
 import Foundation
 
 /// A rational type for value semantics.
-public struct Rational : RationalProtocol {
-    
+///
+/// Rational is specialized fraction which has interger denominator and numerator.
+public struct Rational : Fraction {
+
+    public typealias Number = Int32
+
     /// The numerator of the rational number.
     public var numerator: Int32
 
@@ -22,7 +26,6 @@ public struct Rational : RationalProtocol {
     }
 
     public init(_ stringValue: String) {
-
         let splited = stringValue.split(separator: "/")
 
         let numerator = Int32(splited[0])!

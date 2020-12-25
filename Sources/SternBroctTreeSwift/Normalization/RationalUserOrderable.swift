@@ -10,7 +10,7 @@ import Foundation
 /// A type that a user of your application can store their user defined order as rational.
 public protocol RationalUserOrderable {
     
-    associatedtype ConcreteRational : RationalProtocol
+    associatedtype ConcreteRational : Fraction
 
     /// The user defined order as rational.
     var rationalUserDefinedOrder: ConcreteRational { get set }

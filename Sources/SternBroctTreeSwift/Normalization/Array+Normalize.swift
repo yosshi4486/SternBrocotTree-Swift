@@ -7,7 +7,7 @@
 
 import Foundation
 
-public extension Array where Element : RationalUserOrderable {
+public extension Array where Element : RationalUserOrderable, Element.ConcreteRational.Number == Int32 {
 
     /// Normalize rationals.
     ///

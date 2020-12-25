@@ -8,7 +8,7 @@
 import Foundation
 
 /// Error codes for rational operations.
-public enum RationalError<ConcreteRational : RationalProtocol> : LocalizedError {
+public enum RationalError<ConcreteRational : Fraction> : LocalizedError {
 
     /// An overflow occured.
     case overflow(lhs: ConcreteRational, rhs: ConcreteRational)
