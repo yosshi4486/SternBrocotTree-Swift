@@ -104,36 +104,36 @@ class NSIntermediateTests: XCTestCase {
     }
 
     func testErrorNegativeArguments() {
-        let left = NSRational(fractionWithNoError: "-1/1")
-        let right = NSRational(fractionWithNoError: "1/0")
+        let left = NSRational("-1/1")
+        let right = NSRational("1/0")
         XCTAssertError(try intermediate(left: left, right: nil),
                        throws: RationalIntermediateError<NSRational>.negativeArgument(lhs: left, rhs: right))
     }
 
     func testErrorLeftArgIsSmallerThanRight() {
-        let left = NSRational(fractionWithNoError: "2/3")
-        let right = NSRational(fractionWithNoError: "1/3")
+        let left = NSRational("2/3")
+        let right = NSRational("1/3")
         XCTAssertError(try intermediate(left: left, right: right),
                        throws: RationalIntermediateError<NSRational>.leftMustBeSmallerThanRight(lhs: left, rhs: right))
     }
 
     func testErrorLeftArgIsSmallerThanRightWhenEqual() {
-        let left = NSRational(fractionWithNoError: "2/3")
-        let right = NSRational(fractionWithNoError: "2/3")
+        let left = NSRational("2/3")
+        let right = NSRational("2/3")
         XCTAssertError(try intermediate(left: left, right: right),
                        throws: RationalIntermediateError<NSRational>.leftMustBeSmallerThanRight(lhs: left, rhs: right))
     }
 
     func testMediantErrorOverflowDenominator() {
-        let left = NSRational(fractionWithNoError: "1/2147483647")
-        let right = NSRational(fractionWithNoError: "1/1")
+        let left = NSRational("1/2147483647")
+        let right = NSRational("1/1")
         XCTAssertError(try NSRational.mediant(left: left, right: right),
                        throws: RationalError<NSRational>.overflow(lhs: left, rhs: right))
     }
 
     func testMediantErrorOverflowNumerator() {
-        let left = NSRational(fractionWithNoError: "1/1")
-        let right = NSRational(fractionWithNoError: "2147483647/1")
+        let left = NSRational("1/1")
+        let right = NSRational("2147483647/1")
         XCTAssertError(try NSRational.mediant(left: left, right: right),
                        throws: RationalError<NSRational>.overflow(lhs: left, rhs: right))
     }

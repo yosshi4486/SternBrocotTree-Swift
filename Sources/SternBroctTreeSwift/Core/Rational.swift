@@ -8,7 +8,11 @@
 import Foundation
 
 /// A rational type for value semantics.
-public struct Rational : RationalProtocol {
+///
+/// Rational is specialized fraction which has interger denominator and numerator.
+public struct Rational : Fraction {
+
+    public typealias Number = Int32
 
     /// The numerator of the rational number.
     public var numerator: Int32
@@ -16,58 +20,24 @@ public struct Rational : RationalProtocol {
     /// The denominator of the rational number.
     public var denominator: Int32
 
-    /// Creates an instance initialized by the given numerator and denominator.
-    ///
-    /// - Parameters:
-    ///   - numerator: The value acts as numerator of this instance.
-    ///   - denominator: The value acts as denominator of this instance.
-    /// - Throws: An initizalization error.
-    public init(numerator: Int32, denominator: Int32) throws {
-
-        guard denominator != 0 else {
-            throw RationalError<Self>.zeroDenominator
-        }
-
+    public init(numerator: Int32, denominator: Int32) {
         self.numerator = numerator
         self.denominator = denominator
     }
 
-    /// Creates an instance initizalized by the given string value splited by `/` separator.
-    ///
-    /// In some cases, Initialized by string literal is more readable in terms of use.
-    ///
-    /// - Parameter fraction: The string value represents a fruction.
-    /// - Throws: An initizalization error
-    public init?(fraction: String) throws {
+    public init(_ stringValue: String) {
+        let splited = stringValue.split(separator: "/")
 
-        let splited = fraction.split(separator: "/")
+        let numerator = Int32(splited[0])!
+        let denominator = Int32(splited[1])!
 
-        guard splited.count == 2, let numerator = Int32(splited[0]), let denominator = Int32(splited[1]) else {
-            return nil
-        }
-
-        try self.init(numerator: numerator, denominator: denominator)
+        self.init(numerator: numerator, denominator: denominator)
     }
 
     // Ignore zero denominator error
     private init(_ numerator: Int32, _ denominator: Int32) {
         self.numerator = numerator
         self.denominator = denominator
-    }
-
-    /// Create an instance by the given string vlaue splited by '/' separator with ignoring zero denominator error.
-    ///
-    /// In an `intermediate` operation, `1/0`, that is illigal value in math is used to represent an infinity node of SBTree.
-    /// This `init` is required for the situation.
-    ///
-    /// - Parameter fractionWithNodeError:  The string value represents a fruction.
-    public init(fractionWithNoError: String) {
-
-        let splited = fractionWithNoError.split(separator: "/")
-        let numerator = Int32(splited[0])
-        let denominator = Int32(splited[1])
-
-        self.init(numerator!, denominator!)
     }
 
     /// Returns a value wether this value can simplify or not.
@@ -126,23 +96,15 @@ public struct Rational : RationalProtocol {
         self.denominator = denominator
     }
 
-
     // MARK: - Arithmetic Operations
 
-    /// Returns the sum of this value and the given value **in simplified form**.
-    /// 
-    /// - Parameter other: The value to add to this value.
-    /// - Throws: An AddingError may be thrown.
-    /// - Returns: A rational that is added.
-    public func adding(to other: Rational) throws -> Rational {
+    public func addingReportingOverflow(_ other: Rational) -> (partialValue: Rational, overflow: Bool) {
 
         var x = self
         var y = other
         var xNumeratorYDenominator, yNumeratorYDenominator, numerator, denominator: Int32!
         var isROverflowed, isSOverflowed, isNumeratorOverflowed, isDenominatorOverflowed: Bool!
 
-        // Question: I know devide by GCD only take one step to reach simple fraction.
-        // Should it run loop? or only once?
         var retry = true
         while retry {
 
@@ -160,7 +122,7 @@ public struct Rational : RationalProtocol {
                 if !x.canSimplify && !y.canSimplify {
 
                     // neither fraction could reduce, cannot proceed
-                    throw RationalError.overflow(lhs: self, rhs: other)
+                    return (Rational(numerator, denominator), true)
                 }
 
                 x.simplify()
@@ -174,26 +136,15 @@ public struct Rational : RationalProtocol {
 
         }
 
-        return Rational(numerator, denominator).simplified()
+        return (Rational(numerator, denominator).simplified(), false)
+
     }
 
-    /// Returns the defference obtained by subtracting the given value from this value **in simplified form**.
-    ///
-    /// - Parameter other: The value to subtract from this value.
-    /// - Throws: An AddingError may be thrown
-    /// - Returns: A rational that is subtracted.
-    public func subtracting(_ other: Rational) throws -> Rational {
-        try adding(to: other.negative)
+    public func subtractingReportingOverflow(_ other: Rational) -> (partialValue: Rational, overflow: Bool) {
+        return addingReportingOverflow(-other)
     }
 
-
-    /// Returns the product of this value and the given value **in simplified form**.
-    ///
-    /// - Parameter other: The value to multiply by this value.
-    /// - Throws: An AddingError may be thrown
-    /// - Returns: A rational that is multiplied.
-    public func multiplied(by other: Rational) throws -> Rational {
-
+    public func multipliedReportingOverflow(by other: Rational) -> (partialValue: Rational, overflow: Bool) {
         var x = self
         var y = other
         var numerator, denominator: Int32!
@@ -214,7 +165,7 @@ public struct Rational : RationalProtocol {
                 if !x.canSimplify && !y.canSimplify {
 
                     // neither fraction could reduce, cannot proceed
-                    throw RationalError.overflow(lhs: self, rhs: other)
+                    return (Rational(numerator, denominator), true)
                 }
 
                 x.simplify()
@@ -227,25 +178,14 @@ public struct Rational : RationalProtocol {
             }
         }
 
-        return Rational(numerator, denominator).simplified()
+        return (Rational(numerator, denominator).simplified(), false)
     }
 
-    /// Returns the quatient obtained by dividing this value by the given value **in simplified form**.
-    ///
-    /// - Parameter other: The value to divide this value by.
-    /// - Throws: An AddingError may be thrown.
-    /// - Returns: A rational that is devided.
-    public func divided(by other: Rational) throws -> Rational {
-
-        var y = other
-
-        swap(&y.numerator, &y.denominator)
-
-        return try multiplied(by: y)
+    public func dividedReportingOverflow(by other: Rational) -> (partialValue: Rational, overflow: Bool) {
+        return multipliedReportingOverflow(by: Rational(other.denominator, other.numerator))
     }
 
-    private var negative: Rational {
-
+    public mutating func negate() {
         if numerator == Int32.min {
 
             let simplified = self.simplified()
@@ -254,12 +194,42 @@ public struct Rational : RationalProtocol {
             if simplified.numerator == Int32.min {
 
                 // denominator can't be MIN too or fraction would have previosly simplifed to 1/1.
-                return Rational(simplified.numerator, simplified.denominator * -1)
+                self = Rational(simplified.numerator, simplified.denominator * -1)
             }
+        }
+        self = Rational(numerator * -1, denominator)
+    }
 
+    public func backwardingMatrixSequence() -> [Matrix2x2] {
+
+        // Start from R.
+        var mixPartSequence: [Int32] = []
+        var continueFraction = self
+        while continueFraction.numerator > 1 || continueFraction.denominator > 1 {
+            if continueFraction.numerator == 2 && continueFraction.denominator == 1 {
+                mixPartSequence.append(1)
+                break
+            } else {
+                mixPartSequence.append(continueFraction.mixedPart)
+            }
+            continueFraction = Rational(numerator: continueFraction.denominator, denominator: continueFraction.mixedRemainder)
         }
 
-        return Rational(numerator * -1, denominator)
+        let box: [[Matrix2x2]] = mixPartSequence.enumerated()
+            .compactMap({ index, value in
+                guard value > 0 else {
+                    return nil
+                }
+                
+                if (index % 2 == 0) || index == 0 {
+                    return Array(repeating: Matrix2x2.R, count: Int(value))
+                } else {
+                    return Array(repeating: Matrix2x2.L, count: Int(value))
+                }
+            })
+        
+        return box.flatMap({ $0 })
     }
+
 
 }

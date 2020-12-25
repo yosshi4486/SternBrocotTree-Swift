@@ -8,7 +8,7 @@
 import Foundation
 
 /// Error codes for`intermediate`.
-public enum RationalIntermediateError<ConcreteRational : RationalProtocol> : LocalizedError {
+public enum RationalIntermediateError<ConcreteRational : Fraction> : LocalizedError {
 
     /// A negative value passed to an left or right.
     case negativeArgument(lhs: ConcreteRational, rhs: ConcreteRational)

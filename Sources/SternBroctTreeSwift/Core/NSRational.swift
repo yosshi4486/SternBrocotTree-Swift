@@ -8,7 +8,9 @@
 import Foundation
 
 /// A rational type for reference semantics. The type stores and uses value rational internally.
-public final class NSRational : NSObject, NSSecureCoding, RationalProtocol {
+public final class NSRational : NSObject, NSSecureCoding, Fraction {
+
+    public typealias Number = Int32
 
     private var rational: Rational
 
@@ -34,21 +36,12 @@ public final class NSRational : NSObject, NSSecureCoding, RationalProtocol {
         self.rational = rational
     }
 
-    required public init(numerator: Int32, denominator: Int32) throws {
-        self.rational = try Rational(numerator: numerator, denominator: denominator)
+    required public init(numerator: Int32, denominator: Int32) {
+        self.rational = Rational(numerator: numerator, denominator: denominator)
     }
 
-    required public init?(fraction: String) throws {
-
-        guard let value = try Rational(fraction: fraction) else {
-            return nil
-        }
-
-        self.rational = value
-    }
-
-    public required init(fractionWithNoError: String) {
-        self.rational = Rational(fractionWithNoError: fractionWithNoError)
+    required public init(_ stringValue: String) {
+        self.rational = Rational(stringValue)
     }
 
     public var canSimplify: Bool {
@@ -61,31 +54,45 @@ public final class NSRational : NSObject, NSSecureCoding, RationalProtocol {
 
     public func simplified() -> Self {
         let result = rational.simplified()
-        return Self(fractionWithNoError: result.description)
+        return Self(result.description)
     }
 
     public func simplify() {
         rational.simplify()
     }
 
-    public func adding(to other: NSRational) throws -> Self {
-        let result = try rational.adding(to: other.rational)
-        return Self(fractionWithNoError: result.description)
+    public func addingReportingOverflow(_ other: NSRational) -> (partialValue: NSRational, overflow: Bool) {
+        let (partialValue, overflow) = rational.addingReportingOverflow(other.rational)
+        return (NSRational(rational: partialValue), overflow)
     }
 
-    public func subtracting(_ other: NSRational) throws -> Self {
-        let result = try rational.subtracting(other.rational)
-        return Self(fractionWithNoError: result.description)
+    public func subtractingReportingOverflow(_ other: NSRational) -> (partialValue: NSRational, overflow: Bool) {
+        let (partialValue, overflow) = rational.subtractingReportingOverflow(other.rational)
+        return (NSRational(rational: partialValue), overflow)
     }
 
-    public func multiplied(by other: NSRational) throws -> Self {
-        let result = try rational.multiplied(by: other.rational)
-        return Self(fractionWithNoError: result.description)
+    public func multipliedReportingOverflow(by other: NSRational) -> (partialValue: NSRational, overflow: Bool) {
+        let (partialValue, overflow) = rational.multipliedReportingOverflow(by: other.rational)
+        return (NSRational(rational: partialValue), overflow)
     }
 
-    public func divided(by other: NSRational) throws -> Self {
-        let result = try rational.divided(by: other.rational)
-        return Self(fractionWithNoError: result.description)
+    public func dividedReportingOverflow(by other: NSRational) -> (partialValue: NSRational, overflow: Bool) {
+        let (partialValue, overflow) = rational.dividedReportingOverflow(by: other.rational)
+        return (NSRational(rational: partialValue), overflow)
+    }
+
+    public func negate() {
+        if numerator == Int32.min {
+            let simplified = self.simplified()
+
+            // check again
+            if simplified.numerator == Int32.min {
+
+                // denominator can't be MIN too or fraction would have previosly simplifed to 1/1.
+                self.rational = Rational(numerator: simplified.numerator, denominator: simplified.denominator * -1)
+            }
+        }
+        self.rational = Rational(numerator: numerator * -1, denominator: denominator)
     }
 
     // MARK: - NSObject Protocol
@@ -124,12 +131,7 @@ public final class NSRational : NSObject, NSSecureCoding, RationalProtocol {
     public required init?(coder: NSCoder) {
         let numerator = coder.decodeInt32(forKey: CodingKeys.numerator.rawValue)
         let denominator = coder.decodeInt32(forKey: CodingKeys.denominator.rawValue)
-
-        guard let rational = try? Rational(numerator: numerator, denominator: denominator) else {
-            return nil
-        }
-
-        self.rational = rational
+        self.rational = Rational(numerator: numerator, denominator: denominator)
     }
 
 }

@@ -14,3 +14,17 @@ public protocol SBTreeNode {
     static var identity: Self { get }
 
 }
+
+extension SBTreeNode where Self : Fraction {
+
+    /// Returns one representation of sternbrocot-tree.
+    public static var identity: Self {
+        return Self("1/1")
+    }
+
+    /// Returns infinity representation of sternbrocot-tree.
+    public static var infinity: Self {
+        return Self("1/0")
+    }
+    
+}

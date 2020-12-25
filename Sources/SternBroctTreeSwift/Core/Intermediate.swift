@@ -29,7 +29,7 @@ import Foundation
 /// - Throws: If you see `.overflow` error, user may walk fibonacci path 47 times. In that situation, re-normalization should be executed.
 ///
 /// - Returns:
-public func intermediate<ConcreteRational : RationalProtocol>(left: ConcreteRational?, right: ConcreteRational?) throws -> ConcreteRational {
+public func intermediate<ConcreteRational : Fraction>(left: ConcreteRational?, right: ConcreteRational?) throws -> ConcreteRational {
 
     var low = ConcreteRational.zero
     var high = ConcreteRational.infinity
