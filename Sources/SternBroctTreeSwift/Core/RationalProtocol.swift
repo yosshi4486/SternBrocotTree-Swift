@@ -7,7 +7,9 @@
 
 import Foundation
 
-/// A protocol that represents rational
+/// A protocol that represents rational.
+///
+/// Rational is number that can represent it as ratio of two integer values.
 public protocol RationalProtocol : SBTreeNode, Comparable, Hashable, CustomFloatConvertible, CustomDoubleConvertible, CustomDecimalConvertible {
 
     /// Returns zero representation of sternbrocot-tree.
@@ -25,24 +27,23 @@ public protocol RationalProtocol : SBTreeNode, Comparable, Hashable, CustomFloat
 
     /// Creates an instance initialized by the given numerator and denominator.
     ///
+    /// - Precondition:
+    /// The denominator must not be zero.
+    ///
     /// - Parameters:
     ///   - numerator: The value acts as numerator of this instance.
     ///   - denominator: The value acts as denominator of this instance.
-    /// - Throws: An initizalization error.
-    init(numerator: Int32, denominator: Int32) throws
+    init(numerator: Int32, denominator: Int32)
 
     /// Creates an instance initizalized by the given string value splited by `/` separator.
     ///
     /// In some cases, Initialized by string literal is more readable in terms of use.
     ///
-    /// - Parameter fraction: The string value represents a fruction.
-    /// - Throws: An initizalization error
-    init?(fraction: String) throws
-
-    /// Creates an instance initizalized by the given string value splited by `/` separator.
+    /// - Precondition:
+    /// The denominator must not be zero.
     ///
-    /// This init doesn't throw error so be care about the treatment.
-    init(fractionWithNoError: String)
+    /// - Parameter stringValue: The string value represents a fruction.
+    init(_ stringValue: String)
 
     /// Returns a value wether this value can simplify or not.
     ///
@@ -124,7 +125,7 @@ extension RationalProtocol {
     /// if **r=a/b** is in reduced form, **the simplicity of r** is defined to be **L(r)≡1/ab**.
     var simplicity: Self {
         let ab = Int64(numerator * denominator)
-        return Self(fractionWithNoError: "1/\(ab)")
+        return Self("1/\(ab)")
     }
 
     /// Returns total of a rational.
@@ -144,7 +145,7 @@ extension RationalProtocol {
             throw RationalError.overflow(lhs: left, rhs: right)
         }
 
-        return try Self(numerator: numeratorAddingResult,denominator: denominatorAddingResult)
+        return Self(numerator: numeratorAddingResult,denominator: denominatorAddingResult)
     }
 
     public func backwardingMatrixSequence() -> [Matrix2x2] {
@@ -164,22 +165,22 @@ extension RationalProtocol {
     public static func random(max: Int32 = 1000000) -> Self {
         let numerator = Int32.random(in: 0...max)
         let denominator = Int32.random(in: 1...max)
-        return Self(fractionWithNoError: "\(numerator)/\(denominator)")
+        return Self("\(numerator)/\(denominator)")
     }
 
     /// Returns zero representation of sternbrocot-tree.
     public static var zero: Self {
-        return Self(fractionWithNoError: "0/1")
+        return Self("0/1")
     }
 
     /// Returns one representation of sternbrocot-tree.
     public static var identity: Self {
-        return Self(fractionWithNoError: "1/1")
+        return Self("1/1")
     }
 
     /// Returns infinity representation of sternbrocot-tree.
     public static var infinity: Self {
-        return Self(fractionWithNoError: "1/0")
+        return Self("1/0")
     }
     
 }

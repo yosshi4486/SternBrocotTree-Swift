@@ -92,8 +92,8 @@ extension Matrix2x2 : SBTreeNode {
         return Matrix2x2(a: 1, b: 0, c: 0, d: 1)
     }
     
-    public func recoveredRational<ConcreteRational : RationalProtocol>() throws -> ConcreteRational {
-        return try ConcreteRational(numerator: a + b, denominator: c + d)
+    public func recoveredRational<ConcreteRational : RationalProtocol>() -> ConcreteRational {
+        return ConcreteRational(numerator: a + b, denominator: c + d)
     }
 
     /// The metrix for generating left matrix form node.

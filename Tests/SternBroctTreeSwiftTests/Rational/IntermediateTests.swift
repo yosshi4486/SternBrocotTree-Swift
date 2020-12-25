@@ -97,44 +97,44 @@ final class IntermediateTests: XCTestCase {
     }
 
     func testIntermediatePassingFarValues() throws {
-        let left = Rational(fractionWithNoError: "1/1")
-        let right = Rational(fractionWithNoError: "5/2")
+        let left = Rational("1/1")
+        let right = Rational("5/2")
         let result = try intermediate(left: left, right: right)
 
         XCTAssertEqual(result.description, "2/1")
     }
 
     func testErrorNegativeArguments() {
-        let left = Rational(fractionWithNoError: "-1/1")
-        let right = Rational(fractionWithNoError: "1/0")
+        let left = Rational("-1/1")
+        let right = Rational("1/0")
         XCTAssertError(try intermediate(left: left, right: nil),
                        throws: RationalIntermediateError<Rational>.negativeArgument(lhs: left, rhs: right))
     }
 
     func testErrorLeftArgIsSmallerThanRight() {
-        let left = Rational(fractionWithNoError: "2/3")
-        let right = Rational(fractionWithNoError: "1/3")
+        let left = Rational("2/3")
+        let right = Rational("1/3")
         XCTAssertError(try intermediate(left: left, right: right),
                        throws: RationalIntermediateError<Rational>.leftMustBeSmallerThanRight(lhs: left, rhs: right))
     }
 
     func testErrorLeftArgIsSmallerThanRightWhenEqual() {
-        let left = Rational(fractionWithNoError: "2/3")
-        let right = Rational(fractionWithNoError: "2/3")
+        let left = Rational("2/3")
+        let right = Rational("2/3")
         XCTAssertError(try intermediate(left: left, right: right),
                        throws: RationalIntermediateError<Rational>.leftMustBeSmallerThanRight(lhs: left, rhs: right))
     }
 
     func testMediantErrorOverflowDenominator() {
-        let left = Rational(fractionWithNoError: "1/2147483647")
-        let right = Rational(fractionWithNoError: "1/1")
+        let left = Rational("1/2147483647")
+        let right = Rational("1/1")
         XCTAssertError(try Rational.mediant(left: left, right: right),
                        throws: RationalError<Rational>.overflow(lhs: left, rhs: right))
     }
 
     func testMediantErrorOverflowNumerator() {
-        let left = Rational(fractionWithNoError: "1/1")
-        let right = Rational(fractionWithNoError: "2147483647/1")
+        let left = Rational("1/1")
+        let right = Rational("2147483647/1")
         XCTAssertError(try Rational.mediant(left: left, right: right),
                        throws: RationalError<Rational>.overflow(lhs: left, rhs: right))
     }

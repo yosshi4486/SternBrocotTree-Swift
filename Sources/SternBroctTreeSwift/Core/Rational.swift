@@ -16,58 +16,25 @@ public struct Rational : RationalProtocol {
     /// The denominator of the rational number.
     public var denominator: Int32
 
-    /// Creates an instance initialized by the given numerator and denominator.
-    ///
-    /// - Parameters:
-    ///   - numerator: The value acts as numerator of this instance.
-    ///   - denominator: The value acts as denominator of this instance.
-    /// - Throws: An initizalization error.
-    public init(numerator: Int32, denominator: Int32) throws {
-
-        guard denominator != 0 else {
-            throw RationalError<Self>.zeroDenominator
-        }
-
+    public init(numerator: Int32, denominator: Int32) {
         self.numerator = numerator
         self.denominator = denominator
     }
 
-    /// Creates an instance initizalized by the given string value splited by `/` separator.
-    ///
-    /// In some cases, Initialized by string literal is more readable in terms of use.
-    ///
-    /// - Parameter fraction: The string value represents a fruction.
-    /// - Throws: An initizalization error
-    public init?(fraction: String) throws {
+    public init(_ stringValue: String) {
 
-        let splited = fraction.split(separator: "/")
+        let splited = stringValue.split(separator: "/")
 
-        guard splited.count == 2, let numerator = Int32(splited[0]), let denominator = Int32(splited[1]) else {
-            return nil
-        }
+        let numerator = Int32(splited[0])!
+        let denominator = Int32(splited[1])!
 
-        try self.init(numerator: numerator, denominator: denominator)
+        self.init(numerator: numerator, denominator: denominator)
     }
 
     // Ignore zero denominator error
     private init(_ numerator: Int32, _ denominator: Int32) {
         self.numerator = numerator
         self.denominator = denominator
-    }
-
-    /// Create an instance by the given string vlaue splited by '/' separator with ignoring zero denominator error.
-    ///
-    /// In an `intermediate` operation, `1/0`, that is illigal value in math is used to represent an infinity node of SBTree.
-    /// This `init` is required for the situation.
-    ///
-    /// - Parameter fractionWithNodeError:  The string value represents a fruction.
-    public init(fractionWithNoError: String) {
-
-        let splited = fractionWithNoError.split(separator: "/")
-        let numerator = Int32(splited[0])
-        let denominator = Int32(splited[1])
-
-        self.init(numerator!, denominator!)
     }
 
     /// Returns a value wether this value can simplify or not.
