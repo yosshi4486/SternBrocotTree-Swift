@@ -1,27 +1,24 @@
 //
-//  Rational.swift
+//  Rational8.swift
 //  SternBroctTreeSwift
 //
-//  Created by yosshi4486 on 2020/11/11.
+//  Created by yosshi4486 on 2020/12/25.
 //
 
 import Foundation
 
 /// A rational type for value semantics.
-///
-/// Rational is specialized fraction which has interger denominator and numerator.
-/// On 32-bit platforms, Number is the same size as Int32, and on 64-bit platforms, Number is the same size as Int64.
-public struct Rational : Fraction {
+public struct Rational8 : Fraction {
 
-    public typealias Number = Int
+    public typealias Number = Int8
 
     /// The numerator of the rational number.
-    public var numerator: Int
+    public var numerator: Int8
 
     /// The denominator of the rational number.
-    public var denominator: Int
+    public var denominator: Int8
 
-    public init(numerator: Int, denominator: Int) {
+    public init(numerator: Int8, denominator: Int8) {
         self.numerator = numerator
         self.denominator = denominator
     }
@@ -29,14 +26,14 @@ public struct Rational : Fraction {
     public init(_ stringValue: String) {
         let splited = stringValue.split(separator: "/")
 
-        let numerator = Int(splited[0])!
-        let denominator = Int(splited[1])!
+        let numerator = Int8(splited[0])!
+        let denominator = Int8(splited[1])!
 
         self.init(numerator: numerator, denominator: denominator)
     }
 
     // Ignore zero denominator error
-    private init(_ numerator: Int, _ denominator: Int) {
+    private init(_ numerator: Int8, _ denominator: Int8) {
         self.numerator = numerator
         self.denominator = denominator
     }
@@ -63,7 +60,7 @@ public struct Rational : Fraction {
     ///
     /// - Note:
     /// `Reduce` is term used to reduce numerics by gcm, but  `simplified` execute sign inversion of the numerator and the denominator in addition.
-    public func simplified() -> Rational {
+    public func simplified() -> Rational8 {
 
         var x = self
         x.simplify()
@@ -80,15 +77,15 @@ public struct Rational : Fraction {
         var denominator = self.denominator
 
         // Tricky: avoid overflow from (INT32_MIN / -1)
-        // The range of Int32 is 2147483647 ~ -2147483648. Because positive range includes zero, these ranges are
-        // asymmetry, so an error will occur when trying to multiplied Int32.min by -1. It causes overflow.
-        if commonFactor != -1 || (numerator != Int.min && denominator != Int.min) {
+        // The range of Int8 is 2147483647 ~ -2147483648. Because positive range includes zero, these ranges are
+        // asymmetry, so an error will occur when trying to multiplied Int8.min by -1. It causes overflow.
+        if commonFactor != -1 || (numerator != Int8.min && denominator != Int8.min) {
             numerator /= commonFactor
             denominator /= commonFactor
         }
 
         // prevent negative denominator, but do not negate the smallest value that would produce overflow
-        if denominator < 0 && numerator != Int.min && denominator != Int.min {
+        if denominator < 0 && numerator != Int8.min && denominator != Int8.min {
             numerator *= -1
             denominator *= -1
         }
@@ -99,11 +96,11 @@ public struct Rational : Fraction {
 
     // MARK: - Arithmetic Operations
 
-    public func addingReportingOverflow(_ other: Rational) -> (partialValue: Rational, overflow: Bool) {
+    public func addingReportingOverflow(_ other: Rational8) -> (partialValue: Rational8, overflow: Bool) {
 
         var x = self
         var y = other
-        var xNumeratorYDenominator, yNumeratorYDenominator, numerator, denominator: Int!
+        var xNumeratorYDenominator, yNumeratorYDenominator, numerator, denominator: Int8!
         var isROverflowed, isSOverflowed, isNumeratorOverflowed, isDenominatorOverflowed: Bool!
 
         var retry = true
@@ -123,7 +120,7 @@ public struct Rational : Fraction {
                 if !x.canSimplify && !y.canSimplify {
 
                     // neither fraction could reduce, cannot proceed
-                    return (Rational(numerator, denominator), true)
+                    return (Rational8(numerator, denominator), true)
                 }
 
                 x.simplify()
@@ -137,18 +134,18 @@ public struct Rational : Fraction {
 
         }
 
-        return (Rational(numerator, denominator).simplified(), false)
+        return (Rational8(numerator, denominator).simplified(), false)
 
     }
 
-    public func subtractingReportingOverflow(_ other: Rational) -> (partialValue: Rational, overflow: Bool) {
+    public func subtractingReportingOverflow(_ other: Rational8) -> (partialValue: Rational8, overflow: Bool) {
         return addingReportingOverflow(-other)
     }
 
-    public func multipliedReportingOverflow(by other: Rational) -> (partialValue: Rational, overflow: Bool) {
+    public func multipliedReportingOverflow(by other: Rational8) -> (partialValue: Rational8, overflow: Bool) {
         var x = self
         var y = other
-        var numerator, denominator: Int!
+        var numerator, denominator: Int8!
         var isNumeratorOverflowed, isDenominatorOverflowed: Bool!
 
         var retry = true
@@ -166,7 +163,7 @@ public struct Rational : Fraction {
                 if !x.canSimplify && !y.canSimplify {
 
                     // neither fraction could reduce, cannot proceed
-                    return (Rational(numerator, denominator), true)
+                    return (Rational8(numerator, denominator), true)
                 }
 
                 x.simplify()
@@ -179,32 +176,32 @@ public struct Rational : Fraction {
             }
         }
 
-        return (Rational(numerator, denominator).simplified(), false)
+        return (Rational8(numerator, denominator).simplified(), false)
     }
 
-    public func dividedReportingOverflow(by other: Rational) -> (partialValue: Rational, overflow: Bool) {
-        return multipliedReportingOverflow(by: Rational(other.denominator, other.numerator))
+    public func dividedReportingOverflow(by other: Rational8) -> (partialValue: Rational8, overflow: Bool) {
+        return multipliedReportingOverflow(by: Rational8(other.denominator, other.numerator))
     }
 
     public mutating func negate() {
-        if numerator == Int.min {
+        if numerator == Int8.min {
 
             let simplified = self.simplified()
 
             // check again
-            if simplified.numerator == Int.min {
+            if simplified.numerator == Int8.min {
 
                 // denominator can't be MIN too or fraction would have previosly simplifed to 1/1.
-                self = Rational(simplified.numerator, simplified.denominator * -1)
+                self = Rational8(simplified.numerator, simplified.denominator * -1)
             }
         }
-        self = Rational(numerator * -1, denominator)
+        self = Rational8(numerator * -1, denominator)
     }
 
     public func backwardingMatrixSequence() -> [Matrix2x2] {
 
         // Start from R.
-        var mixPartSequence: [Int] = []
+        var mixPartSequence: [Int8] = []
         var continueFraction = self
         while continueFraction.numerator > 1 || continueFraction.denominator > 1 {
             if continueFraction.numerator == 2 && continueFraction.denominator == 1 {
@@ -213,7 +210,7 @@ public struct Rational : Fraction {
             } else {
                 mixPartSequence.append(continueFraction.mixedPart)
             }
-            continueFraction = Rational(numerator: continueFraction.denominator, denominator: continueFraction.mixedRemainder)
+            continueFraction = Rational8(numerator: continueFraction.denominator, denominator: continueFraction.mixedRemainder)
         }
 
         let box: [[Matrix2x2]] = mixPartSequence.enumerated()
@@ -221,14 +218,14 @@ public struct Rational : Fraction {
                 guard value > 0 else {
                     return nil
                 }
-                
+
                 if (index % 2 == 0) || index == 0 {
                     return Array(repeating: Matrix2x2.R, count: Int(value))
                 } else {
                     return Array(repeating: Matrix2x2.L, count: Int(value))
                 }
             })
-        
+
         return box.flatMap({ $0 })
     }
 
@@ -247,3 +244,4 @@ public struct Rational : Fraction {
 
 
 }
+

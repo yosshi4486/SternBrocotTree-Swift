@@ -11,7 +11,7 @@ import XCTest
 class ArrayPlusRationalExtensionTests: XCTestCase {
 
     struct StubRationalOrderable : RationalUserOrderable {
-        var rationalUserDefinedOrder: Rational
+        var rationalUserDefinedOrder: NSRational
     }
 
     func testMakeFibonacciPathArray() {
@@ -57,9 +57,9 @@ class ArrayPlusRationalExtensionTests: XCTestCase {
     func testNormalizePerformance() throws {
         
         // Preparation
-        var array = (1..<100000).map({ Rational(numerator: 1, denominator: $0)} ).map({ StubRationalOrderable(rationalUserDefinedOrder: $0) })
+        var array = (1..<100000).map({ NSRational(numerator: 1, denominator: $0)} ).map({ StubRationalOrderable(rationalUserDefinedOrder: $0) })
         
-        let comparator = Rational("1/1")
+        let comparator = NSRational("1/1")
         XCTAssertTrue(array.allSatisfy({ $0.rationalUserDefinedOrder <= comparator }))
         
         // Execution and Measurement
@@ -72,14 +72,14 @@ class ArrayPlusRationalExtensionTests: XCTestCase {
 
     func makeFibonacciPathArray() -> Array<StubRationalOrderable> {
         return (0...5)
-            .compactMap({ Rational(numerator: fib(n: $0), denominator: fib(n: $0 + 1)) })
+            .compactMap({ NSRational(numerator: fib(n: $0), denominator: fib(n: $0 + 1)) })
             .sorted()
             .map({ StubRationalOrderable(rationalUserDefinedOrder: $0) })
     }
 
-    func fib(n: Int32) -> Int32 {
-        var a: Int32 = 1
-        var b: Int32 = 1
+    func fib(n: Int) -> Int {
+        var a: Int = 1
+        var b: Int = 1
         guard n > 1 else { return a }
 
         (2...n).forEach { _ in

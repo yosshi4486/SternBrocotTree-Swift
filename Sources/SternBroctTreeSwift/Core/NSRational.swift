@@ -10,11 +10,11 @@ import Foundation
 /// A rational type for reference semantics. The type stores and uses value rational internally.
 public final class NSRational : NSObject, NSSecureCoding, Fraction {
 
-    public typealias Number = Int32
+    public typealias Number = Int
 
     private var rational: Rational
 
-    public var denominator: Int32 {
+    public var denominator: Int {
         get {
             return rational.denominator
         }
@@ -23,7 +23,7 @@ public final class NSRational : NSObject, NSSecureCoding, Fraction {
         }
     }
 
-    public var numerator: Int32 {
+    public var numerator: Int {
         get {
             return rational.numerator
         }
@@ -36,7 +36,7 @@ public final class NSRational : NSObject, NSSecureCoding, Fraction {
         self.rational = rational
     }
 
-    required public init(numerator: Int32, denominator: Int32) {
+    required public init(numerator: Int, denominator: Int) {
         self.rational = Rational(numerator: numerator, denominator: denominator)
     }
 
@@ -82,11 +82,11 @@ public final class NSRational : NSObject, NSSecureCoding, Fraction {
     }
 
     public func negate() {
-        if numerator == Int32.min {
+        if numerator == Int.min {
             let simplified = self.simplified()
 
             // check again
-            if simplified.numerator == Int32.min {
+            if simplified.numerator == Int.min {
 
                 // denominator can't be MIN too or fraction would have previosly simplifed to 1/1.
                 self.rational = Rational(numerator: simplified.numerator, denominator: simplified.denominator * -1)
@@ -94,6 +94,20 @@ public final class NSRational : NSObject, NSSecureCoding, Fraction {
         }
         self.rational = Rational(numerator: numerator * -1, denominator: denominator)
     }
+
+    /// Returns a mediant from two fractions.
+    public static func mediant(left: NSRational, right: NSRational) throws -> Self {
+
+        let (numeratorAddingResult, numeratorAddingOverflow) = left.numerator.addingReportingOverflow(right.numerator)
+        let (denominatorAddingResult, denominatorAddingOverflow) = left.denominator.addingReportingOverflow(right.denominator)
+
+        if numeratorAddingOverflow || denominatorAddingOverflow {
+            throw RationalError.overflow(lhs: left, rhs: right)
+        }
+
+        return Self(numerator: numeratorAddingResult,denominator: denominatorAddingResult)
+    }
+
 
     // MARK: - NSObject Protocol
 
@@ -124,13 +138,13 @@ public final class NSRational : NSObject, NSSecureCoding, Fraction {
     public static var supportsSecureCoding: Bool = true
 
     public func encode(with coder: NSCoder) {
-        coder.encode(rational.numerator, forKey: CodingKeys.numerator.rawValue)
-        coder.encode(rational.denominator, forKey: CodingKeys.denominator.rawValue)
+        coder.encode(rational.numerator as NSInteger, forKey: CodingKeys.numerator.rawValue)
+        coder.encode(rational.denominator as NSInteger, forKey: CodingKeys.denominator.rawValue)
     }
 
     public required init?(coder: NSCoder) {
-        let numerator = coder.decodeInt32(forKey: CodingKeys.numerator.rawValue)
-        let denominator = coder.decodeInt32(forKey: CodingKeys.denominator.rawValue)
+        let numerator = coder.decodeInteger(forKey: CodingKeys.numerator.rawValue)
+        let denominator = coder.decodeInteger(forKey: CodingKeys.denominator.rawValue)
         self.rational = Rational(numerator: numerator, denominator: denominator)
     }
 

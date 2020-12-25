@@ -12,7 +12,7 @@ import Foundation
 /// Rational is number that can represent it as ratio of two integer values.
 public protocol Fraction : SBTreeNode, SignedNumeric, Comparable, Hashable, CustomFloatConvertible, CustomDoubleConvertible, CustomDecimalConvertible {
 
-    associatedtype Number : Numeric
+    associatedtype Number : SignedNumeric
 
     /// The denominator of the rational number.
     var denominator: Number { get set }
@@ -108,7 +108,7 @@ public protocol Fraction : SBTreeNode, SignedNumeric, Comparable, Hashable, Cust
 }
 
 /// Default implementation for SBTreeNode.
-extension Fraction where Number == Int32 {
+extension Fraction where Number : SignedInteger {
 
     /// Returns a boolean value whether this and the other are adjacent.
     ///
@@ -131,21 +131,8 @@ extension Fraction where Number == Int32 {
     /// Returns total of a rational.
     ///
     /// if **r=a/b** is in reduced form, define the total of r to be **t(r) ≡ a+b**.
-    public var total: Int32 {
+    public var total: Number {
         return numerator + denominator
-    }
-
-    /// Returns a mediant from two fractions.
-    public static func mediant(left: Self, right: Self) throws -> Self {
-
-        let (numeratorAddingResult, numeratorAddingOverflow) = left.numerator.addingReportingOverflow(right.numerator)
-        let (denominatorAddingResult, denominatorAddingOverflow) = left.denominator.addingReportingOverflow(right.denominator)
-
-        if numeratorAddingOverflow || denominatorAddingOverflow {
-            throw RationalError.overflow(lhs: left, rhs: right)
-        }
-
-        return Self(numerator: numeratorAddingResult,denominator: denominatorAddingResult)
     }
 
     /// Returns the interger value of mixed rational.
@@ -233,6 +220,12 @@ extension Fraction where Number : SignedInteger {
 
 }
 
+extension Fraction where Number == Int {
+
+    public var decimalValue: Decimal { Decimal(numerator) / Decimal(denominator) }
+
+}
+
 extension Fraction where Number == Int8 {
 
     public var decimalValue: Decimal { Decimal(numerator) / Decimal(denominator) }
@@ -258,7 +251,7 @@ extension Fraction where Number == Int64 {
 }
 
 /// Default implementation for SignedNumeric.
-extension Fraction where Number == Int32, Magnitude == Double, IntegerLiteralType == Int32 {
+extension Fraction where Number : SignedInteger, Magnitude == Double, IntegerLiteralType == Number {
 
     public static var zero: Self {
         return Self("0/1")
@@ -269,10 +262,10 @@ extension Fraction where Number == Int32, Magnitude == Double, IntegerLiteralTyp
     }
 
     public init?<T>(exactly source: T) where T : BinaryInteger {
-        self.init(numerator: Int32(source), denominator: 1)
+        self.init(numerator: Number(source), denominator: 1)
     }
 
-    public init(integerLiteral value: Int32) {
+    public init(integerLiteral value: Number) {
         self.init(numerator: value, denominator: 1)
     }
 

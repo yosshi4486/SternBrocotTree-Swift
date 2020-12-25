@@ -17,16 +17,16 @@ import Foundation
 public struct Matrix2x2 {
 
     /// The value which is positioned at top left.
-    var a: Int32
+    var a: Int
 
     /// The value which is positioned at top right.
-    var b: Int32
+    var b: Int
 
     /// The value which is positioned at bottom left.
-    var c: Int32
+    var c: Int
 
     /// The value which is positioned at bottom right.
-    var d: Int32
+    var d: Int
 
     /// Multiplies two 2x2 matrix and produces thier product.
     ///
@@ -92,8 +92,8 @@ extension Matrix2x2 : SBTreeNode {
         return Matrix2x2(a: 1, b: 0, c: 0, d: 1)
     }
     
-    public func recoveredRational<ConcreteRational : Fraction>() -> ConcreteRational where ConcreteRational.Number == Int32 {
-        return ConcreteRational(numerator: a + b, denominator: c + d)
+    public func recoveredRational() -> Rational {
+        return Rational(numerator: a + b, denominator: c + d)
     }
 
     /// The metrix for generating left matrix form node.
