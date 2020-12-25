@@ -8,7 +8,7 @@
 import Foundation
 
 /// A rational type for value semantics.
-public struct Rational8 : Fraction {
+public struct Rational8 : SignedRational {
 
     public typealias Number = Int8
 
