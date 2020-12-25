@@ -114,6 +114,7 @@ public protocol RationalProtocol : SBTreeNode, SignedNumeric, Comparable, Hashab
 
 }
 
+/// Default implementation for SBTreeNode.
 extension RationalProtocol {
 
     /// Returns a boolean value whether this and the other are adjacent.
@@ -191,7 +192,7 @@ extension RationalProtocol {
     
 }
 
-// MARK: - Equatable
+/// Default implementation for Equtable.
 extension RationalProtocol {
 
     public static func == (lhs: Self, rhs: Self) -> Bool {
@@ -200,7 +201,7 @@ extension RationalProtocol {
 
 }
 
-// MARK: - Comparable
+/// Default implementation for Comparable.
 extension RationalProtocol {
 
     public static func < (lhs: Self, rhs: Self) -> Bool {
@@ -222,7 +223,7 @@ extension RationalProtocol {
 
 }
 
-// MARK: - Hashable
+/// Default implementation for Hashable.
 extension RationalProtocol {
 
     public func hash(into hasher: inout Hasher) {
@@ -235,7 +236,7 @@ extension RationalProtocol {
 
 }
 
-// MARK: - Convertibles
+/// Default implementation for Convertibles.
 extension RationalProtocol {
 
     public var description: String { "\(numerator)/\(denominator)" }
@@ -250,6 +251,7 @@ extension RationalProtocol {
 
 }
 
+/// Default implementation for SignedNumeric.
 extension RationalProtocol where Magnitude == Double, IntegerLiteralType == Int32 {
 
     public var magnitude: Double {
