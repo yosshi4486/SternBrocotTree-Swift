@@ -63,48 +63,6 @@ public protocol Fraction : SBTreeNode, SignedNumeric, Comparable, Hashable, Cust
     /// `Reduce` is term used to reduce numerics by gcm, but  `simplified` execute sign inversion of the numerator and the denominator in addition.
     func simplified() -> Self
 
-    /// Returns the sum of this value and the given value, along with a Boolean value indicating whether overflow occurred in the operation.
-    ///
-    /// - Parameter other: The value to add to this value.
-    /// - Returns:
-    /// A tuple containing the result of the addition along with a Boolean value indicating whether overflow occurred.
-    /// If the overflow component is false, the partialValue component contains the entire sum.
-    /// If the overflow component is true, an overflow occurred and the partialValue component contains the truncated sum of this value and rhs.
-    func addingReportingOverflow(_ other: Self) -> (partialValue: Self, overflow: Bool)
-
-    /// Returns the difference obtained by subtracting the given value from this value, along with a Boolean value indicating whether overflow occurred in the operation.
-    ///
-    /// - Parameter other: The value to subtract from this value.
-    /// - Returns: A tuple containing the result of the subtraction along with a Boolean value indicating whether overflow occurred.
-    ///  If the overflow component is false, the partialValue component contains the entire difference.
-    ///  If the overflow component is true, an overflow occurred and the partialValue component contains the truncated result of rhs subtracted from this value.
-    func subtractingReportingOverflow(_ other: Self) -> (partialValue: Self, overflow: Bool)
-
-    /// Returns the product of this value and the given value, along with a Boolean value indicating whether overflow occurred in the operation.
-    ///
-    /// - Parameter other: The value to multiply by this value.
-    /// - Returns: A tuple containing the result of the subtraction along with a Boolean value indicating whether overflow occurred.
-    ///  If the overflow component is false, the partialValue component contains the entire difference.
-    ///  If the overflow component is true, an overflow occurred and the partialValue component contains the truncated result of rhs subtracted from this value.
-    func multipliedReportingOverflow(by other: Self) -> (partialValue: Self, overflow: Bool)
-
-    /// Returns the quotient obtained by dividing this value by the given value, along with a Boolean value indicating whether overflow occurred in the operation.
-    ///
-    /// - Parameter other: The value to divide this value by.
-    /// - Returns: A tuple containing the result of the subtraction along with a Boolean value indicating whether overflow occurred.
-    ///  If the overflow component is false, the partialValue component contains the entire difference.
-    ///  If the overflow component is true, an overflow occurred and the partialValue component contains the truncated result of rhs subtracted from this value.
-    func dividedReportingOverflow(by other: Self) -> (partialValue: Self, overflow: Bool)
-
-    /// Returns a mediant from two fractions.
-    static func mediant(left: Self, right: Self) throws -> Self
-
-    /// Returns a boolean value whether this and the other are adjacent.
-    ///
-    /// - Parameter other: The other concrete rational to determine adjacent.
-    /// - Returns: The two values are adjacent or not.
-    func isAdjacent(to other: Self) -> Bool
-
 }
 
 extension Fraction where Number == Int {

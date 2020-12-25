@@ -7,7 +7,111 @@
 
 import Foundation
 
-public protocol SignedRational : Fraction where Number : SignedInteger { }
+public protocol SignedRational : Fraction where Number : SignedInteger & FixedWidthInteger {
+
+    /// Returns a mediant from two fractions.
+    static func mediant(left: Self, right: Self) throws -> Self
+
+    /// Returns a boolean value whether this and the other are adjacent.
+    ///
+    /// - Parameter other: The other concrete rational to determine adjacent.
+    /// - Returns: The two values are adjacent or not.
+    func isAdjacent(to other: Self) -> Bool
+
+    /// Returns an array of R or L sequence which are backwardeded from this rational.
+    func backwardingMatrixSequence() -> [Matrix2x2]
+
+    /// Returns the sum of this value and the given value, along with a Boolean value indicating whether overflow occurred in the operation.
+    ///
+    /// - Parameter other: The value to add to this value.
+    /// - Returns:
+    /// A tuple containing the result of the addition along with a Boolean value indicating whether overflow occurred.
+    /// If the overflow component is false, the partialValue component contains the entire sum.
+    /// If the overflow component is true, an overflow occurred and the partialValue component contains the truncated sum of this value and rhs.
+    func addingReportingOverflow(_ other: Self) -> (partialValue: Self, overflow: Bool)
+
+    /// Returns the difference obtained by subtracting the given value from this value, along with a Boolean value indicating whether overflow occurred in the operation.
+    ///
+    /// - Parameter other: The value to subtract from this value.
+    /// - Returns: A tuple containing the result of the subtraction along with a Boolean value indicating whether overflow occurred.
+    ///  If the overflow component is false, the partialValue component contains the entire difference.
+    ///  If the overflow component is true, an overflow occurred and the partialValue component contains the truncated result of rhs subtracted from this value.
+    func subtractingReportingOverflow(_ other: Self) -> (partialValue: Self, overflow: Bool)
+
+    /// Returns the product of this value and the given value, along with a Boolean value indicating whether overflow occurred in the operation.
+    ///
+    /// - Parameter other: The value to multiply by this value.
+    /// - Returns: A tuple containing the result of the subtraction along with a Boolean value indicating whether overflow occurred.
+    ///  If the overflow component is false, the partialValue component contains the entire difference.
+    ///  If the overflow component is true, an overflow occurred and the partialValue component contains the truncated result of rhs subtracted from this value.
+    func multipliedReportingOverflow(by other: Self) -> (partialValue: Self, overflow: Bool)
+
+    /// Returns the quotient obtained by dividing this value by the given value, along with a Boolean value indicating whether overflow occurred in the operation.
+    ///
+    /// - Parameter other: The value to divide this value by.
+    /// - Returns: A tuple containing the result of the subtraction along with a Boolean value indicating whether overflow occurred.
+    ///  If the overflow component is false, the partialValue component contains the entire difference.
+    ///  If the overflow component is true, an overflow occurred and the partialValue component contains the truncated result of rhs subtracted from this value.
+    func dividedReportingOverflow(by other: Self) -> (partialValue: Self, overflow: Bool)
+
+}
+
+/// Default implementation for SignedRational.
+extension SignedRational {
+
+    /// Returns a value wether this value can simplify or not.
+    ///
+    /// - Complexity: O(log n) where n is digits of the given `denominator`.
+    public var canSimplify: Bool {
+        let commonFactor = gcd(numerator, denominator)
+        return commonFactor != 1 && commonFactor != -1
+    }
+
+    /// Returns a mediant from two fractions.
+    public static func mediant(left: Self, right: Self) throws -> Self {
+
+        let (numeratorAddingResult, numeratorAddingOverflow) = left.numerator.addingReportingOverflow(right.numerator)
+        let (denominatorAddingResult, denominatorAddingOverflow) = left.denominator.addingReportingOverflow(right.denominator)
+
+        if numeratorAddingOverflow || denominatorAddingOverflow {
+            throw RationalError.overflow(lhs: left, rhs: right)
+        }
+
+        return Self(numerator: numeratorAddingResult,denominator: denominatorAddingResult)
+    }
+
+    public func backwardingMatrixSequence() -> [Matrix2x2] {
+
+        // Start from R.
+        var mixPartSequence: [Number] = []
+        var continueFraction = self
+        while continueFraction.numerator > 1 || continueFraction.denominator > 1 {
+            if continueFraction.numerator == 2 && continueFraction.denominator == 1 {
+                mixPartSequence.append(1)
+                break
+            } else {
+                mixPartSequence.append(continueFraction.mixedPart)
+            }
+            continueFraction = Self(numerator: continueFraction.denominator, denominator: continueFraction.mixedRemainder)
+        }
+
+        let box: [[Matrix2x2]] = mixPartSequence.enumerated()
+            .compactMap({ index, value in
+                guard value > 0 else {
+                    return nil
+                }
+
+                if (index % 2 == 0) || index == 0 {
+                    return Array(repeating: Matrix2x2.R, count: Int(value))
+                } else {
+                    return Array(repeating: Matrix2x2.L, count: Int(value))
+                }
+            })
+
+        return box.flatMap({ $0 })
+    }
+
+}
 
 /// Default implementation for SBTreeNode.
 extension SignedRational {
