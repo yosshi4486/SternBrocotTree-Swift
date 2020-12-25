@@ -104,7 +104,7 @@ public final class NSRational : NSObject, NSSecureCoding, SignedRational {
         let (denominatorAddingResult, denominatorAddingOverflow) = left.denominator.addingReportingOverflow(right.denominator)
 
         if numeratorAddingOverflow || denominatorAddingOverflow {
-            throw RationalError.overflow(lhs: left, rhs: right)
+            throw RationalError.arithmeticOverflow(lhs: left, rhs: right)
         }
 
         return Self(numerator: numeratorAddingResult,denominator: denominatorAddingResult)

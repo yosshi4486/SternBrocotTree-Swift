@@ -7,6 +7,10 @@
 
 import Foundation
 
+/// A type of Signed Rational.
+///
+/// Default implementations of AddingArithmetic and Comparable don't care overflow error. Use alternative overflow reporting methods
+/// like `addingReportingOverflow(:)` if you consider about overflow.
 public protocol SignedRational : Fraction, CustomFloatConvertible, CustomDoubleConvertible, CustomDecimalConvertible where Number : SignedInteger & FixedWidthInteger {
 
     /// Returns a mediant from two fractions.
@@ -54,6 +58,14 @@ public protocol SignedRational : Fraction, CustomFloatConvertible, CustomDoubleC
     ///  If the overflow component is true, an overflow occurred and the partialValue component contains the truncated result of rhs subtracted from this value.
     func dividedReportingOverflow(by other: Self) -> (partialValue: Self, overflow: Bool)
 
+    /// Returns the result of comparison of this value and the given value. along with a Boolean value indicating whether overflow occurred in the operation.
+    ///
+    /// - Parameter other: The value to compare this value with.
+    /// - Returns: A tuple containing the result of the subtraction along with a Boolean value indicating whether overflow occurred.
+    ///  If the overflow component is false, the partialValue component contains the entire difference.
+    ///  If the overflow component is true, an overflow occurred and the partialValue component contains the truncated result of rhs subtracted from this value.
+    func comparedReportingOverflow(with other: Self) -> (partialValue: RationalComparisonResult, overflow: Bool)
+
 }
 
 /// Default implementation for SignedRational.
@@ -74,7 +86,7 @@ extension SignedRational {
         let (denominatorAddingResult, denominatorAddingOverflow) = left.denominator.addingReportingOverflow(right.denominator)
 
         if numeratorAddingOverflow || denominatorAddingOverflow {
-            throw RationalError.overflow(lhs: left, rhs: right)
+            throw RationalError.arithmeticOverflow(lhs: left, rhs: right)
         }
 
         return Self(numerator: numeratorAddingResult,denominator: denominatorAddingResult)
@@ -113,6 +125,36 @@ extension SignedRational {
         return boxOfRLMatrixes.flatMap({ $0 })
     }
 
+    public func comparedReportingOverflow(with other: Self) -> (partialValue: RationalComparisonResult, overflow: Bool) {
+        let a = Number(numerator)
+        let b = Number(denominator)
+        let c = Number(other.numerator)
+        let d = Number(other.denominator)
+
+        let (ad, adOverflow) = a.multipliedReportingOverflow(by: d)
+        let (bc, bcOverflow) = b.multipliedReportingOverflow(by: c)
+
+        switch (adOverflow, bcOverflow) {
+        case (true, true):
+            return (RationalComparisonResult.incomparable, true)
+
+        case (true, false):
+            return (RationalComparisonResult.bigger, true)
+
+        case (false, true):
+            return (RationalComparisonResult.smaller, true)
+            
+        case (false, false):
+            if ad == bc {
+                return (RationalComparisonResult.equal, false)
+            } else if ad > bc {
+                return (RationalComparisonResult.bigger, false)
+            } else {
+                return (RationalComparisonResult.smaller, false)
+            }
+        }
+    }
+
 }
 
 /// Default implementation for SBTreeNode.
@@ -123,17 +165,22 @@ extension SignedRational {
     /// - Parameter other: The other concrete rational to determine adjacent.
     /// - Returns: The two values are adjacent or not.
     public func isAdjacent(to other: Self) -> Bool {
-        let ad = Int64(numerator * other.denominator)
-        let bc = Int64(denominator * other.numerator)
-        return abs(ad - bc) == 1
+        let (ad, adOverflow) = Number(numerator).multipliedReportingOverflow(by: Number(other.denominator))
+        let (bc, bcOverflow) = Number(denominator).multipliedReportingOverflow(by: Number(other.numerator))
+
+        if !adOverflow && !bcOverflow {
+            return abs(ad - bc) == 1
+        } else {
+            return false
+        }
     }
 
     /// Returns simplicity of a rational.
     ///
     /// if **r=a/b** is in reduced form, **the simplicity of r** is defined to be **L(r)≡1/ab**.
-    public var simplicity: Self {
-        let ab = Int64(numerator * denominator)
-        return Self("1/\(ab)")
+    public func simplicity() -> (partialValue: Self, overflow: Bool) {
+        let (ab, overflow) = Number(numerator).multipliedReportingOverflow(by: Number(denominator))
+        return (Self("1/\(ab)"), overflow)
     }
 
     /// Returns total of a rational.

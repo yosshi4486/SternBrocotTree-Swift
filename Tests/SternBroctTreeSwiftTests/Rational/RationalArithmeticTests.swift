@@ -75,5 +75,59 @@ class RationalArithmeticTests: XCTestCase {
         XCTAssertEqual(result.description, "2/1")
     }
 
+    func testCompareEqual() {
+        let a = Rational8("1/1")
+        let b = Rational8("1/1")
+
+        let result = a.comparedReportingOverflow(with: b)
+        XCTAssertEqual(result.partialValue, .equal)
+        XCTAssertFalse(result.overflow)
+    }
+
+    func testCompareBigger() {
+        let a = Rational8("1/1")
+        let b = Rational8("1/2")
+
+        let result = a.comparedReportingOverflow(with: b)
+        XCTAssertEqual(result.partialValue, .bigger)
+        XCTAssertFalse(result.overflow)
+    }
+
+    func testCompareSmaller() {
+        let a = Rational8("1/2")
+        let b = Rational8("1/1")
+
+        let result = a.comparedReportingOverflow(with: b)
+        XCTAssertEqual(result.partialValue, .smaller)
+        XCTAssertFalse(result.overflow)
+    }
+
+    // white box tests.
+    func testCompareOverflowLeft() {
+        let a = Rational8("127/1")
+        let b = Rational8("1/2")
+
+        let result = a.comparedReportingOverflow(with: b)
+        XCTAssertEqual(result.partialValue, .bigger)
+        XCTAssertTrue(result.overflow)
+    }
+
+    func testCompareOverflowRight() {
+        let a = Rational8("1/127")
+        let b = Rational8("2/1")
+
+        let result = a.comparedReportingOverflow(with: b)
+        XCTAssertEqual(result.partialValue, .smaller)
+        XCTAssertTrue(result.overflow)
+    }
+
+    func testCompareOverflowBoth() {
+        let a = Rational8("2/127")
+        let b = Rational8("2/127")
+
+        let result = a.comparedReportingOverflow(with: b)
+        XCTAssertEqual(result.partialValue, .incomparable)
+        XCTAssertTrue(result.overflow)
+    }
 
 }
