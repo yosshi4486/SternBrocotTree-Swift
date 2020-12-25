@@ -95,7 +95,7 @@ class Matrix2x2Tests: XCTestCase {
     }
 
     func testRecoveredRational() throws {
-        let rational: Rational = try matrixX.recoveredRational()
+        let rational: Rational = matrixX.recoveredRational()
         XCTAssertEqual(rational.description, "5/19")
     }
 

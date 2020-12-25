@@ -9,7 +9,7 @@ import Foundation
 
 /// A rational type for value semantics.
 public struct Rational : RationalProtocol {
-
+    
     /// The numerator of the rational number.
     public var numerator: Int32
 

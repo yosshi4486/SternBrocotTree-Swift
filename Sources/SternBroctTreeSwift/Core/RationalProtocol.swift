@@ -10,7 +10,7 @@ import Foundation
 /// A protocol that represents rational.
 ///
 /// Rational is number that can represent it as ratio of two integer values.
-public protocol RationalProtocol : SBTreeNode, Comparable, Hashable, CustomFloatConvertible, CustomDoubleConvertible, CustomDecimalConvertible {
+public protocol RationalProtocol : SBTreeNode, SignedNumeric, Comparable, Hashable, CustomFloatConvertible, CustomDoubleConvertible, CustomDecimalConvertible {
 
     /// Returns zero representation of sternbrocot-tree.
     static var zero: Self { get }
@@ -243,3 +243,57 @@ extension RationalProtocol {
     public var decimalValue: Decimal { Decimal(numerator) / Decimal(denominator) }
 
 }
+
+extension RationalProtocol where Magnitude == Double, IntegerLiteralType == Int32 {
+
+    public var magnitude: Double {
+        return abs(Double(numerator)/Double(denominator))
+    }
+
+    public init?<T>(exactly source: T) where T : BinaryInteger {
+        self.init(numerator: Int32(source), denominator: 1)
+    }
+
+    public init(integerLiteral value: Int32) {
+        self.init(numerator: value, denominator: 1)
+    }
+
+    public static func + (lhs: Self, rhs: Self) -> Self {
+        let denominator = lhs.denominator * rhs.denominator
+        let numerator = (lhs.numerator * rhs.denominator) + (rhs.numerator * lhs.denominator)
+        return self.init(numerator: numerator, denominator: denominator)
+    }
+
+    public static func - (lhs: Self, rhs: Self) -> Self {
+        let denominator = lhs.denominator * rhs.denominator
+        let numerator = (lhs.numerator * rhs.denominator) - (rhs.numerator * lhs.denominator)
+        return self.init(numerator: numerator, denominator: denominator)
+    }
+
+    public static func * (lhs: Self, rhs: Self) -> Self {
+        return self.init(numerator: lhs.numerator * rhs.numerator, denominator: lhs.denominator * rhs.denominator)
+    }
+
+    public static func *= (lhs: inout Self, rhs: Self) {
+        lhs = lhs * rhs
+    }
+
+    /// Returns the quotient of dividing the first value by the second.
+    ///
+    /// - Parameters:
+    ///   - lhs: The value to divide.
+    ///   - rhs: The value to divide lhs by. rhs must not be zeo.
+    public static func / (lhs: Self, rhs: Self) -> Self {
+        return lhs * self.init(numerator: rhs.denominator, denominator: rhs.numerator)
+    }
+
+    /// Divides the first value by the second and stores the quotient in the left-hand-side variable
+    /// - Parameters:
+    ///   - lhs: The value to divide.
+    ///   - rhs: The value to divide lhs by. rhs must not be zeo.
+    public static func /= (lhs: inout Self, rhs: Self) {
+        lhs = lhs / rhs
+    }
+
+}
+
