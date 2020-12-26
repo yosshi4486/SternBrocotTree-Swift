@@ -40,36 +40,5 @@ public struct Rational16 : MutableSignedRational {
         self.denominator = denominator
     }
 
-    public func backwardingMatrixSequence() -> [Matrix2x2] {
-
-        // Start from R.
-        var mixPartSequence: [Int16] = []
-        var continueFraction = self
-        while continueFraction.numerator > 1 || continueFraction.denominator > 1 {
-            if continueFraction.numerator == 2 && continueFraction.denominator == 1 {
-                mixPartSequence.append(1)
-                break
-            } else {
-                mixPartSequence.append(continueFraction.mixedPart)
-            }
-            continueFraction = Rational16(numerator: continueFraction.denominator, denominator: continueFraction.mixedRemainder)
-        }
-
-        let box: [[Matrix2x2]] = mixPartSequence.enumerated()
-            .compactMap({ index, value in
-                guard value > 0 else {
-                    return nil
-                }
-
-                if (index % 2 == 0) || index == 0 {
-                    return Array(repeating: Matrix2x2.R, count: Int(value))
-                } else {
-                    return Array(repeating: Matrix2x2.L, count: Int(value))
-                }
-            })
-
-        return box.flatMap({ $0 })
-    }
-
 }
 
