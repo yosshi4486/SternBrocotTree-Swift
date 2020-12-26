@@ -130,4 +130,30 @@ class RationalArithmeticTests: XCTestCase {
         XCTAssertTrue(result.overflow)
     }
 
+    // This is benefit of adopting SignedNumeric. The protocol use `public init(integerLiteral value: IntegerLiteralType)` to adding integer.
+    func testAddingToIntegerNumber() {
+        let r = Rational8("2/3")
+        let result = r + 1
+        XCTAssertEqual(result.description, "5/3")
+    }
+
+    func testIntegerNumberAddingToRational() {
+        let r = Rational8("2/3")
+        let result = 1 + r
+        XCTAssertEqual(result.description, "5/3")
+    }
+
+    func testMultiplyByIntegerNumber() {
+        let r = Rational8("2/3")
+        let result = r * 3
+        XCTAssertEqual(result.description, "6/3")
+    }
+
+    func testIntegerNumberMultiplyByRational() {
+        let r = Rational8("2/3")
+        let result = 3 * r
+        XCTAssertEqual(result.description, "6/3")
+    }
+
+
 }
