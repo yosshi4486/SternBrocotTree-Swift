@@ -44,3 +44,5 @@ public struct Rational : MutableSignedRational {
     }
 
 }
+
+extension Rational : SBTreeNode { }

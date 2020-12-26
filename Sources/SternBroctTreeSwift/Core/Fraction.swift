@@ -64,3 +64,30 @@ public protocol Fraction : SBTreeNode, SignedNumeric, Comparable, Hashable {
     func simplified() -> Self
 
 }
+
+extension Fraction where Number : BinaryInteger {
+
+    /// Returns a Boolean value whether this fraction is unit fraction or not.
+    public var isUnit: Bool {
+        return numerator == 1
+    }
+
+    /// Returns a Boolean value whther this fraction is proper fraction or not.
+    public var isProper: Bool {
+        return numerator < denominator
+    }
+
+    /// Returns a Boolean value whether this fraction is improper or not.
+    public var isImproper: Bool {
+        return denominator > numerator
+    }
+
+    /// Returns a mixed fraction from this value.
+    ///
+    /// - Returns: The result touple cantains two values intergetPart and fraction.
+    /// The intergetPart is equal to `intergerPartOfMixedFraction` and  the fraction numerator is equal to `numeratorOfMixedFraction` property.
+    public func mixed() -> (integerPart: Number, fraction: Self) {
+        return (numerator / denominator, Self(numerator: numerator % denominator, denominator: denominator))
+    }
+
+}

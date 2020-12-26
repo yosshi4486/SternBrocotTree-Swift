@@ -165,26 +165,6 @@ class FractionTests: XCTestCase {
         XCTAssertEqual(f.denominator, 3)
     }
 
-    func testMixedPart() {
-        let f = Rational("11/3")
-        XCTAssertEqual(f.mixedPart, 3)
-    }
-
-    func testMixedPartZero() {
-        let f = Rational("3/11")
-        XCTAssertEqual(f.mixedPart, 0)
-    }
-
-    func testMixedRemainder() {
-        let f = Rational("11/3")
-        XCTAssertEqual(f.mixedRemainder, 2)
-    }
-
-    func testMixedRemainderZer0() {
-        let f = Rational("3/3")
-        XCTAssertEqual(f.mixedRemainder, 0)
-    }
-
     func testBackwardsMatrixSequnce1() {
         let rational = Rational("3/11")
         let matrixSequence = rational.backwardingMatrixSequence()
@@ -197,6 +177,65 @@ class FractionTests: XCTestCase {
         let matrixSequence = rational.backwardingMatrixSequence()
 
         XCTAssertEqual(matrixSequence, [.R, .R, .L, .L, .R, .L])
+    }
+
+    func testUnitFraction() {
+        let rational = Rational("1/9")
+        XCTAssertTrue(rational.isUnit)
+    }
+
+    func testNotUnitFraction() {
+        let rational = Rational("2/9")
+        XCTAssertFalse(rational.isUnit)
+    }
+
+    func testNotUnitFractionWhenZero() {
+        let rational = Rational("0/9")
+        XCTAssertFalse(rational.isUnit)
+    }
+
+    func testProperFraction() {
+        let rational = Rational("1/3")
+        XCTAssertTrue(rational.isProper)
+    }
+
+    func testNotProperFraction() {
+        let rational = Rational("4/3")
+        XCTAssertFalse(rational.isProper)
+    }
+
+    func testNotProperFractionWhenEqual() {
+        let rational = Rational("3/3")
+        XCTAssertFalse(rational.isProper)
+    }
+
+    func testImproperFraction() {
+        let rational = Rational("3/4")
+        XCTAssertTrue(rational.isImproper)
+    }
+
+    func testNotImproperFraction() {
+        let rational = Rational("3/2")
+        XCTAssertFalse(rational.isImproper)
+    }
+
+    func testNotImproperFractionWhenEqual() {
+        let rational = Rational("3/3")
+        XCTAssertFalse(rational.isImproper)
+    }
+
+    func testMixedForm() {
+        let rational = Rational("7/3")
+        let result = rational.mixed()
+        XCTAssertEqual(result.integerPart, 2)
+        XCTAssertEqual(result.fraction.description, "1/3")
+    }
+
+    func testMixedFormIntegerZero() {
+        let rational = Rational("2/3")
+        let result = rational.mixed()
+        XCTAssertEqual(result.integerPart, 0)
+        XCTAssertEqual(result.fraction.description, "2/3")
     }
 
 }

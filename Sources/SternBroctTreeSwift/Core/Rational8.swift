@@ -42,3 +42,4 @@ public struct Rational8 : MutableSignedRational {
 
 }
 
+extension Rational8 : SBTreeNode { }

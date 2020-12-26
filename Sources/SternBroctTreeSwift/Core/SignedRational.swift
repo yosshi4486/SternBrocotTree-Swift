@@ -13,25 +13,6 @@ import Foundation
 /// like `addingReportingOverflow(:)` if you consider about overflow.
 public protocol SignedRational : Fraction, CustomFloatConvertible, CustomDoubleConvertible, CustomDecimalConvertible where Number : SignedInteger & FixedWidthInteger {
 
-    /// Returns a mediant from two fractions.
-    static func mediant(left: Self, right: Self) -> Self
-
-    /// Retuns the result of mediant of the given left and right, along with a Boolean value indicating whether overflow occurred in the operation.
-    ///
-    /// - Parameters:
-    ///   - left: The left value to mediant.
-    ///   - right: The right value to mediant.
-    static func mediantReportingOverflow(left: Self, right: Self) -> (partialValue: Self, overflow: Bool)
-
-    /// Returns a boolean value whether this and the other are adjacent.
-    ///
-    /// - Parameter other: The other concrete rational to determine adjacent.
-    /// - Returns: The two values are adjacent or not.
-    func isAdjacent(to other: Self) -> Bool
-
-    /// Returns an array of R or L sequence which are backwardeded from this rational.
-    func backwardingMatrixSequence() -> [Matrix2x2]
-
     /// Returns the sum of this value and the given value, along with a Boolean value indicating whether overflow occurred in the operation.
     ///
     /// - Parameter other: The value to add to this value.
@@ -86,58 +67,6 @@ extension SignedRational {
         return commonFactor != 1 && commonFactor != -1
     }
 
-    /// Returns a mediant from two fractions.
-    public static func mediant(left: Self, right: Self) -> Self {
-        let numerator = left.numerator + right.numerator
-        let denominator = left.denominator + right.denominator
-        return Self(numerator: numerator, denominator: denominator)
-    }
-
-    /// Returns a mediant from two fractions.
-    public static func mediantReportingOverflow(left: Self, right: Self) -> (partialValue: Self, overflow: Bool) {
-        let (numeratorAddingResult, numeratorAddingOverflow) = left.numerator.addingReportingOverflow(right.numerator)
-        let (denominatorAddingResult, denominatorAddingOverflow) = left.denominator.addingReportingOverflow(right.denominator)
-
-        if numeratorAddingOverflow || denominatorAddingOverflow {
-            return (Self(numerator: numeratorAddingResult, denominator: denominatorAddingResult), true)
-        }
-
-        return (Self(numerator: numeratorAddingResult,denominator: denominatorAddingResult), false)
-    }
-
-    public func backwardingMatrixSequence() -> [Matrix2x2] {
-
-        // Start from R.
-        var mixPartSequence: [Number] = []
-        var continueFraction = self
-
-        while continueFraction.numerator > 1 || continueFraction.denominator > 1 {
-            let isEndIndeciesOfContinueFraction = continueFraction.numerator == 2 && continueFraction.denominator == 1
-            if isEndIndeciesOfContinueFraction {
-                mixPartSequence.append(1)
-                break
-            } else {
-                mixPartSequence.append(continueFraction.mixedPart)
-            }
-            continueFraction = Self(numerator: continueFraction.denominator, denominator: continueFraction.mixedRemainder)
-        }
-
-        let boxOfRLMatrixes: [[Matrix2x2]] = mixPartSequence.enumerated().compactMap({ index, value in
-            guard value > 0 else {
-                return nil
-            }
-
-            let isEven = index % 2 == 0
-            if isEven || index == 0 {
-                return Array(repeating: Matrix2x2.R, count: Int(value))
-            } else {
-                return Array(repeating: Matrix2x2.L, count: Int(value))
-            }
-        })
-
-        return boxOfRLMatrixes.flatMap({ $0 })
-    }
-
     public func comparedReportingOverflow(with other: Self) -> (partialValue: RationalComparisonResult, overflow: Bool) {
         let a = Number(numerator)
         let b = Number(denominator)
@@ -170,60 +99,6 @@ extension SignedRational {
 
 }
 
-/// Default implementation for SBTreeNode.
-extension SignedRational {
-
-    /// Returns a boolean value whether this and the other are adjacent.
-    ///
-    /// - Parameter other: The other concrete rational to determine adjacent.
-    /// - Returns: The two values are adjacent or not.
-    public func isAdjacent(to other: Self) -> Bool {
-        let (ad, adOverflow) = Number(numerator).multipliedReportingOverflow(by: Number(other.denominator))
-        let (bc, bcOverflow) = Number(denominator).multipliedReportingOverflow(by: Number(other.numerator))
-
-        if !adOverflow && !bcOverflow {
-            return abs(ad - bc) == 1
-        } else {
-            return false
-        }
-    }
-
-    /// Returns simplicity of a rational.
-    ///
-    /// if **r=a/b** is in reduced form, **the simplicity of r** is defined to be **L(r)≡1/ab**.
-    public func simplicity() -> (partialValue: Self, overflow: Bool) {
-        let (ab, overflow) = Number(numerator).multipliedReportingOverflow(by: Number(denominator))
-        return (Self("1/\(ab)"), overflow)
-    }
-
-    /// Returns total of a rational.
-    ///
-    /// if **r=a/b** is in reduced form, define the total of r to be **t(r) ≡ a+b**.
-    public var total: Number {
-        return numerator + denominator
-    }
-
-    /// Returns the interger value of mixed rational.
-    public var mixedPart: Number {
-        return numerator / denominator
-    }
-
-    /// Returns the numerator of mixed rational.
-    public var mixedRemainder: Number {
-        return numerator % denominator
-    }
-
-}
-
-/// Default implementation for Equtable.
-extension SignedRational {
-
-    public static func == (lhs: Self, rhs: Self) -> Bool {
-        return lhs.numerator == rhs.numerator && lhs.denominator == rhs.denominator
-    }
-
-}
-
 /// Default implementation for Comparable.
 extension SignedRational {
 
@@ -251,10 +126,10 @@ extension SignedRational {
 
     public func hash(into hasher: inout Hasher) {
 
-        // In reduced form, SBTree node's fruction must be identified in the tree.
-        let x = simplified()
-        hasher.combine(x.numerator)
-        hasher.combine(x.denominator)
+        // Rational should be hashed in reduced form.
+        let reducedForm = simplified()
+        hasher.combine(reducedForm.numerator)
+        hasher.combine(reducedForm.denominator)
     }
 
 }
@@ -330,6 +205,100 @@ extension SignedRational where Magnitude == Double, IntegerLiteralType == Number
 
 }
 
+/// Default implementation for SBTreeNode.
+extension SignedRational where Self : SBTreeNode {
+
+    /// Returns a mediant from two fractions.
+    public static func mediant(left: Self, right: Self) -> Self {
+        let numerator = left.numerator + right.numerator
+        let denominator = left.denominator + right.denominator
+        return Self(numerator: numerator, denominator: denominator)
+    }
+
+    /// Retuns the result of mediant of the given left and right, along with a Boolean value indicating whether overflow occurred in the operation.
+    ///
+    /// - Parameters:
+    ///   - left: The left value to mediant.
+    ///   - right: The right value to mediant.
+    public static func mediantReportingOverflow(left: Self, right: Self) -> (partialValue: Self, overflow: Bool) {
+        let (numeratorAddingResult, numeratorAddingOverflow) = left.numerator.addingReportingOverflow(right.numerator)
+        let (denominatorAddingResult, denominatorAddingOverflow) = left.denominator.addingReportingOverflow(right.denominator)
+
+        if numeratorAddingOverflow || denominatorAddingOverflow {
+            return (Self(numerator: numeratorAddingResult, denominator: denominatorAddingResult), true)
+        }
+
+        return (Self(numerator: numeratorAddingResult,denominator: denominatorAddingResult), false)
+    }
+
+    /// Returns an array of R or L sequence which are backwardeded from this rational.
+    public func backwardingMatrixSequence() -> [Matrix2x2] {
+
+        // Start from R.
+        var mixPartSequence: [Number] = []
+        var continueFraction = self
+
+        while continueFraction.numerator > 1 || continueFraction.denominator > 1 {
+            let mixed = continueFraction.mixed()
+            let isEndIndeciesOfContinueFraction = continueFraction.numerator == 2 && continueFraction.denominator == 1
+            if isEndIndeciesOfContinueFraction {
+                mixPartSequence.append(1)
+                break
+            } else {
+                mixPartSequence.append(mixed.integerPart)
+            }
+            continueFraction = Self(numerator: mixed.fraction.denominator,
+                                    denominator: mixed.fraction.numerator)
+        }
+
+        let boxOfRLMatrixes: [[Matrix2x2]] = mixPartSequence.enumerated().compactMap({ index, value in
+            guard value > 0 else {
+                return nil
+            }
+
+            let isEven = index % 2 == 0
+            if isEven || index == 0 {
+                return Array(repeating: Matrix2x2.R, count: Int(value))
+            } else {
+                return Array(repeating: Matrix2x2.L, count: Int(value))
+            }
+        })
+
+        return boxOfRLMatrixes.flatMap({ $0 })
+    }
+
+    /// Returns a boolean value whether this and the other are adjacent.
+    ///
+    /// - Parameter other: The other concrete rational to determine adjacent.
+    /// - Returns: The two values are adjacent or not.
+    public func isAdjacent(to other: Self) -> Bool {
+        let (ad, adOverflow) = Number(numerator).multipliedReportingOverflow(by: Number(other.denominator))
+        let (bc, bcOverflow) = Number(denominator).multipliedReportingOverflow(by: Number(other.numerator))
+
+        if !adOverflow && !bcOverflow {
+            return abs(ad - bc) == 1
+        } else {
+            return false
+        }
+    }
+
+    /// Returns simplicity of a rational.
+    ///
+    /// if **r=a/b** is in reduced form, **the simplicity of r** is defined to be **L(r)≡1/ab**.
+    public func simplicity() -> (partialValue: Self, overflow: Bool) {
+        let (ab, overflow) = Number(numerator).multipliedReportingOverflow(by: Number(denominator))
+        return (Self("1/\(ab)"), overflow)
+    }
+
+    /// Returns total of a rational.
+    ///
+    /// if **r=a/b** is in reduced form, define the total of r to be **t(r) ≡ a+b**.
+    public var total: Number {
+        return numerator + denominator
+    }
+
+}
+
 extension SignedRational {
 
 
@@ -347,3 +316,4 @@ extension SignedRational {
 
 
 }
+
