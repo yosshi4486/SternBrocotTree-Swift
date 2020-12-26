@@ -11,7 +11,7 @@ import Foundation
 ///
 /// Rational is specialized fraction which has interger denominator and numerator.
 /// On 32-bit platforms, Number is the same size as Int32, and on 64-bit platforms, Number is the same size as Int64.
-public struct Rational : MutableSignedRational {
+public struct Rational : MutableSignedRational, SBTreeNode {
 
     public typealias Number = Int
 

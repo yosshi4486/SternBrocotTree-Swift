@@ -167,22 +167,22 @@ class FractionTests: XCTestCase {
 
     func testMixedPart() {
         let f = Rational("11/3")
-        XCTAssertEqual(f.mixedPart, 3)
+        XCTAssertEqual(f.integerPart, 3)
     }
 
     func testMixedPartZero() {
         let f = Rational("3/11")
-        XCTAssertEqual(f.mixedPart, 0)
+        XCTAssertEqual(f.integerPart, 0)
     }
 
     func testMixedRemainder() {
         let f = Rational("11/3")
-        XCTAssertEqual(f.mixedRemainder, 2)
+        XCTAssertEqual(f.numeratorOfMixedFraction, 2)
     }
 
     func testMixedRemainderZer0() {
         let f = Rational("3/3")
-        XCTAssertEqual(f.mixedRemainder, 0)
+        XCTAssertEqual(f.numeratorOfMixedFraction, 0)
     }
 
     func testBackwardsMatrixSequnce1() {

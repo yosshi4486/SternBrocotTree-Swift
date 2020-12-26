@@ -64,3 +64,17 @@ public protocol Fraction : SBTreeNode, SignedNumeric, Comparable, Hashable {
     func simplified() -> Self
 
 }
+
+extension Fraction where Number : BinaryInteger {
+
+    /// Returns the interger value of mixed rational.
+    public var integerPartOfMixedFraction: Number {
+        return numerator / denominator
+    }
+
+    /// Returns the numerator of mixed rational.
+    public var numeratorOfMixedFraction: Number {
+        return numerator % denominator
+    }
+
+}
