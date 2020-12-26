@@ -239,14 +239,16 @@ extension SignedRational where Self : SBTreeNode {
         var continueFraction = self
 
         while continueFraction.numerator > 1 || continueFraction.denominator > 1 {
+            let mixed = continueFraction.mixed()
             let isEndIndeciesOfContinueFraction = continueFraction.numerator == 2 && continueFraction.denominator == 1
             if isEndIndeciesOfContinueFraction {
                 mixPartSequence.append(1)
                 break
             } else {
-                mixPartSequence.append(continueFraction.integerPartOfMixedFraction)
+                mixPartSequence.append(mixed.integerPart)
             }
-            continueFraction = Self(numerator: continueFraction.denominator, denominator: continueFraction.numeratorOfMixedFraction)
+            continueFraction = Self(numerator: mixed.fraction.denominator,
+                                    denominator: mixed.fraction.numerator)
         }
 
         let boxOfRLMatrixes: [[Matrix2x2]] = mixPartSequence.enumerated().compactMap({ index, value in

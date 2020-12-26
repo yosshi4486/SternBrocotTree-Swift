@@ -67,16 +67,6 @@ public protocol Fraction : SBTreeNode, SignedNumeric, Comparable, Hashable {
 
 extension Fraction where Number : BinaryInteger {
 
-    /// Returns the interger value of mixed rational.
-    public var integerPartOfMixedFraction: Number {
-        return numerator / denominator
-    }
-
-    /// Returns the numerator of mixed rational.
-    public var numeratorOfMixedFraction: Number {
-        return numerator % denominator
-    }
-
     /// Returns a Boolean value whether this fraction is unit fraction or not.
     public var isUnit: Bool {
         return numerator == 1
@@ -97,7 +87,7 @@ extension Fraction where Number : BinaryInteger {
     /// - Returns: The result touple cantains two values intergetPart and fraction.
     /// The intergetPart is equal to `intergerPartOfMixedFraction` and  the fraction numerator is equal to `numeratorOfMixedFraction` property.
     public func mixed() -> (integerPart: Number, fraction: Self) {
-        return (integerPartOfMixedFraction, Self(numerator: numeratorOfMixedFraction, denominator: denominator))
+        return (numerator / denominator, Self(numerator: numerator % denominator, denominator: denominator))
     }
 
 }
