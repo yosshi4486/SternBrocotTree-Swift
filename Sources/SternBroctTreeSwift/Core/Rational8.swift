@@ -8,7 +8,7 @@
 import Foundation
 
 /// A rational type for value semantics.
-public struct Rational8 : MutableSignedRational, SBTreeNode {
+public struct Rational8 : MutableSignedRational {
 
     public typealias Number = Int8
 
@@ -42,3 +42,4 @@ public struct Rational8 : MutableSignedRational, SBTreeNode {
 
 }
 
+extension Rational8 : SBTreeNode { }
