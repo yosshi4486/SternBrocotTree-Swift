@@ -104,7 +104,7 @@ extension SignedRational {
 
     public static func < (lhs: Self, rhs: Self) -> Bool {
 
-        // If a, b, c, and d are positive, the result of a/b < c/d can represent as ad < bc.
+        // Reduce to common denominators, then compare numerators.
         // 1. To remove left side devider, let both sides multiplied by b. (a < bc/d)
         // 2. To remove right side devider, let both sides multipied by d. (ad < bc)
 
