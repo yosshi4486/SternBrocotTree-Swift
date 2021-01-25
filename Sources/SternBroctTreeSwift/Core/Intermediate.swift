@@ -29,6 +29,11 @@ import Foundation
 /// - Throws: If you see `.overflow` error, you shoud execute any normalization.
 ///
 /// - Returns:
+///
+/// - Complexity:
+/// Best: O(1) when the given left and right are adjacent.
+///
+/// Average: O(E) wher E is an edge from the given left node to identity(1/1) node.(Not sure)
 public func intermediate<ConcreteRational : SignedRational>(left: ConcreteRational?, right: ConcreteRational?) throws -> ConcreteRational {
 
     // STEP1: Validate Arguments
@@ -76,7 +81,6 @@ public func intermediate<ConcreteRational : SignedRational>(left: ConcreteRation
     // If arguments are not adjacent, search proper node which matches SB-Tree requirements.
     var mediant: ConcreteRational?
     while true {
-
         let result = ConcreteRational.mediantReportingOverflow(left: low, right: high)
         if !result.overflow {
             mediant = result.partialValue
@@ -92,7 +96,6 @@ public func intermediate<ConcreteRational : SignedRational>(left: ConcreteRation
             break
         }
     }
-
     return mediant!
 
 }
