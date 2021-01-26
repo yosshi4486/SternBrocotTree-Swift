@@ -30,7 +30,7 @@ class SBTreeTests: XCTestCase {
         XCTAssertEqual(tree.nodes.map(\.description), ["1/4" ,"1/3", "2/5", "1/2", "3/5", "2/3", "3/4", "1/1", "4/3", "3/2", "5/3", "2/1", "5/2", "3/1", "4/1"])
     }
 
-    func testInitEnoughRoomCase1() {
+    func testInitEnoughRoomCase() {
 
         // Around 2 ^ 3
         XCTContext.runActivity(named: "Before Boundary Value 2 ^ 3") { (_) in
@@ -54,6 +54,26 @@ class SBTreeTests: XCTestCase {
             XCTAssertEqual(tree.nodes.count, 31)
         }
 
+    }
+
+    func testNodesInDepth1() {
+        let nodes = SBTree<Rational>.nodesInDepth(1)
+        XCTAssertEqual(nodes.map(\.description), ["1/1"])
+    }
+
+    func testNodesInDepth2() {
+        let nodes = SBTree<Rational>.nodesInDepth(2)
+        XCTAssertEqual(nodes.map(\.description), ["1/2", "2/1"])
+    }
+
+    func testNodesInDepth3() {
+        let nodes = SBTree<Rational>.nodesInDepth(3)
+        XCTAssertEqual(nodes.map(\.description), ["1/3", "2/3", "3/2", "3/1"])
+    }
+
+    func testNodesInDepth4() {
+        let nodes = SBTree<Rational>.nodesInDepth(4)
+        XCTAssertEqual(nodes.map(\.description),  ["1/4", "2/5", "3/5", "3/4", "4/3", "5/3", "5/2", "4/1"])
     }
 
 }
