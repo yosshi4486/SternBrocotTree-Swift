@@ -91,11 +91,11 @@ extension Matrix2x2 : SBTreeNode {
     public static var identity: Matrix2x2 {
         return Matrix2x2(a: 1, b: 0, c: 0, d: 1)
     }
-    
-    public func recoveredRational() -> Rational {
+
+    public var rationalRepresentation: Rational {
         return Rational(numerator: a + b, denominator: c + d)
     }
-
+    
     /// The metrix for generating left matrix form node.
     public static var L: Matrix2x2 {
         return Matrix2x2(a: 1, b: 0, c: 1, d: 1)

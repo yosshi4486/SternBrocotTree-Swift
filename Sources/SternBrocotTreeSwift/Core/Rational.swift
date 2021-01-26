@@ -45,4 +45,10 @@ public struct Rational : MutableSignedRational {
 
 }
 
-extension Rational : SBTreeNode { }
+extension Rational : SBTreeNode {
+    
+    public var rationalRepresentation: Rational {
+        return self
+    }
+
+}
