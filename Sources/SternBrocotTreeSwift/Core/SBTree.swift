@@ -35,4 +35,12 @@ extension SBTree where Node : SignedRational {
         makeNodesRecursively(depth: height, left: .zero, right: .infinity)
     }
 
+    /// Initialize a tree for having enough room that is able to store the given nodes.
+    ///
+    /// - Parameter numberOfNodes: The number of nodes to store.
+    init(numberOfNodes: Int) {
+        let requiredHeight = Int(log2(Double(numberOfNodes)).rounded(.down)) + 1
+        self.init(height: requiredHeight)
+    }
+
 }
