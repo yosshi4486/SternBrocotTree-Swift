@@ -1,4 +1,4 @@
-# SternBroctTreeSwift
+# SternBrocotTreeSwift
 
 This package is providing rational and intermediate function known as Stern Brocot Tree.
 I am very inspired from this article https://begriffs.com/posts/2018-03-20-user-defined-order.html and @begriffs.

@@ -1,5 +1,5 @@
 import UIKit
-import SternBroctTreeSwift
+import SternBrocotTreeSwift
 
 /*:
 # User Order by using Stern Brocot Tree
