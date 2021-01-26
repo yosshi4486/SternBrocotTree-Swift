@@ -11,7 +11,7 @@ import Foundation
 public struct SBTree<Node: SBTreeNode> {
 
     /// The sequence of concrete stern brocot tree nodes which are alighed left to right.
-    private(set) var nodes: [Node] = []
+    public private(set) var nodes: [Node] = []
 
 }
 
@@ -24,7 +24,7 @@ extension SBTree where Node : SignedRational {
     ///
     /// - Complexity:
     /// O(n) where n is number of nodes in the whole tree.
-    init(height: Int) {
+    public init(height: Int) {
 
         // It's like a depth limited search.
         func makeNodesRecursively(depth: Int, left: Node, right: Node) {
@@ -46,7 +46,7 @@ extension SBTree where Node : SignedRational {
     ///
     /// - Complexity:
     /// O(n) where n is number of nodes in the whole tree.
-    init(numberOfNodes: Int) {
+    public init(numberOfNodes: Int) {
         let requiredHeight = Int(log2(Double(numberOfNodes)).rounded(.down)) + 1
         self.init(height: requiredHeight)
     }
@@ -61,7 +61,7 @@ extension SBTree where Node : SignedRational {
     ///
     /// - Complexity:
     /// O(n) where n is number of nodes in the whole tree.
-    static func nodesInDepth(_ depth: Int) -> [Node] {
+    public static func nodesInDepth(_ depth: Int) -> [Node] {
         var nodes: [Node] = []
 
         func makeNodesRecursively(functionDepth: Int, left: Node, right: Node) {
