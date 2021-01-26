@@ -14,6 +14,10 @@ public final class NSRational : NSObject, NSSecureCoding, SignedRational, SBTree
 
     private var rational: Rational
 
+    public var rationalRepresentation: Rational {
+        return self.rational
+    }
+
     public var denominator: Int {
         get {
             return rational.denominator

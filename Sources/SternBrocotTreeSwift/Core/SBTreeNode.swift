@@ -13,6 +13,9 @@ public protocol SBTreeNode {
     /// Returns identity representation of sternbrocot-tree.
     static var identity: Self { get }
 
+    /// Returns the rational representation of stern brocot tree node.
+    var rationalRepresentation: Rational { get }
+
 }
 
 extension SBTreeNode where Self : Fraction {

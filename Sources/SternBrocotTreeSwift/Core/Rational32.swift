@@ -42,4 +42,10 @@ public struct Rational32 : MutableSignedRational {
         
 }
 
-extension Rational32 : SBTreeNode { }
+extension Rational32 : SBTreeNode {
+
+    public var rationalRepresentation: Rational {
+        return Rational(numerator: Int(numerator), denominator: Int(denominator))
+    }
+
+}
