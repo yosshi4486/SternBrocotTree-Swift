@@ -15,13 +15,24 @@ public struct SBTree<Node: SBTreeNode> {
 
 }
 
-extension SBTree where Node == Rational {
+extension SBTree where Node : SignedRational {
 
     /// Initialize by tree height. The results are stored in `self.nodes` property.
     ///
     /// - Parameter height: The height of tree structure.
     init(height: Int) {
-        nodes = [Rational(numerator: 1, denominator: 1)]
+
+        // It's like a depth limited search.
+        func makeNodesRecursively(depth: Int, left: Node, right: Node) {
+            if depth > 0 {
+                let node = Node.mediant(left: left, right: right)
+                makeNodesRecursively(depth: depth - 1, left: left, right: node)
+                nodes.append(node)
+                makeNodesRecursively(depth: depth - 1, left: node, right: right)
+            }
+        }
+
+        makeNodesRecursively(depth: height, left: .zero, right: .infinity)
     }
 
 }
