@@ -1,7 +1,7 @@
 import XCTest
 
-import SternBroctTreeSwiftTests
+import SternBrocotTreeSwiftTests
 
 var tests = [XCTestCaseEntry]()
-tests += SternBroctTreeSwiftTests.allTests()
+tests += SternBrocotTreeSwiftTests.allTests()
 XCTMain(tests)
