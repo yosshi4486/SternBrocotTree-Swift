@@ -60,7 +60,7 @@ public final class NSRational : NSObject, NSSecureCoding, SignedRational, SBTree
     }
 
     public func simplify() {
-        rational.simplify()
+        rational.reduce()
     }
 
     public func addingReportingOverflow(_ other: NSRational) -> (partialValue: NSRational, overflow: Bool) {

@@ -32,13 +32,13 @@ class RationalArithmeticTests: XCTestCase {
 
     func testSimplify() throws {
         var rational = Rational("3/9")
-        rational.simplify()
+        rational.reduce()
         XCTAssertEqual(rational.description, "1/3")
     }
 
     func testSimplifyNotChanged() throws {
         var rational = Rational("3/10")
-        rational.simplify()
+        rational.reduce()
         XCTAssertEqual(rational.description, "3/10")
     }
 

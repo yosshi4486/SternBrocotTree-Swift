@@ -9,14 +9,14 @@ import Foundation
 
 public protocol MutableSignedRational : SignedRational {
 
-    mutating func simplify()
+    mutating func reduce()
 
 }
 
 extension MutableSignedRational {
 
     /// Mutate this value to a simplified rational.
-    public mutating func simplify() {
+    public mutating func reduce() {
 
         let commonFactor = gcd(numerator, denominator)
 
@@ -58,7 +58,7 @@ extension MutableSignedRational {
     public func simplified() -> Self {
 
         var x = self
-        x.simplify()
+        x.reduce()
 
         return x
     }
@@ -92,8 +92,8 @@ extension MutableSignedRational {
                     return (Self(numerator: numerator, denominator: denominator), true)
                 }
 
-                x.simplify()
-                y.simplify()
+                x.reduce()
+                y.reduce()
 
                 // the fraction(s) reduced, good for one more retry
                 retry = true
@@ -135,8 +135,8 @@ extension MutableSignedRational {
                     return (Self(numerator: numerator, denominator: denominator), true)
                 }
 
-                x.simplify()
-                y.simplify()
+                x.reduce()
+                y.reduce()
 
                 // the fraction(s) reduced, good for one more retry
                 retry = true
