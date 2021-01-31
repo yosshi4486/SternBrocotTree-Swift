@@ -232,7 +232,7 @@ extension SignedRational where Self : SBTreeNode {
     }
 
     /// Returns an array of R or L sequence which are backwardeded from this rational.
-    public func backwardingMatrixSequence() -> [SBMatrix2x2] {
+    public func backwardingMatrixSequence() -> [Matrix2x2] {
 
         // Start from R.
         var mixPartSequence: [Number] = []
@@ -251,16 +251,16 @@ extension SignedRational where Self : SBTreeNode {
                                     denominator: mixed.fraction.numerator)
         }
 
-        let boxOfRLMatrixes: [[SBMatrix2x2]] = mixPartSequence.enumerated().compactMap({ index, value in
+        let boxOfRLMatrixes: [[Matrix2x2]] = mixPartSequence.enumerated().compactMap({ index, value in
             guard value > 0 else {
                 return nil
             }
 
             let isEven = index % 2 == 0
             if isEven || index == 0 {
-                return Array(repeating: SBMatrix2x2.R, count: Int(value))
+                return Array(repeating: Matrix2x2.R, count: Int(value))
             } else {
-                return Array(repeating: SBMatrix2x2.L, count: Int(value))
+                return Array(repeating: Matrix2x2.L, count: Int(value))
             }
         })
 

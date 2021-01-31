@@ -8,13 +8,13 @@
 import XCTest
 @testable import SternBrocotTreeSwift
 
-class SBMatrix2x2Tests: XCTestCase {
-    var matrixX: SBMatrix2x2!
-    var matrixY: SBMatrix2x2!
+class Matrix2x2Tests: XCTestCase {
+    var matrixX: Matrix2x2!
+    var matrixY: Matrix2x2!
 
     override func setUpWithError() throws {
-        matrixX = SBMatrix2x2(a: 2, b: 3, c: 11, d: 8)
-        matrixY = SBMatrix2x2(a: 3, b: 1, c: 2, d: 4)
+        matrixX = Matrix2x2(a: 2, b: 3, c: 11, d: 8)
+        matrixY = Matrix2x2(a: 3, b: 1, c: 2, d: 4)
     }
 
     override func tearDownWithError() throws {
@@ -100,49 +100,49 @@ class SBMatrix2x2Tests: XCTestCase {
     }
 
     func testMoveLeft() {
-        var initial = SBMatrix2x2.identity
+        var initial = Matrix2x2.identity
         initial.moveLeft()
-        XCTAssertEqual(initial, SBMatrix2x2(a: 1, b: 0, c: 1, d: 1))
+        XCTAssertEqual(initial, Matrix2x2(a: 1, b: 0, c: 1, d: 1))
 
         initial.moveLeft()
-        XCTAssertEqual(initial, SBMatrix2x2(a: 1, b: 0, c: 2, d: 1))
+        XCTAssertEqual(initial, Matrix2x2(a: 1, b: 0, c: 2, d: 1))
 
         initial.moveLeft()
-        XCTAssertEqual(initial, SBMatrix2x2(a: 1, b: 0, c: 3, d: 1))
+        XCTAssertEqual(initial, Matrix2x2(a: 1, b: 0, c: 3, d: 1))
 
         initial.moveLeft()
-        XCTAssertEqual(initial, SBMatrix2x2(a: 1, b: 0, c: 4, d: 1))
+        XCTAssertEqual(initial, Matrix2x2(a: 1, b: 0, c: 4, d: 1))
     }
 
     func testMoveRight() {
-        var initial = SBMatrix2x2.identity
+        var initial = Matrix2x2.identity
         initial.moveRight()
-        XCTAssertEqual(initial, SBMatrix2x2(a: 1, b: 1, c: 0, d: 1))
+        XCTAssertEqual(initial, Matrix2x2(a: 1, b: 1, c: 0, d: 1))
 
         initial.moveRight()
-        XCTAssertEqual(initial, SBMatrix2x2(a: 1, b: 2, c: 0, d: 1))
+        XCTAssertEqual(initial, Matrix2x2(a: 1, b: 2, c: 0, d: 1))
 
         initial.moveRight()
-        XCTAssertEqual(initial, SBMatrix2x2(a: 1, b: 3, c: 0, d: 1))
+        XCTAssertEqual(initial, Matrix2x2(a: 1, b: 3, c: 0, d: 1))
 
         initial.moveRight()
-        XCTAssertEqual(initial, SBMatrix2x2(a: 1, b: 4, c: 0, d: 1))
+        XCTAssertEqual(initial, Matrix2x2(a: 1, b: 4, c: 0, d: 1))
     }
 
     func testMakeLeft() {
-        let initial = SBMatrix2x2(a: 3, b: 1, c: 2, d: 1)
-        XCTAssertEqual(initial.makeLeft(), SBMatrix2x2(a: 4, b: 1, c: 3, d: 1))
+        let initial = Matrix2x2(a: 3, b: 1, c: 2, d: 1)
+        XCTAssertEqual(initial.makeLeft(), Matrix2x2(a: 4, b: 1, c: 3, d: 1))
     }
 
     func testMakeRight() {
-        let initial = SBMatrix2x2(a: 3, b: 1, c: 2, d: 1)
-        XCTAssertEqual(initial.makeRight(), SBMatrix2x2(a: 3, b: 4, c: 2, d: 3))
+        let initial = Matrix2x2(a: 3, b: 1, c: 2, d: 1)
+        XCTAssertEqual(initial.makeRight(), Matrix2x2(a: 3, b: 4, c: 2, d: 3))
     }
 
     /// Determinants shoud be 1, so random tests are always success if the implementations is good.
     func testDeterminants() {
         for _ in 0..<100 {
-            var node = SBMatrix2x2.identity
+            var node = Matrix2x2.identity
 
             // If the loop bellow is over 30, you may step fibonacci path and fails this test, so I choose 20.
             (0..<Int.random(in: 0..<20)).forEach({ _ in
