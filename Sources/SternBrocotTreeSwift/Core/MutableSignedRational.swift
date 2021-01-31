@@ -86,7 +86,7 @@ extension MutableSignedRational {
             if isROverflowed || isSOverflowed || isNumeratorOverflowed || isDenominatorOverflowed {
 
                 // overflow in intermediate value
-                if !x.canSimplify && !y.canSimplify {
+                if !x.canReduce && !y.canReduce {
 
                     // neither fraction could reduce, cannot proceed
                     return (Self(numerator: numerator, denominator: denominator), true)
@@ -129,7 +129,7 @@ extension MutableSignedRational {
             if isNumeratorOverflowed || isDenominatorOverflowed {
 
                 // overflow in intermediate value
-                if !x.canSimplify && !y.canSimplify {
+                if !x.canReduce && !y.canReduce {
 
                     // neither fraction could reduce, cannot proceed
                     return (Self(numerator: numerator, denominator: denominator), true)

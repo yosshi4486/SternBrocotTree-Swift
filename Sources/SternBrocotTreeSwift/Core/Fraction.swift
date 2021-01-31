@@ -40,10 +40,10 @@ public protocol Fraction : SBTreeNode, SignedNumeric, Comparable, Hashable {
     /// - Parameter stringValue: The string value represents a fruction.
     init(_ stringValue: String)
 
-    /// Returns a value wether this value can simplify or not.
+    /// Returns a value wether this value can reduce or not.
     ///
     /// - Complexity: O(log n) where n is digits of the given `denominator`.
-    var canSimplify: Bool { get }
+    var canReduce: Bool { get }
 
     /// Returns a new simplified rational.
     ///

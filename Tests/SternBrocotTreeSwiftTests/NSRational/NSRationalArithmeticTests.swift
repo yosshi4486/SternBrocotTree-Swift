@@ -12,12 +12,12 @@ class NSRationalArithmeticTests: XCTestCase {
 
     func testCanSimplify() throws {
         let rational = NSRational("3/9")
-        XCTAssertTrue(rational.canSimplify)
+        XCTAssertTrue(rational.canReduce)
     }
 
     func testCannotSimplify() throws {
         let rational = NSRational("3/10")
-        XCTAssertFalse(rational.canSimplify)
+        XCTAssertFalse(rational.canReduce)
     }
 
     func testSimplified() throws {

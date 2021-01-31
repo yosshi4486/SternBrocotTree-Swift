@@ -62,7 +62,7 @@ extension SignedRational {
     /// Returns a value wether this value can simplify or not.
     ///
     /// - Complexity: O(log n) where n is digits of the given `denominator`.
-    public var canSimplify: Bool {
+    public var canReduce: Bool {
         let commonFactor = gcd(numerator, denominator)
         return commonFactor != 1 && commonFactor != -1
     }
