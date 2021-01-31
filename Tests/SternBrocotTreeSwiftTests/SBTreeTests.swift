@@ -85,15 +85,13 @@ class SBTreeTests: XCTestCase {
     /// https://youtu.be/CiO8iAYC6xI?t=1513
     func testSimplicity() {
         for i in 1...5 {
-            XCTContext.runActivity(named: "Depth \(i)") { (_) in
-                let nodes = SBTree<Rational>.nodesInDepth(i)
-                let simplicities = nodes.map({ $0.simplicity() })
-                let sum = simplicities.reduce(into: Rational(numerator: 0, denominator: 0)) { (result, value) in
-                    result += value.partialValue
-                }
-
-                XCTAssertEqual(sum.numerator, sum.denominator)
+            let nodes = SBTree<Rational>.nodesInDepth(i)
+            let simplicities = nodes.map({ $0.simplicity() })
+            let sum = simplicities.reduce(into: Rational(numerator: 0, denominator: 0)) { (result, value) in
+                result += value.partialValue
             }
+
+            XCTAssertEqual(sum.numerator, sum.denominator)
         }
     }
 
@@ -102,15 +100,13 @@ class SBTreeTests: XCTestCase {
     /// https://youtu.be/CiO8iAYC6xI?t=1628
     func testTotal() {
         for i in 1...5 {
-            XCTContext.runActivity(named: "Depth \(i)") { (_) in
-                let nodes = SBTree<Rational>.nodesInDepth(i)
-                let simplicities = nodes.map({ $0.total })
-                let sum = simplicities.reduce(into: 0) { (result, value) in
-                    result += value
-                }
-
-                XCTAssertEqual(Double(sum), Double(2) * pow(Double(3), Double(i-1)))
+            let nodes = SBTree<Rational>.nodesInDepth(i)
+            let simplicities = nodes.map({ $0.total })
+            let sum = simplicities.reduce(into: 0) { (result, value) in
+                result += value
             }
+
+            XCTAssertEqual(Double(sum), Double(2) * pow(Double(3), Double(i-1)))
         }
     }
 
