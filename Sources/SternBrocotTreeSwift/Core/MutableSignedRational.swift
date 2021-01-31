@@ -81,7 +81,7 @@ extension MutableSignedRational {
             (denominator, isDenominatorOverflowed) = x.denominator.multipliedReportingOverflow(by: y.denominator)
 
             // 1. Go into a branch if r,s, numerator or denominator is overflowed.
-            // 2. If they can simplify, do it. If not, throw overflow error.
+            // 2. If they can reduce, do it. If not, throw overflow error.
             // 3. Continue the steps to resolve overflow completely.
             if isROverflowed || isSOverflowed || isNumeratorOverflowed || isDenominatorOverflowed {
 
@@ -124,7 +124,7 @@ extension MutableSignedRational {
             (denominator, isDenominatorOverflowed) = x.denominator.multipliedReportingOverflow(by: y.denominator)
 
             // 1. Go into a branch if x or y is overflowed.
-            // 2. If they can simplify, do it. If not, throw outOfRange(overflow) error.
+            // 2. If they can reduce, do it. If not, throw outOfRange(overflow) error.
             // 3. Continue the steps to resolve overflow completely.
             if isNumeratorOverflowed || isDenominatorOverflowed {
 
@@ -155,13 +155,13 @@ extension MutableSignedRational {
     public mutating func negate() {
         if numerator == Number.min {
 
-            let simplified = self.reduced()
+            let reduced = self.reduced()
 
             // check again
-            if simplified.numerator == Number.min {
+            if reduced.numerator == Number.min {
 
                 // denominator can't be MIN too or fraction would have previosly simplifed to 1/1.
-                self = Self(numerator: simplified.numerator, denominator: simplified.denominator * -1)
+                self = Self(numerator: reduced.numerator, denominator: reduced.denominator * -1)
             }
         }
         self = Self(numerator: numerator * -1, denominator: denominator)

@@ -10,38 +10,37 @@ import XCTest
 
 class RationalArithmeticTests: XCTestCase {
 
-    func testCanSimplify() throws {
+    func testCanReduce() throws {
         let rational = Rational("3/9")
         XCTAssertTrue(rational.canReduce)
     }
 
-    func testCannotSimplify() throws {
+    func testCannotReduce() throws {
         let rational = Rational("3/10")
         XCTAssertFalse(rational.canReduce)
     }
 
-    func testSimplified() throws {
+    func testReduced() throws {
         let rational = Rational("3/9")
         XCTAssertEqual(rational.reduced().description, "1/3")
     }
 
-    func testSimplifiedNotChanged() throws {
+    func testReducedNotChanged() throws {
         let rational = Rational("3/10")
         XCTAssertEqual(rational.reduced().description, "3/10")
     }
 
-    func testSimplify() throws {
+    func testReduce() throws {
         var rational = Rational("3/9")
         rational.reduce()
         XCTAssertEqual(rational.description, "1/3")
     }
 
-    func testSimplifyNotChanged() throws {
+    func testReduceNotChanged() throws {
         var rational = Rational("3/10")
         rational.reduce()
         XCTAssertEqual(rational.description, "3/10")
     }
-
 
     func testAdd() throws {
         let a = Rational("1/3")

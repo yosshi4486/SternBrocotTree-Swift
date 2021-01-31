@@ -59,7 +59,7 @@ public protocol SignedRational : Fraction, CustomFloatConvertible, CustomDoubleC
 /// Default implementation for SignedRational.
 extension SignedRational {
 
-    /// Returns a value wether this value can simplify or not.
+    /// Returns a value wether this value can reduce or not.
     ///
     /// - Complexity: O(log n) where n is digits of the given `denominator`.
     public var canReduce: Bool {

@@ -59,7 +59,7 @@ public final class NSRational : NSObject, NSSecureCoding, SignedRational, SBTree
         return Self(result.description)
     }
 
-    public func simplify() {
+    public func reduce() {
         rational.reduce()
     }
 
@@ -85,13 +85,13 @@ public final class NSRational : NSObject, NSSecureCoding, SignedRational, SBTree
 
     public func negate() {
         if numerator == Int.min {
-            let simplified = self.reduced()
+            let reduced = self.reduced()
 
             // check again
-            if simplified.numerator == Int.min {
+            if reduced.numerator == Int.min {
 
                 // denominator can't be MIN too or fraction would have previosly simplifed to 1/1.
-                self.rational = Rational(numerator: simplified.numerator, denominator: simplified.denominator * -1)
+                self.rational = Rational(numerator: reduced.numerator, denominator: reduced.denominator * -1)
             }
         }
         self.rational = Rational(numerator: numerator * -1, denominator: denominator)
