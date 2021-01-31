@@ -14,21 +14,21 @@ import XCTest
 //class TransformerTests: XCTestCase {
 //
 //    override class func setUp() {
-//        NSRationalToDataTransformer.register()
+//        SBRationalToDataTransformer.register()
 //    }
 //
 //    func testTransform() {
-//        let referenceRational = NSRational(fractionWithNoError: "1/3")
-//        let transformer = NSRationalToDataTransformer()
+//        let referenceRational = SBRational(fractionWithNoError: "1/3")
+//        let transformer = SBRationalToDataTransformer()
 //        let transformed = transformer.transformedValue(referenceRational)
 //        XCTAssertNotNil(transformed)
 //    }
 //
 //    func testTransformThenReverse() {
-//        let referenceRational = NSRational(fractionWithNoError: "1/3")
-//        let transformer = NSRationalToDataTransformer()
+//        let referenceRational = SBRational(fractionWithNoError: "1/3")
+//        let transformer = SBRationalToDataTransformer()
 //        let transformed = transformer.transformedValue(referenceRational)
-//        let reversed = transformer.reverseTransformedValue(transformed) as? NSRational
+//        let reversed = transformer.reverseTransformedValue(transformed) as? SBRational
 //        XCTAssertEqual(reversed?.description, "1/3")
 //    }
 //

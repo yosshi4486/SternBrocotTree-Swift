@@ -8,11 +8,11 @@
 import XCTest
 @testable import SternBrocotTreeSwift
 
-class NSIntermediateTests: XCTestCase {
+class SBIntermediateTests: XCTestCase {
     
     func testMediantsOnlyLeft() throws {
 
-        var right: NSRational?
+        var right: SBRational?
 
         // 1
         right = try intermediate(left: nil, right: right)
@@ -58,8 +58,8 @@ class NSIntermediateTests: XCTestCase {
     // In SBTree, go down LRLRLR... makes fibonacci sequence.
     func testFibonacciPath() throws {
 
-        var left: NSRational?
-        var right: NSRational?
+        var left: SBRational?
+        var right: SBRational?
 
         // 1
         right = try intermediate(left: left, right: right)
@@ -104,38 +104,38 @@ class NSIntermediateTests: XCTestCase {
     }
 
     func testErrorNegativeArguments() {
-        let left = NSRational("-1/1")
-        let right = NSRational("1/0")
+        let left = SBRational("-1/1")
+        let right = SBRational("1/0")
         XCTAssertError(try intermediate(left: left, right: nil),
-                       throws: RationalIntermediateError<NSRational>.negativeArgument(lhs: left, rhs: right))
+                       throws: RationalIntermediateError<SBRational>.negativeArgument(lhs: left, rhs: right))
     }
 
     func testErrorLeftArgIsSmallerThanRight() {
-        let left = NSRational("2/3")
-        let right = NSRational("1/3")
+        let left = SBRational("2/3")
+        let right = SBRational("1/3")
         XCTAssertError(try intermediate(left: left, right: right),
-                       throws: RationalIntermediateError<NSRational>.leftMustBeSmallerThanRight(lhs: left, rhs: right))
+                       throws: RationalIntermediateError<SBRational>.leftMustBeSmallerThanRight(lhs: left, rhs: right))
     }
 
     func testErrorLeftArgIsSmallerThanRightWhenEqual() {
-        let left = NSRational("2/3")
-        let right = NSRational("2/3")
+        let left = SBRational("2/3")
+        let right = SBRational("2/3")
         XCTAssertError(try intermediate(left: left, right: right),
-                       throws: RationalIntermediateError<NSRational>.leftMustBeSmallerThanRight(lhs: left, rhs: right))
+                       throws: RationalIntermediateError<SBRational>.leftMustBeSmallerThanRight(lhs: left, rhs: right))
     }
 
     func testMediantErrorOverflowDenominator() {
-        let left = NSRational("1/9223372036854775807")
-        let right = NSRational("1/1")
-        let result = NSRational.mediantReportingOverflow(left: left, right: right)
+        let left = SBRational("1/9223372036854775807")
+        let right = SBRational("1/1")
+        let result = SBRational.mediantReportingOverflow(left: left, right: right)
 
         XCTAssertTrue(result.overflow)
     }
 
     func testMediantErrorOverflowNumerator() {
-        let left = NSRational("1/1")
-        let right = NSRational("9223372036854775807/1")
-        let result = NSRational.mediantReportingOverflow(left: left, right: right)
+        let left = SBRational("1/1")
+        let right = SBRational("9223372036854775807/1")
+        let result = SBRational.mediantReportingOverflow(left: left, right: right)
         XCTAssertTrue(result.overflow)
     }
 
