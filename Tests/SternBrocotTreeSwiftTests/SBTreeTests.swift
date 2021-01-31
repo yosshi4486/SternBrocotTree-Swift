@@ -10,6 +10,8 @@ import XCTest
 
 class SBTreeTests: XCTestCase {
 
+    // MARK: - Programmer Tests
+
     func testInitFromSpecifiedHeight1() {
         let tree = SBTree<Rational>(height: 1)
         XCTAssertEqual(tree.nodes.map(\.description), ["1/1"])
@@ -76,4 +78,37 @@ class SBTreeTests: XCTestCase {
         XCTAssertEqual(nodes.map(\.description),  ["1/4", "2/5", "3/5", "3/4", "4/3", "5/3", "5/2", "4/1"])
     }
 
+    // MARK: - Mathematical Property Tests
+
+    /// The sum of the simplicities along any row of the Stern-Brocot tree is 1.
+    ///
+    /// https://youtu.be/CiO8iAYC6xI?t=1513
+    func testSimplicity() {
+        for i in 1...5 {
+            let nodes = SBTree<Rational>.nodesInDepth(i)
+            let simplicities = nodes.map({ $0.simplicity() })
+            let sum = simplicities.reduce(into: Rational(numerator: 0, denominator: 0)) { (result, value) in
+                result += value.partialValue
+            }
+
+            XCTAssertEqual(sum.numerator, sum.denominator)
+        }
+    }
+
+    /// The sum of the totals along any row is twice a power of 3. The sum for the n ^ th row (beginning 1/n) is 2 * 3 ^ (n-1)
+    ///
+    /// https://youtu.be/CiO8iAYC6xI?t=1628
+    func testTotal() {
+        for i in 1...5 {
+            let nodes = SBTree<Rational>.nodesInDepth(i)
+            let simplicities = nodes.map({ $0.total })
+            let sum = simplicities.reduce(into: 0) { (result, value) in
+                result += value
+            }
+
+            XCTAssertEqual(Double(sum), Double(2) * pow(Double(3), Double(i-1)))
+        }
+    }
+
 }
+
