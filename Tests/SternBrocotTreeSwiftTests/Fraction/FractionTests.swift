@@ -64,7 +64,7 @@ class FractionTests: XCTestCase {
 
     func testSimplicity() throws {
         let r = Rational("2/3")
-        XCTAssertEqual(r.simplicity().partialValue, Rational("1/6"))
+        XCTAssertEqual(r.simplicity, Rational("1/6"))
     }
 
     func testSumOfSimplicitiesForRow() throws {
@@ -74,7 +74,7 @@ class FractionTests: XCTestCase {
             Rational("3/2"),
             Rational("3/1")
         ]
-        let simplicities = rows.compactMap({ $0.simplicity().partialValue })
+        let simplicities = rows.compactMap({ $0.simplicity })
         let sum = simplicities[0]
             .addingReportingOverflow(simplicities[1]).partialValue
             .addingReportingOverflow(simplicities[2]).partialValue

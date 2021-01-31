@@ -19,3 +19,9 @@ Setting something to Module, xcdatamodeld/xcdatamodel/contents set combined valu
 ## Contribution
 I have not majored math, so my understanding may not be enough. If your notice several misunderstanding of this package, I hope you make issue or pull request. 
 
+## Desing Guidline
+### Overflow API
+- Provide non-overflow API at first, then if it is possible to make overflow, provide reportingOverflow API. 
+- Follow Swift standard overflow API style whenever possible.
+
+
