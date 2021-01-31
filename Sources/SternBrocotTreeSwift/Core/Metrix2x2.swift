@@ -126,6 +126,11 @@ extension Matrix2x2 : SBTreeNode {
         return self * Matrix2x2.R
     }
 
+    /// Returns a determinants of this matrix.
+    public var determinants: Int {
+        return (a * d) - (b * c)
+    }
+
 }
 
 extension Matrix2x2 : CustomStringConvertible {

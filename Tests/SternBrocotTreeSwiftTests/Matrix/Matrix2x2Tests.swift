@@ -139,4 +139,22 @@ class Matrix2x2Tests: XCTestCase {
         XCTAssertEqual(initial.makeRight(), Matrix2x2(a: 3, b: 4, c: 2, d: 3))
     }
 
+    /// Determinants shoud be 1, so random tests are always success if the implementations is good.
+    func testDeterminants() {
+        for _ in 0..<100 {
+            var node = Matrix2x2.identity
+
+            // If the loop bellow is over 30, you may step fibonacci path and fails this test, so I choose 20.
+            (0..<Int.random(in: 0..<20)).forEach({ _ in
+                let isR = Bool.random()
+                if isR {
+                    node.moveRight()
+                } else {
+                    node.moveLeft()
+                }
+            })
+            XCTAssertEqual(node.determinants, 1)
+        }
+    }
+
 }
