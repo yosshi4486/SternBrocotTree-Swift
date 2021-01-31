@@ -17,7 +17,7 @@ import Foundation
 /// - Remark:
 /// This type is copy of Matrix2x2. My implementations is WET, which means not DRY. Please advice me If anyone notices this implementation and knows good way to bridge
 /// value semantics to reference semantics without including WET code. (Code generator...?)
-public final class SBMatrix2x2 {
+public final class SBMatrix2x2: NSObject, NSSecureCoding {
 
     /// The value which is positioned at top left.
     public var a: Int
@@ -65,6 +65,47 @@ public final class SBMatrix2x2 {
         lhs = lhs * rhs
     }
 
+    // MARK: - NSObject Protocol
+
+    public override var description: String {
+        return """
+        \(a) \(b)
+        \(c) \(d)
+        """
+    }
+
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? SBMatrix2x2 else {
+            return false
+        }
+
+        return self.a == other.a && self.b == other.b && self.c == other.c && self.d == other.d
+    }
+
+    // MARK: - NSSecureCoding
+
+    private enum CodingKeys: String, CodingKey {
+        case a
+        case b
+        case c
+        case d
+    }
+
+    public static var supportsSecureCoding: Bool = true
+
+    public func encode(with coder: NSCoder) {
+        coder.encode(a as NSInteger, forKey: CodingKeys.a.rawValue)
+        coder.encode(b as NSInteger, forKey: CodingKeys.b.rawValue)
+        coder.encode(c as NSInteger, forKey: CodingKeys.c.rawValue)
+        coder.encode(d as NSInteger, forKey: CodingKeys.d.rawValue)
+    }
+
+    public required init?(coder: NSCoder) {
+        self.a = coder.decodeInteger(forKey: CodingKeys.a.rawValue)
+        self.b = coder.decodeInteger(forKey: CodingKeys.b.rawValue)
+        self.c = coder.decodeInteger(forKey: CodingKeys.c.rawValue)
+        self.d = coder.decodeInteger(forKey: CodingKeys.d.rawValue)
+    }
 
 }
 
@@ -90,14 +131,6 @@ extension SBMatrix2x2 : AdditiveArithmetic {
             c: lhs.c - rhs.c,
             d: lhs.d - rhs.d
         )
-    }
-
-}
-
-extension SBMatrix2x2 : Equatable {
-
-    public static func == (lhs: SBMatrix2x2, rhs: SBMatrix2x2) -> Bool {
-        return lhs.a == rhs.a && lhs.b == rhs.b && lhs.c == rhs.c && lhs.d == rhs.d
     }
 
 }
@@ -155,17 +188,6 @@ extension SBMatrix2x2 : SBTreeNode {
     /// Returns a determinants of this matrix.
     public var determinants: Int {
         return (a * d) - (b * c)
-    }
-
-}
-
-extension SBMatrix2x2 : CustomStringConvertible {
-
-    public var description: String {
-        """
-        \(a) \(b)
-        \(c) \(d)
-        """
     }
 
 }
