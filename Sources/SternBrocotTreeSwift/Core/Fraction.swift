@@ -40,28 +40,28 @@ public protocol Fraction : SBTreeNode, SignedNumeric, Comparable, Hashable {
     /// - Parameter stringValue: The string value represents a fruction.
     init(_ stringValue: String)
 
-    /// Returns a value wether this value can simplify or not.
+    /// Returns a value wether this value can reduce or not.
     ///
     /// - Complexity: O(log n) where n is digits of the given `denominator`.
-    var canSimplify: Bool { get }
+    var canReduce: Bool { get }
 
-    /// Returns a new simplified rational.
+    /// Returns a new reduced rational.
     ///
     /// Returns new value when the numerator and the denominator have common devider except for ± 1,
     ///
-    ///     let new = Rational(fraction: "3/9").simplified
+    ///     let new = Rational(fraction: "3/9").reduced
     ///     // new.description is 1/3.
     ///
     /// otherwise always returns self.
     ///
-    ///     let new = Rational(fraction: "3/10").simplified
+    ///     let new = Rational(fraction: "3/10").reduced
     ///     // new.description is 3/10.
     ///
     ///- Complexity: O(log n) where n is digits of given `denominator`.
     ///
     /// - Note:
-    /// `Reduce` is term used to reduce numerics by gcm, but  `simplified` execute sign inversion of the numerator and the denominator in addition.
-    func simplified() -> Self
+    /// `Reduce` is term used to reduce numerics by gcm, but  `reduced` execute sign inversion of the numerator and the denominator in addition.
+    func reduced() -> Self
 
 }
 

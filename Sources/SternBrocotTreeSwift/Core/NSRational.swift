@@ -54,13 +54,13 @@ public final class NSRational : NSObject, NSSecureCoding, SignedRational, SBTree
      A RationalProtocol(fractionWithNoError:) is also usefull in compatibility of Rational and NSRational.
      */
 
-    public func simplified() -> Self {
-        let result = rational.simplified()
+    public func reduced() -> Self {
+        let result = rational.reduced()
         return Self(result.description)
     }
 
-    public func simplify() {
-        rational.simplify()
+    public func reduce() {
+        rational.reduce()
     }
 
     public func addingReportingOverflow(_ other: NSRational) -> (partialValue: NSRational, overflow: Bool) {
@@ -85,13 +85,13 @@ public final class NSRational : NSObject, NSSecureCoding, SignedRational, SBTree
 
     public func negate() {
         if numerator == Int.min {
-            let simplified = self.simplified()
+            let reduced = self.reduced()
 
             // check again
-            if simplified.numerator == Int.min {
+            if reduced.numerator == Int.min {
 
                 // denominator can't be MIN too or fraction would have previosly simplifed to 1/1.
-                self.rational = Rational(numerator: simplified.numerator, denominator: simplified.denominator * -1)
+                self.rational = Rational(numerator: reduced.numerator, denominator: reduced.denominator * -1)
             }
         }
         self.rational = Rational(numerator: numerator * -1, denominator: denominator)

@@ -9,14 +9,14 @@ import Foundation
 
 public protocol MutableSignedRational : SignedRational {
 
-    mutating func simplify()
+    mutating func reduce()
 
 }
 
 extension MutableSignedRational {
 
-    /// Mutate this value to a simplified rational.
-    public mutating func simplify() {
+    /// Mutate this value to a reduced rational.
+    public mutating func reduce() {
 
         let commonFactor = gcd(numerator, denominator)
 
@@ -41,24 +41,24 @@ extension MutableSignedRational {
         self.denominator = denominator
     }
 
-    /// Returns a new simplified rational.
+    /// Returns a new reduced rational.
     ///
     /// Returns new value when the numerator and the denominator have common devider except for ± 1,
     ///
-    ///     let new = Rational(fraction: "3/9").simplified
+    ///     let new = Rational(fraction: "3/9").reduced
     ///     // new.description is 1/3.
     ///
     /// otherwise always returns self.
     ///
-    ///     let new = Rational(fraction: "3/10").simplified
+    ///     let new = Rational(fraction: "3/10").reduced
     ///     // new.description is 3/10.
     ///
     /// - Note:
-    /// `Reduce` is term used to reduce numerics by gcm, but  `simplified` execute sign inversion of the numerator and the denominator in addition.
-    public func simplified() -> Self {
+    /// `Reduce` is term used to reduce numerics by gcm, but  `reduced` execute sign inversion of the numerator and the denominator in addition.
+    public func reduced() -> Self {
 
         var x = self
-        x.simplify()
+        x.reduce()
 
         return x
     }
@@ -81,19 +81,19 @@ extension MutableSignedRational {
             (denominator, isDenominatorOverflowed) = x.denominator.multipliedReportingOverflow(by: y.denominator)
 
             // 1. Go into a branch if r,s, numerator or denominator is overflowed.
-            // 2. If they can simplify, do it. If not, throw overflow error.
+            // 2. If they can reduce, do it. If not, throw overflow error.
             // 3. Continue the steps to resolve overflow completely.
             if isROverflowed || isSOverflowed || isNumeratorOverflowed || isDenominatorOverflowed {
 
                 // overflow in intermediate value
-                if !x.canSimplify && !y.canSimplify {
+                if !x.canReduce && !y.canReduce {
 
                     // neither fraction could reduce, cannot proceed
                     return (Self(numerator: numerator, denominator: denominator), true)
                 }
 
-                x.simplify()
-                y.simplify()
+                x.reduce()
+                y.reduce()
 
                 // the fraction(s) reduced, good for one more retry
                 retry = true
@@ -103,7 +103,7 @@ extension MutableSignedRational {
 
         }
 
-        return (Self(numerator: numerator, denominator: denominator).simplified(), false)
+        return (Self(numerator: numerator, denominator: denominator).reduced(), false)
 
     }
 
@@ -124,19 +124,19 @@ extension MutableSignedRational {
             (denominator, isDenominatorOverflowed) = x.denominator.multipliedReportingOverflow(by: y.denominator)
 
             // 1. Go into a branch if x or y is overflowed.
-            // 2. If they can simplify, do it. If not, throw outOfRange(overflow) error.
+            // 2. If they can reduce, do it. If not, throw outOfRange(overflow) error.
             // 3. Continue the steps to resolve overflow completely.
             if isNumeratorOverflowed || isDenominatorOverflowed {
 
                 // overflow in intermediate value
-                if !x.canSimplify && !y.canSimplify {
+                if !x.canReduce && !y.canReduce {
 
                     // neither fraction could reduce, cannot proceed
                     return (Self(numerator: numerator, denominator: denominator), true)
                 }
 
-                x.simplify()
-                y.simplify()
+                x.reduce()
+                y.reduce()
 
                 // the fraction(s) reduced, good for one more retry
                 retry = true
@@ -145,7 +145,7 @@ extension MutableSignedRational {
             }
         }
 
-        return (Self(numerator: numerator, denominator: denominator).simplified(), false)
+        return (Self(numerator: numerator, denominator: denominator).reduced(), false)
     }
 
     public func dividedReportingOverflow(by other: Self) -> (partialValue: Self, overflow: Bool) {
@@ -155,13 +155,13 @@ extension MutableSignedRational {
     public mutating func negate() {
         if numerator == Number.min {
 
-            let simplified = self.simplified()
+            let reduced = self.reduced()
 
             // check again
-            if simplified.numerator == Number.min {
+            if reduced.numerator == Number.min {
 
                 // denominator can't be MIN too or fraction would have previosly simplifed to 1/1.
-                self = Self(numerator: simplified.numerator, denominator: simplified.denominator * -1)
+                self = Self(numerator: reduced.numerator, denominator: reduced.denominator * -1)
             }
         }
         self = Self(numerator: numerator * -1, denominator: denominator)

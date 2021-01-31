@@ -59,10 +59,10 @@ public protocol SignedRational : Fraction, CustomFloatConvertible, CustomDoubleC
 /// Default implementation for SignedRational.
 extension SignedRational {
 
-    /// Returns a value wether this value can simplify or not.
+    /// Returns a value wether this value can reduce or not.
     ///
     /// - Complexity: O(log n) where n is digits of the given `denominator`.
-    public var canSimplify: Bool {
+    public var canReduce: Bool {
         let commonFactor = gcd(numerator, denominator)
         return commonFactor != 1 && commonFactor != -1
     }
@@ -127,7 +127,7 @@ extension SignedRational {
     public func hash(into hasher: inout Hasher) {
 
         // Rational should be hashed in reduced form.
-        let reducedForm = simplified()
+        let reducedForm = reduced()
         hasher.combine(reducedForm.numerator)
         hasher.combine(reducedForm.denominator)
     }
