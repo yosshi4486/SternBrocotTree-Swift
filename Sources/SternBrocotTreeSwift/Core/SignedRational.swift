@@ -285,9 +285,9 @@ extension SignedRational where Self : SBTreeNode {
     /// Returns simplicity of a rational.
     ///
     /// if **r=a/b** is in reduced form, **the simplicity of r** is defined to be **L(r)≡1/ab**.
-    public func simplicity() -> (partialValue: Self, overflow: Bool) {
-        let (ab, overflow) = Number(numerator).multipliedReportingOverflow(by: Number(denominator))
-        return (Self("1/\(ab)"), overflow)
+    public var simplicity: Self {
+        let ab = Number(numerator) * Number(denominator)
+        return Self("1/\(ab)")
     }
 
     /// Returns total of a rational.

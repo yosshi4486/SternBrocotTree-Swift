@@ -86,9 +86,9 @@ class SBTreeTests: XCTestCase {
     func testSimplicity() {
         for i in 1...5 {
             let nodes = SBTree<Rational>.nodesInDepth(i)
-            let simplicities = nodes.map({ $0.simplicity() })
+            let simplicities = nodes.map({ $0.simplicity })
             let sum = simplicities.reduce(into: Rational(numerator: 0, denominator: 0)) { (result, value) in
-                result += value.partialValue
+                result += value
             }
 
             XCTAssertEqual(sum.numerator, sum.denominator)
