@@ -22,12 +22,12 @@ class RationalArithmeticTests: XCTestCase {
 
     func testSimplified() throws {
         let rational = Rational("3/9")
-        XCTAssertEqual(rational.simplified().description, "1/3")
+        XCTAssertEqual(rational.reduced().description, "1/3")
     }
 
     func testSimplifiedNotChanged() throws {
         let rational = Rational("3/10")
-        XCTAssertEqual(rational.simplified().description, "3/10")
+        XCTAssertEqual(rational.reduced().description, "3/10")
     }
 
     func testSimplify() throws {

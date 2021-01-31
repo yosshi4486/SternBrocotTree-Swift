@@ -127,7 +127,7 @@ extension SignedRational {
     public func hash(into hasher: inout Hasher) {
 
         // Rational should be hashed in reduced form.
-        let reducedForm = simplified()
+        let reducedForm = reduced()
         hasher.combine(reducedForm.numerator)
         hasher.combine(reducedForm.denominator)
     }

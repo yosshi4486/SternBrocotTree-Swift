@@ -15,7 +15,7 @@ public protocol MutableSignedRational : SignedRational {
 
 extension MutableSignedRational {
 
-    /// Mutate this value to a simplified rational.
+    /// Mutate this value to a reduced rational.
     public mutating func reduce() {
 
         let commonFactor = gcd(numerator, denominator)
@@ -41,21 +41,21 @@ extension MutableSignedRational {
         self.denominator = denominator
     }
 
-    /// Returns a new simplified rational.
+    /// Returns a new reduced rational.
     ///
     /// Returns new value when the numerator and the denominator have common devider except for ± 1,
     ///
-    ///     let new = Rational(fraction: "3/9").simplified
+    ///     let new = Rational(fraction: "3/9").reduced
     ///     // new.description is 1/3.
     ///
     /// otherwise always returns self.
     ///
-    ///     let new = Rational(fraction: "3/10").simplified
+    ///     let new = Rational(fraction: "3/10").reduced
     ///     // new.description is 3/10.
     ///
     /// - Note:
-    /// `Reduce` is term used to reduce numerics by gcm, but  `simplified` execute sign inversion of the numerator and the denominator in addition.
-    public func simplified() -> Self {
+    /// `Reduce` is term used to reduce numerics by gcm, but  `reduced` execute sign inversion of the numerator and the denominator in addition.
+    public func reduced() -> Self {
 
         var x = self
         x.reduce()
@@ -103,7 +103,7 @@ extension MutableSignedRational {
 
         }
 
-        return (Self(numerator: numerator, denominator: denominator).simplified(), false)
+        return (Self(numerator: numerator, denominator: denominator).reduced(), false)
 
     }
 
@@ -145,7 +145,7 @@ extension MutableSignedRational {
             }
         }
 
-        return (Self(numerator: numerator, denominator: denominator).simplified(), false)
+        return (Self(numerator: numerator, denominator: denominator).reduced(), false)
     }
 
     public func dividedReportingOverflow(by other: Self) -> (partialValue: Self, overflow: Bool) {
@@ -155,7 +155,7 @@ extension MutableSignedRational {
     public mutating func negate() {
         if numerator == Number.min {
 
-            let simplified = self.simplified()
+            let simplified = self.reduced()
 
             // check again
             if simplified.numerator == Number.min {
