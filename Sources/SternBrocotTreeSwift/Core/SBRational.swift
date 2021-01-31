@@ -8,7 +8,7 @@
 import Foundation
 
 /// A rational type for reference semantics. The type stores and uses value rational internally.
-public final class NSRational : NSObject, NSSecureCoding, SignedRational, SBTreeNode {
+public final class SBRational : NSObject, NSSecureCoding, SignedRational, SBTreeNode {
 
     public typealias Number = Int
 
@@ -51,7 +51,7 @@ public final class NSRational : NSObject, NSSecureCoding, SignedRational, SBTree
     }
 
     /*
-     A RationalProtocol(fractionWithNoError:) is also usefull in compatibility of Rational and NSRational.
+     A RationalProtocol(fractionWithNoError:) is also usefull in compatibility of Rational and SBRational.
      */
 
     public func reduced() -> Self {
@@ -63,24 +63,24 @@ public final class NSRational : NSObject, NSSecureCoding, SignedRational, SBTree
         rational.reduce()
     }
 
-    public func addingReportingOverflow(_ other: NSRational) -> (partialValue: NSRational, overflow: Bool) {
+    public func addingReportingOverflow(_ other: SBRational) -> (partialValue: SBRational, overflow: Bool) {
         let (partialValue, overflow) = rational.addingReportingOverflow(other.rational)
-        return (NSRational(rational: partialValue), overflow)
+        return (SBRational(rational: partialValue), overflow)
     }
 
-    public func subtractingReportingOverflow(_ other: NSRational) -> (partialValue: NSRational, overflow: Bool) {
+    public func subtractingReportingOverflow(_ other: SBRational) -> (partialValue: SBRational, overflow: Bool) {
         let (partialValue, overflow) = rational.subtractingReportingOverflow(other.rational)
-        return (NSRational(rational: partialValue), overflow)
+        return (SBRational(rational: partialValue), overflow)
     }
 
-    public func multipliedReportingOverflow(by other: NSRational) -> (partialValue: NSRational, overflow: Bool) {
+    public func multipliedReportingOverflow(by other: SBRational) -> (partialValue: SBRational, overflow: Bool) {
         let (partialValue, overflow) = rational.multipliedReportingOverflow(by: other.rational)
-        return (NSRational(rational: partialValue), overflow)
+        return (SBRational(rational: partialValue), overflow)
     }
 
-    public func dividedReportingOverflow(by other: NSRational) -> (partialValue: NSRational, overflow: Bool) {
+    public func dividedReportingOverflow(by other: SBRational) -> (partialValue: SBRational, overflow: Bool) {
         let (partialValue, overflow) = rational.dividedReportingOverflow(by: other.rational)
-        return (NSRational(rational: partialValue), overflow)
+        return (SBRational(rational: partialValue), overflow)
     }
 
     public func negate() {
@@ -106,7 +106,7 @@ public final class NSRational : NSObject, NSSecureCoding, SignedRational, SBTree
 
     public override func isEqual(_ object: Any?) -> Bool {
 
-        guard let otherReferenceRational = object as? NSRational else {
+        guard let otherReferenceRational = object as? SBRational else {
             return false
         }
 

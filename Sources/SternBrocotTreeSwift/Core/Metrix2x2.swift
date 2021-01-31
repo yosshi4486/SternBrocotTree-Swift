@@ -17,16 +17,16 @@ import Foundation
 public struct Matrix2x2 {
 
     /// The value which is positioned at top left.
-    var a: Int
+    public var a: Int
 
     /// The value which is positioned at top right.
-    var b: Int
+    public var b: Int
 
     /// The value which is positioned at bottom left.
-    var c: Int
+    public var c: Int
 
     /// The value which is positioned at bottom right.
-    var d: Int
+    public var d: Int
 
     /// Multiplies two 2x2 matrix and produces thier product.
     ///
