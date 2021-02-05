@@ -11,7 +11,7 @@ import Foundation
 ///
 /// Default implementations of AddingArithmetic and Comparable don't care overflow error. Use alternative overflow reporting methods
 /// like `addingReportingOverflow(:)` if you consider about overflow.
-public protocol SignedRational : Fraction, CustomFloatConvertible, CustomDoubleConvertible, CustomDecimalConvertible where Number : SignedInteger & FixedWidthInteger {
+public protocol SignedRational : Fraction where Number : SignedInteger & FixedWidthInteger {
 
     /// Returns the sum of this value and the given value, along with a Boolean value indicating whether overflow occurred in the operation.
     ///
@@ -137,13 +137,37 @@ extension SignedRational {
 /// Default implementation for Convertibles.
 extension SignedRational {
 
+    /// The string representation of this rational.
+    ///
+    /// examples) "1/1", "103/33", "57/999"
     public var description: String { "\(numerator)/\(denominator)" }
 
-    public var float32Value: Float32 { Float32(numerator) / Float32(denominator) }
+    /// The float representation of this rational.
+    ///
+    /// It can represent 7 digits precision decimal number.
+    ///
+    /// - SeeAlso:
+    /// - IEEE754
+    public var floatValue: Float { Float(numerator) / Float(denominator) }
 
-    public var float64Value: Float64 { Float64(numerator) / Float64(denominator) }
-
+    /// The double representation of this rational.
+    ///
+    /// It can represent 15 digits precision decimal number.
+    ///
+    /// - SeeAlso:
+    /// - IEEE754
     public var doubleValue: Double { Double(numerator) / Double(denominator) }
+
+    /// The decimal representation of this rational.
+    ///
+    /// It can represent 38 digits precision decimal number.
+    ///
+    /// Decimal is useful for computing strict number such as money, but it is slower than float and double.
+    ///
+    /// - SeeAlso:
+    /// - IEEE754
+    /// - [NSDecimalNumber](https://developer.apple.com/documentation/foundation/nsdecimalnumber)
+    public var decimalValue: Decimal { Decimal(Int(numerator)) / Decimal(Int(denominator)) }
 
 }
 
