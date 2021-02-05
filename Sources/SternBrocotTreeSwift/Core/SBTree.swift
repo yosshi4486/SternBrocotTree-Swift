@@ -13,6 +13,15 @@ public struct SBTree<Node: SBTreeNode> {
     /// The sequence of concrete stern brocot tree nodes which are alighed left to right.
     public private(set) var nodes: [Node] = []
 
+    public enum Error: CaseIterable, LocalizedError {
+        case overflow
+
+        public var errorDescription: String? {
+            return NSLocalizedString("Overflow is occured in SBTree.", comment: "")
+        }
+
+    }
+
 }
 
 extension SBTree where Node : SignedRational {
@@ -24,19 +33,25 @@ extension SBTree where Node : SignedRational {
     ///
     /// - Complexity:
     /// O(n) where n is number of nodes in the whole tree.
-    public init(height: Int) {
+    ///
+    /// - Throws:
+    /// Error.overflow is thrown when the tree is about to over Int.man.
+    public init(height: Int) throws {
 
         // It's like a depth limited search.
-        func makeNodesRecursively(depth: Int, left: Node, right: Node) {
+        func makeNodesRecursively(depth: Int, left: Node, right: Node) throws {
             if depth <= height {
-                let node = Node.mediant(left: left, right: right)
-                makeNodesRecursively(depth: depth + 1, left: left, right: node)
+                let (node, overflow) = Node.mediantReportingOverflow(left: left, right: right)
+                guard !overflow else {
+                    throw Error.overflow
+                }
+                try makeNodesRecursively(depth: depth + 1, left: left, right: node)
                 nodes.append(node)
-                makeNodesRecursively(depth: depth + 1, left: node, right: right)
+                try makeNodesRecursively(depth: depth + 1, left: node, right: right)
             }
         }
 
-        makeNodesRecursively(depth: 1, left: .zero, right: .infinity)
+        try makeNodesRecursively(depth: 1, left: .zero, right: .infinity)
     }
 
     /// Initialize a tree for having enough room that is able to store the given nodes.
@@ -46,9 +61,12 @@ extension SBTree where Node : SignedRational {
     ///
     /// - Complexity:
     /// O(n) where n is number of nodes in the whole tree.
-    public init(numberOfNodes: Int) {
+    ///
+    /// - Throws:
+    /// Error.overflow is thrown when the tree is about to over Int.man.
+    public init(numberOfNodes: Int) throws {
         let requiredHeight = Int(log2(Double(numberOfNodes)).rounded(.down)) + 1
-        self.init(height: requiredHeight)
+        try self.init(height: requiredHeight)
     }
 
     /// Return nodes which are located in the given depth
@@ -61,21 +79,29 @@ extension SBTree where Node : SignedRational {
     ///
     /// - Complexity:
     /// O(n) where n is number of nodes in the whole tree.
-    public static func nodesInDepth(_ depth: Int) -> [Node] {
+    ///
+    /// - Throws:
+    /// Error.overflow is thrown when the tree is about to over Int.man.
+    public static func nodesInDepth(_ depth: Int) throws -> [Node] {
         var nodes: [Node] = []
 
-        func makeNodesRecursively(functionDepth: Int, left: Node, right: Node) {
+        func makeNodesRecursively(functionDepth: Int, left: Node, right: Node) throws {
             if functionDepth <= depth {
-                let node = Node.mediant(left: left, right: right)
-                makeNodesRecursively(functionDepth: functionDepth + 1, left: left, right: node)
+
+                let (node, overflow) = Node.mediantReportingOverflow(left: left, right: right)
+                guard !overflow else {
+                    throw Error.overflow
+                }
+
+                try makeNodesRecursively(functionDepth: functionDepth + 1, left: left, right: node)
                 if functionDepth == depth {
                     nodes.append(node)
                 }
-                makeNodesRecursively(functionDepth: functionDepth + 1, left: node, right: right)
+                try makeNodesRecursively(functionDepth: functionDepth + 1, left: node, right: right)
             }
         }
 
-        makeNodesRecursively(functionDepth: 1, left: .zero, right: .infinity)
+        try makeNodesRecursively(functionDepth: 1, left: .zero, right: .infinity)
         return nodes
     }
 
