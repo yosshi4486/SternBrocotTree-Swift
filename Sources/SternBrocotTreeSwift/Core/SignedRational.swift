@@ -208,7 +208,28 @@ extension SignedRational where Magnitude == Double, IntegerLiteralType == Number
 /// Default implementation for SBTreeNode.
 extension SignedRational where Self : SBTreeNode {
 
+    /// Returns simplicity of a rational.
+    ///
+    /// if **r=a/b** is in reduced form, **the simplicity of r** is defined to be **L(r)≡1/ab**.
+    public var simplicity: Self {
+        let ab = Number(numerator) * Number(denominator)
+        return Self("1/\(ab)")
+    }
+
+    /// Returns total of a rational.
+    ///
+    /// if **r=a/b** is in reduced form, define the total of r to be **t(r) ≡ a+b**.
+    public var total: Number {
+        return numerator + denominator
+    }
+
     /// Returns a mediant from two fractions.
+    ///
+    /// - Note:
+    /// The most important property of rational is `The mediant inequality` described in the url bellow. please check it out!
+    /// https://en.wikipedia.org/wiki/Mediant_(mathematics)
+    ///
+    /// **The mediant of two rationals strictlly lies between them.**
     public static func mediant(left: Self, right: Self) -> Self {
         let numerator = left.numerator + right.numerator
         let denominator = left.denominator + right.denominator
@@ -282,20 +303,6 @@ extension SignedRational where Self : SBTreeNode {
         }
     }
 
-    /// Returns simplicity of a rational.
-    ///
-    /// if **r=a/b** is in reduced form, **the simplicity of r** is defined to be **L(r)≡1/ab**.
-    public var simplicity: Self {
-        let ab = Number(numerator) * Number(denominator)
-        return Self("1/\(ab)")
-    }
-
-    /// Returns total of a rational.
-    ///
-    /// if **r=a/b** is in reduced form, define the total of r to be **t(r) ≡ a+b**.
-    public var total: Number {
-        return numerator + denominator
-    }
 
 }
 
