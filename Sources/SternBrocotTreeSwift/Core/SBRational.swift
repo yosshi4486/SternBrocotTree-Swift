@@ -8,7 +8,7 @@
 import Foundation
 
 /// A rational type for reference semantics. The type stores and uses value rational internally.
-public final class SBRational : NSObject, NSSecureCoding, SignedRational, SBTreeNode {
+public final class SBRational : NSObject, NSSecureCoding, SignedRational, SBTreeNode, Codable {
 
     public typealias Number = Int
 
@@ -115,12 +115,14 @@ public final class SBRational : NSObject, NSSecureCoding, SignedRational, SBTree
         return rational.hashValue
     }
 
-    // MARK: - NSSecureCoding
-
+    // MARK: - CodingKeys
+    
     private enum CodingKeys: String, CodingKey {
         case numerator
         case denominator
     }
+
+    // MARK: - NSSecureCoding
 
     public static var supportsSecureCoding: Bool = true
 
@@ -132,6 +134,21 @@ public final class SBRational : NSObject, NSSecureCoding, SignedRational, SBTree
     public required init?(coder: NSCoder) {
         let numerator = coder.decodeInteger(forKey: CodingKeys.numerator.rawValue)
         let denominator = coder.decodeInteger(forKey: CodingKeys.denominator.rawValue)
+        self.rational = Rational(numerator: numerator, denominator: denominator)
+    }
+
+    // MARK: - Codable
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(rational.numerator, forKey: CodingKeys.numerator)
+        try container.encode(rational.denominator, forKey: CodingKeys.denominator)
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let numerator = try container.decode(Int.self, forKey: CodingKeys.numerator)
+        let denominator = try container.decode(Int.self, forKey: CodingKeys.denominator)
         self.rational = Rational(numerator: numerator, denominator: denominator)
     }
 
